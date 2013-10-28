@@ -47,13 +47,7 @@ Box.Application = (function() {
 	// Private
 	//--------------------------------------------------------------------------
 
-	var MODULE_CLASS_SELECTOR = '.module',
-
-		// Mouse Button Codes
-		// @TODO(nzakas) 2013-06-11: Remove when blockClick is removed
-		LEFT_CLICK = 0,
-		MIDDLE_CLICK = 1,
-		RIGHT_CLICK = 2;
+	var MODULE_CLASS_SELECTOR = '.module';
 
 	var globalConfig = {}, // Global configuration
 		modules = {},      // Information about each registered module by moduleName
@@ -66,7 +60,7 @@ Box.Application = (function() {
 	// Supported events for modules
 	var eventTypes = ['click', 'mouseover', 'mouseout', 'mousedown', 'mouseup',
 			'mouseenter', 'mouseleave', 'keydown', 'keyup', 'submit', 'change',
-			'contextmenu'];
+			'contextmenu', 'dblclick'];
 
 	/**
 	 * Reset all state to its default values
@@ -251,38 +245,21 @@ Box.Application = (function() {
 	}
 
 	/**
-	 * Determines when to block click events
-	 * @param {Event} event jQuery event object
-	 * @returns {boolean} True if event should not be handled and stopped from propagating
-	 * @private
+	 * Finds the closest ancestor that of an element that has a data-type
+	 * attribute.
+	 * @param {HTMLElement} element The element to start searching from.
+	 * @returns {HTMLElement} The matching element or null if not found.
 	 */
-	// @TODO(nzakas): See if we can remove this
-	function blockClick(event) {
+	function getNearestTypeElement(element) {
+		var $element = $(element),
+			found = $element.is('[data-type]');
 
-		if ( // only continue if left click or middle click
-			(event.button != LEFT_CLICK && event.button != MIDDLE_CLICK) ||
-				// prevent default behavior and propagation when element is disabled or ignoring clicks
-				($(event.target).hasClass('disabled') || $(event.target).hasClass('ignore_click'))) {
-			return true;
-		}
+		while (!found && $element.length && !$element.hasClass('module')) {
+			$element = $element.parent();
+			found = $element.is('[data-type]');
+		}   
 
-		return false;
-	}
-
-	/**
-	 * Determines when to let the default action for clicks task place. In
-	 * other words, this determines if the browser should do what it normally
-	 * does as a reaction to the click as if the Box JS isn't present. Weird?
-	 * Yes. We need to fix this.
-	 * @param {Event} event jQuery event object
-	 * @returns {boolean} True if click event should not be handled by client code
-	 * @private
-	 */
-	// @TODO(nzakas): See if we can remove this
-	function passThroughClick(event) {
-
-		// run the default (native) behavior, such as following the href, and ignore any JavaScript click handlers
-		return $(event.target).hasClass('ignore_click_handler');
+		return found ? $element[0] : null;
 	}
 
 	/**
@@ -296,20 +273,8 @@ Box.Application = (function() {
 	function bindEventType(element, type, handlers) {
 		var eventHandler = function(event) {
 
-			var dom = getService('dom'),
-				targetElement = dom.getNearestTypeElement(event.target),
-				elementType = dom.getData(targetElement, 'type');
-
-			// @TODO(nzakas): This stuff WILL be removed when we can.
-			if (type == 'click') {
-				if (blockClick(event)) {
-					return false;
-				}
-
-				if (passThroughClick(event)) {
-					return true;
-				}
-			}
+			var targetElement = getNearestTypeElement(event.target),
+				elementType = targetElement ? targetElement.getAttribute('data-type') : '';
 
 			for (var i = 0; i < handlers.length; i++) {
 				handlers[i](event, targetElement, elementType);
