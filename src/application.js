@@ -1,0 +1,760 @@
+/**
+ * @fileoverview Contains the main application object that is the heart of the
+ * 		JavaScript architecture.
+ * @author whuang
+ * @author nzakas
+ */
+
+/*global Box, $, document, window*/
+/*jshint loopfunc: true */
+
+/**
+ * The core application object where components are registered and managed
+ * @mixes Box.EventTarget
+ * @namespace
+ */
+Box.Application = (function() {
+
+	'use strict';
+
+	//--------------------------------------------------------------------------
+	// Virtual Types
+	//--------------------------------------------------------------------------
+
+	/**
+	 * An object representing information about a module.
+	 * @typedef {Object} Box.Application~ModuleData
+	 * @property {Function} creator The function that creates an instance of this module.
+	 * @property {int} counter The number of module instances.
+	 */
+
+	/**
+	 * An object representing information about a module instance.
+	 * @typedef {Object} Box.Application~ModuleInstanceData
+	 * @property {string} moduleName The name of the module.
+	 * @property {Box.Application~ModuleInstance} instance The module instance.
+	 * @property {Box.Context} context The context object for the module.
+	 * @property {HTMLElement} element The DOM element associated with the module.
+	 * @property {Object} eventHandlers Handler callback functions by event type.
+	 */
+
+	/**
+	 * A module object.
+	 * @typedef {Object} Box.Application~Module
+	 */
+
+	//--------------------------------------------------------------------------
+	// Private
+	//--------------------------------------------------------------------------
+
+	var MODULE_CLASS_SELECTOR = '.module',
+
+		// Mouse Button Codes
+		// @TODO(nzakas) 2013-06-11: Remove when blockClick is removed
+		LEFT_CLICK = 0,
+		MIDDLE_CLICK = 1,
+		RIGHT_CLICK = 2;
+
+	var globalConfig = {}, // Global configuration
+		modules = {},      // Information about each registered module by moduleName
+		services = {},     // Information about each registered service by serviceName
+		behaviors = {},    // Information about each registered behavior by behaviorName
+		instances = {},    // Module instances keyed by DOM element id
+
+		application = new Box.EventTarget();	// base object for application
+
+	// Supported events for modules
+	var eventTypes = ['click', 'mouseover', 'mouseout', 'mousedown', 'mouseup',
+			'mouseenter', 'mouseleave', 'keydown', 'keyup', 'submit', 'change',
+			'contextmenu'];
+
+	/**
+	 * Reset all state to its default values
+	 * @returns {void}
+	 * @private
+	 */
+	function reset() {
+		globalConfig = {};
+		modules = {};
+		services = {};
+		behaviors = {};
+		instances = {};
+	}
+
+	/**
+	 * Signals that an error has occurred. If in development mode, an error
+	 * is thrown. If in production mode, an event is fired.
+	 * @param {String} message The error message.
+	 * @param {Error} [exception] The exception object to use.
+	 * @returns {void}
+	 * @private
+	 */
+	function error(message, exception) {
+
+		// prepend T3 details to message
+		if (exception) {
+			exception.name = message + ' - ' + exception.name;
+		} else {
+			exception = new Error(message);
+		}
+
+		if (globalConfig.debug) {
+			throw exception;
+		} else {
+			application.fire('error', {
+				message: message,
+				exception: exception
+			});
+		}
+	}
+
+	/**
+	 * Wraps all methods on an object with try-catch so that objects don't need
+	 * to worry about trapping their own errors. When an error occurs, the
+	 * error event is fired with the error information.
+	 * @see http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/
+	 * @param {Object} object Any object whose public methods should be wrapped.
+	 * @param {string} objectName The name that should be reported for the object
+	 * 		when an error occurs.
+	 * @returns {void}
+	 * @private
+	 */
+	function captureObjectErrors(object, objectName){
+
+		var propertyName,
+			propertyValue;
+
+		for (propertyName in object){
+			propertyValue = object[propertyName];
+
+			// only do this for methods, be sure to check before making changes!
+			if (typeof propertyValue === 'function'){
+
+				/*
+				 * This creates a new function that wraps the original function
+				 * in a try-catch. The outer function executes immediately with
+				 * the name and actual method passed in as values. This allows
+				 * us to create a function with specific information even though
+				 * it's inside of a loop.
+				 */
+				object[propertyName] = (function(methodName, method){
+					return function(){
+						try {
+							return method.apply(this, arguments);
+						} catch (ex) {
+							error(objectName + '.' + methodName + '()', ex);
+						}
+					};
+
+				}(propertyName, propertyValue));
+			}
+		}
+	}
+
+	/**
+	 * Returns the name of the module associated with a DOM element
+	 * @param {HTMLElement} element DOM element associated with the module
+	 * @returns {string} Name of the module (empty if not a module)
+	 * @private
+	 */
+	function getModuleName(element) {
+		var moduleDeclaration = $(element).data('module');
+
+		if (moduleDeclaration) {
+			return moduleDeclaration.split(' ')[0];
+		}
+		return '';
+	}
+
+	/**
+	 * Returns whether the module associated with a DOM element should not be started automatically
+	 * @param {HTMLElement} element DOM element associated with the module
+	 * @returns {boolean} True if module is declared to be deferred (false if not a module)
+	 * @private
+	 */
+	function isModuleDeferred(element) {
+		var moduleDeclaration = $(element).data('module');
+
+		if (moduleDeclaration) {
+			return ($.inArray('deferred', moduleDeclaration.split(' ')) !== -1);
+		}
+		return false;
+	}
+
+	/**
+	 * Calls a method on an object if it exists
+	 * @param {Box.Application~ModuleInstance} instance Module object to call the method on.
+	 * @param {string} method Name of method
+	 * @param {...*} [args] Any additional arguments are passed as function parameters (Optional)
+	 * @returns {void}
+	 * @private
+	 */
+	function callModuleMethod(instance, method) {
+		if (typeof instance[method] === 'function') {
+			// Getting the rest of the parameters (the ones other than instance and method)
+			instance[method].apply(instance, Array.prototype.slice.call(arguments, 2));
+		}
+	}
+
+	/**
+	 * Returns the requested service
+	 * @param {string} serviceName The name of the service to retrieve.
+	 * @returns {!Object} An object if the service is found or null if not.
+	 * @private
+	 */
+	function getService(serviceName) {
+		var serviceData = services[serviceName];
+
+		if (serviceData) {
+			if (!serviceData.instance) {
+				serviceData.instance = serviceData.creator(application);
+			}
+
+			return serviceData.instance;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets the behaviors associated with a particular module
+	 * @param {Box.Application~ModuleInstanceData} instanceData Module with behaviors
+	 * @returns {Array} Array of behavior instances
+	 * @private
+	 */
+	function getBehaviors(instanceData) {
+		var i,
+			behaviorNames,
+			behaviorData,
+			behaviorInstances = [],
+			moduleBehaviorInstances;
+
+		behaviorNames = instanceData.instance.behaviors || [];
+		for (i = 0; i < behaviorNames.length; i++) {
+			if (!('behaviorInstances' in instanceData)) {
+				instanceData.behaviorInstances = {};
+			}
+			moduleBehaviorInstances = instanceData.behaviorInstances;
+			behaviorData = behaviors[behaviorNames[i]];
+
+			if (behaviorData) {
+				if (!moduleBehaviorInstances[behaviorNames[i]]) {
+					moduleBehaviorInstances[behaviorNames[i]] = behaviorData.creator(instanceData.context);
+				}
+				behaviorInstances.push(moduleBehaviorInstances[behaviorNames[i]]);
+			} else {
+				error('Behavior "' + behaviorNames[i] + '" not found');
+			}
+		}
+
+		return behaviorInstances;
+	}
+
+	/**
+	 * Determines when to block click events
+	 * @param {Event} event jQuery event object
+	 * @returns {boolean} True if event should not be handled and stopped from propagating
+	 * @private
+	 */
+	// @TODO(nzakas): See if we can remove this
+	function blockClick(event) {
+
+		if ( // only continue if left click or middle click
+			(event.button != LEFT_CLICK && event.button != MIDDLE_CLICK) ||
+				// prevent default behavior and propagation when element is disabled or ignoring clicks
+				($(event.target).hasClass('disabled') || $(event.target).hasClass('ignore_click'))) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Determines when to let the default action for clicks task place. In
+	 * other words, this determines if the browser should do what it normally
+	 * does as a reaction to the click as if the Box JS isn't present. Weird?
+	 * Yes. We need to fix this.
+	 * @param {Event} event jQuery event object
+	 * @returns {boolean} True if click event should not be handled by client code
+	 * @private
+	 */
+	// @TODO(nzakas): See if we can remove this
+	function passThroughClick(event) {
+
+		// run the default (native) behavior, such as following the href, and ignore any JavaScript click handlers
+		return $(event.target).hasClass('ignore_click_handler');
+	}
+
+	/**
+	 * Binds a user event to a DOM element with the given handler
+	 * @param {HTMLElement} element DOM element to bind the event to
+	 * @param {string} type Event type (click, mouseover, ...)
+	 * @param {Function[]} handlers Array of event callbacks to be called in that order
+	 * @returns {void}
+	 * @private
+	 */
+	function bindEventType(element, type, handlers) {
+		var eventHandler = function(event) {
+
+			var dom = getService('dom'),
+				targetElement = dom.getNearestTypeElement(event.target),
+				elementType = dom.getData(targetElement, 'type');
+
+			// @TODO(nzakas): This stuff WILL be removed when we can.
+			if (type == 'click') {
+				if (blockClick(event)) {
+					return false;
+				}
+
+				if (passThroughClick(event)) {
+					return true;
+				}
+			}
+
+			for (var i = 0; i < handlers.length; i++) {
+				handlers[i](event, targetElement, elementType);
+			}
+
+			return true;
+		};
+
+		$(element).on(type, eventHandler);
+
+		return eventHandler;
+	}
+
+	/**
+	 * Binds the user events listed in the module to its toplevel element
+	 * @param {Box.Application~ModuleInstanceData} instanceData Events will be bound to the module defined in the Instance object
+	 * @returns {void}
+	 * @private
+	 */
+	function bindEventListeners(instanceData) {
+		var i,
+			j,
+			type,
+			eventHandlerName,
+			eventHandlerFunctions,
+			behaviors = getBehaviors(instanceData);
+
+		for (i = 0; i < eventTypes.length; i++) {
+			eventHandlerFunctions = [];
+
+			// @REVIEW(jengler): Breakout into its own function: bindEventListener()  This will make that function
+			// easier to test and simplifies this one to just being a loop over it. This also always for easier
+			// comparison between the binding and unbinding actions (to ensure they are complimentary).
+			type = eventTypes[i];
+			eventHandlerName = 'on' + type;
+
+			// Module's event handler gets called first
+			if (instanceData.instance[eventHandlerName]) {
+				eventHandlerFunctions.push($.proxy(instanceData.instance[eventHandlerName], instanceData.instance));
+			}
+
+			// And then all of its behaviors in the order they were declared
+			for (j = 0; j < behaviors.length; j++) {
+				if (behaviors[j][eventHandlerName]) {
+					eventHandlerFunctions.push($.proxy(behaviors[j][eventHandlerName], behaviors[j]));
+				}
+			}
+
+			if (eventHandlerFunctions.length) {
+				instanceData.eventHandlers[type] = bindEventType(instanceData.element, type, eventHandlerFunctions);
+			}
+		}
+	}
+
+	/**
+	 * Unbinds the user events listed in the module
+	 * @param {Box.Application~ModuleInstanceData} instanceData Events will be unbound from the module defined in the Instance object
+	 * @returns {void}
+	 * @private
+	 */
+	function unbindEventListeners(instanceData) {
+		for (var type in instanceData.eventHandlers) {
+			$(instanceData.element).off(type, instanceData.eventHandlers[type]);
+		}
+
+		instanceData.eventHandlers = {};
+	}
+
+	/**
+	 * Gets the module instance associated with a DOM element
+	 * @param {HTMLElement} element DOM element associated with module
+	 * @returns {Box.Application~ModuleInstance} Instance object of the module (undefined if not found)
+	 * @private
+	 */
+	function getInstanceDataByElement(element) {
+		return instances[element.id];
+	}
+
+	//--------------------------------------------------------------------------
+	// Public
+	//--------------------------------------------------------------------------
+
+	/** @lends Box.Application */
+	return $.extend(application, {
+
+		//----------------------------------------------------------------------
+		// Application Lifecycle
+		//----------------------------------------------------------------------
+
+		/**
+		 * Initializes the application
+		 * @param {Object} [params] Configuration object
+		 * @returns {void}
+		 */
+		init: function(params) {
+			$.extend(globalConfig, params || {});
+
+			this.startAll(document.body);
+
+			this.fire('init');
+		},
+
+		/**
+		 * Stops all modules and clears all saved state
+		 * @returns {void}
+		 */
+		destroy: function() {
+			this.stopAll(document.body);
+
+			reset();
+		},
+
+		//----------------------------------------------------------------------
+		// Module Lifecycle
+		//----------------------------------------------------------------------
+
+		/**
+		 * Determines if a module represented by the HTML element is started.
+		 * If the element doesn't have a data-module attribute, this method
+		 * always returns false.
+		 * @param {HTMLElement} element The element that represents a module.
+		 * @returns {Boolean} True if the module is started, false if not.
+		 */
+		isStarted: function(element) {
+			var instanceData = getInstanceDataByElement(element);
+			return (typeof instanceData === 'object');
+		},
+
+		/**
+		 * Begins the lifecycle of a module (registers and binds listeners)
+		 * @param {HTMLElement} element DOM element associated with module to be started
+		 * @returns {void}
+		 */
+		start: function(element) {
+			var moduleName = getModuleName(element),
+				deferred = isModuleDeferred(element),
+				moduleData = modules[moduleName],
+				instanceData,
+				context,
+				module;
+
+			if (!moduleData) {
+				error('Module type "' + moduleName + '" is not defined.');
+			}
+
+			if (!this.isStarted(element) && !deferred) {
+				// Auto-assign module id to element
+				if (!element.id) {
+					// @REVIEW(jengler): Low-level, put in function
+					element.id = 'mod-' + moduleName + '-' + moduleData.counter;
+				}
+
+				moduleData.counter++;
+
+				context = new Box.Context(this, moduleName, element.id);
+
+				module = moduleData.creator(context);
+
+				// Prevent errors from showing the browser, fire event instead
+				if (!globalConfig.debug) {
+					captureObjectErrors(module, moduleName);
+				}
+
+				instanceData = {
+					moduleName: moduleName,
+					instance: module,
+					context: context,
+					element: element,
+					eventHandlers: {}
+				};
+
+				bindEventListeners(instanceData);
+
+				instances[element.id] = instanceData;
+
+				callModuleMethod(instanceData.instance, 'init');
+
+				var behaviors = getBehaviors(instanceData),
+					behaviorInstance;
+
+				for (var i = 0, len = behaviors.length; i < len; i++) {
+					behaviorInstance = behaviors[i];
+					callModuleMethod(behaviorInstance, 'init');
+				}
+
+			}
+		},
+
+		/**
+		 * Ends the lifecycle of a module (unregisters and unbinds listeners)
+		 * @param {HTMLElement} element DOM element associated with module to be stopped
+		 * @returns {void}
+		 */
+		stop: function(element) {
+			var instanceData = getInstanceDataByElement(element),
+				moduleName,
+				moduleData;
+
+			if (!instanceData) {
+
+				if (globalConfig.debug) {
+					error('Unable to stop module associated with element: ' + element.id);
+				}
+
+			} else {
+
+				moduleName = instanceData.moduleName;
+				moduleData = modules[moduleName];
+
+				unbindEventListeners(instanceData);
+
+				if (globalConfig.debug) {
+					$.log(moduleName + ' destroy()');
+				}
+
+				// Call these in reverse order
+				var behaviors = getBehaviors(instanceData);
+				var behaviorInstance;
+				for (var i = behaviors.length - 1; i >= 0; i--) {
+					behaviorInstance = behaviors[i];
+					callModuleMethod(behaviorInstance, 'destroy');
+				}
+
+				callModuleMethod(instanceData.instance, 'destroy');
+
+				delete instances[element.id];
+			}
+		},
+
+		/**
+		 * Starts all modules contained within an element
+		 * @param {HTMLElement} root DOM element which contains modules
+		 * @returns {void}
+		 */
+		startAll: function(root) {
+			var me = this,
+				$root = $(root);
+
+			$root.find(MODULE_CLASS_SELECTOR).each(function(idx, element) {
+				me.start(element);
+			});
+		},
+
+		/**
+		 * Stops all modules contained within an element
+		 * @param {HTMLElement} root DOM element which contains modules
+		 * @returns {void}
+		 */
+		stopAll: function(root) {
+			var me = this,
+				$root = $(root);
+
+			$root.find(MODULE_CLASS_SELECTOR).each(function(idx, element) {
+				me.stop(element);
+			});
+		},
+
+		//----------------------------------------------------------------------
+		// Module-Related
+		//----------------------------------------------------------------------
+
+		/**
+		 * Registers a new module
+		 * @param {string} moduleName Unique module identifier
+		 * @param {Function} creator Factory function used to generate the module
+		 * @returns {void}
+		 */
+		addModule: function(moduleName, creator) {
+			// @REVIEW(jengler): Validate moduleName. Otherwise, a module could theoretically register itself as the
+			// module not found module. (With a name of '')
+			// @REVIEW(jengler): Duplicate includes of modules/services are not handled.
+			modules[moduleName] = {
+				creator: creator,
+				counter: 1 // increments for each new instance
+			};
+		},
+
+		/**
+		 * Returns any configuration information that was output into the page
+		 * for this instance of the module.
+		 * @param {HTMLElement} element The HTML element associated with a module.
+		 * @param {string} [name] Specific config parameter
+		 * @returns {any} config value or the entire configuration JSON object
+		 *                if no name is specified (null if either not found)
+		 */
+		getModuleConfig: function(element, name) {
+
+			var instanceData = getInstanceDataByElement(element),
+				configElement;
+
+			if (instanceData) {
+
+				if (!instanceData.config) {
+					// <script type="text/x-config"> is used to store JSON data
+					configElement = $(element).find('script[type="text/x-config"]')[0];
+
+					// <script> tag supports .text property
+					if (configElement) {
+						instanceData.config = $.parseJSON(configElement.text);
+					}
+				}
+
+				if (!instanceData.config) {
+					return null;
+				} else if (typeof name === 'undefined') {
+					return instanceData.config;
+				} else if (name in instanceData.config) {
+					return instanceData.config[name];
+				} else {
+					return null;
+				}
+			}
+
+			return null;
+		},
+
+		//----------------------------------------------------------------------
+		// Service-Related
+		//----------------------------------------------------------------------
+
+		/**
+		 * Registers a new service
+		 * @param {string} serviceName Unique service identifier
+		 * @param {Function} creator Factory function used to generate the service
+		 * @returns {void}
+		 */
+		addService: function(serviceName, creator) {
+			services[serviceName] = {
+				creator: creator,
+				instance: null
+			};
+		},
+
+		// @TODO(nzakas) 2013-06-11: See if the method definition can be moved back here
+		/**
+		 * Returns the requested service
+		 * @param {string} serviceName The name of the service to retrieve.
+		 * @returns {!Object} An object if the service is found or null if not.
+		 */
+		getService: getService,
+
+
+		//----------------------------------------------------------------------
+		// Behavior-Related
+		//----------------------------------------------------------------------
+
+		/**
+		 * Registers a new behavior
+		 * @param {string} behaviorName Unique behavior identifier
+		 * @param {Function} creator Factory function used to generate the behavior
+		 * @returns {void}
+		 */
+		addBehavior: function(behaviorName, creator) {
+			behaviors[behaviorName] = {
+				creator: creator,
+				instance: null
+			};
+		},
+
+		//----------------------------------------------------------------------
+		// Messaging
+		//----------------------------------------------------------------------
+
+		/**
+		 * Broadcasts a message to all registered listeners
+		 * @param {string} name Name of the message
+		 * @param {any} [data] Custom parameters for the message
+		 * @returns {void}
+		 */
+		broadcast: function(name, data) {
+			var i,
+				id,
+				instanceData,
+				behaviorInstance,
+				behaviors,
+				messageHandlers;
+
+			for (id in instances) {
+				messageHandlers = [];
+				instanceData = instances[id];
+
+				// Module message handler is called first
+				if ($.inArray(name, instanceData.instance.messages || []) !== -1) {
+					messageHandlers.push($.proxy(instanceData.instance.onmessage, instanceData.instance));
+				}
+
+				// And then any message handlers defined in module's behaviors
+				behaviors = getBehaviors(instanceData);
+				for (i = 0; i < behaviors.length; i++) {
+					behaviorInstance = behaviors[i];
+
+					if ($.inArray(name, behaviorInstance.messages || []) !== -1) {
+						messageHandlers.push($.proxy(behaviorInstance.onmessage, behaviorInstance));
+					}
+				}
+
+				for (i = 0; i < messageHandlers.length; i++) {
+					messageHandlers[i](name, data);
+				}
+			}
+		},
+
+		//----------------------------------------------------------------------
+		// Global Configuration
+		//----------------------------------------------------------------------
+
+		/**
+		 * Returns global configuration data
+		 * @param {string} [name] Specific config parameter
+		 * @returns {any} config value or the entire configuration JSON object
+		 *                if no name is specified (null if neither not found)
+		 */
+		getGlobalConfig: function(name) {
+			if (typeof name === 'undefined') {
+				return globalConfig;
+			} else if (name in globalConfig) {
+				return globalConfig[name];
+			} else {
+				return null;
+			}
+		},
+
+		//----------------------------------------------------------------------
+		// Passthrough Methods
+		//----------------------------------------------------------------------
+
+		// @TODO(nzakas): Need to get this out of this file somehow
+
+		/**
+		 * Performs URL navigation against a whitelist of patterns. If the pattern
+		 * is matched, then in-page navigation is used. If the pattern is not
+		 * matched, then a regular navigation happens. This passes through to
+		 * the navigation service for the actual implementation.
+		 * @param {string} url The URL to change to.
+		 * @param {Object} [state] Additional state information to store for
+		 * 		the URL change.
+		 * @param {Object} [params] Legacy params for box.load()
+		 * @returns {void}
+		 */
+		navigate: function(url, state, params) {
+			var navigation = this.getService('navigation');
+			return navigation.navigate.apply(navigation, arguments);
+		}
+
+
+	});
+
+}());
