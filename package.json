@@ -1,0 +1,12 @@
+{
+	"name": "T3",
+	"description": "T3 Javascript Framework",
+	"version": "0.1.0",
+	"author": "Box (https://www.box.com/)",
+	"private": true,
+	"dependencies": {
+		"grunt": "~0.4.1",
+		"grunt-beep": "~0.3.0",
+		"grunt-contrib-concat": "~0.3.0"
+	}
+}
