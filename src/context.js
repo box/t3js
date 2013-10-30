@@ -4,7 +4,7 @@
  * @author nzakas
  */
 
-/*global Box*/
+/*global Box, $*/
 
 /**
  * The object type that modules use to interact with the environment. Used
@@ -72,8 +72,7 @@ Box.Context = function(application, moduleName, moduleId) {
 	 * @returns {HTMLElement} The element representing the module.
 	 */
 	this.getElement = function() {
-		var dom = this.getService('dom');
-		return dom.query('#' + moduleId);
+		return $('#' + moduleId)[0];
 	};
 
 };
