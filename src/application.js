@@ -486,10 +486,6 @@ Box.Application = (function() {
 
 				unbindEventListeners(instanceData);
 
-				if (globalConfig.debug) {
-					$.log(moduleName + ' destroy()');
-				}
-
 				// Call these in reverse order
 				var behaviors = getBehaviors(instanceData);
 				var behaviorInstance;

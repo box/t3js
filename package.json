@@ -6,7 +6,8 @@
 	"private": true,
 	"dependencies": {
 		"grunt": "~0.4.1",
-		"grunt-beep": "~0.3.0",
-		"grunt-contrib-concat": "~0.3.0"
+		"grunt-contrib-concat": "~0.3.0",
+		"grunt-contrib-connect": "~0.5.0",
+		"grunt-contrib-qunit": "~0.3.0"
 	}
 }

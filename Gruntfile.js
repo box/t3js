@@ -11,17 +11,34 @@ module.exports = function( grunt ) {
 				src: ['src/box.js', 'src/event-target.js', 'src/context.js', 'src/application.js'],
 				dest: 'dist/t3.js'
 			}
+		},
+		connect: {
+			server: {
+				options: {
+					port: 9001,
+					base: '.'
+				}
+			}
+		},
+		qunit: {
+			all: {
+				options: {
+					urls: [
+						'http://127.0.0.1:9001/test/application.html',
+						'http://127.0.0.1:9001/test/context.html',
+						'http://127.0.0.1:9001/test/event-target.html'
+					]
+				}
+			}
 		}
 	});
 
-	grunt.loadNpmTasks('grunt-beep');
+
 	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-connect');
+	grunt.loadNpmTasks('grunt-contrib-qunit');
 
-	//grunt.loadTasks( 'build/tasks' );
 
-	// Short list as a high frequency watch task
-	//grunt.registerTask( 'dev', [ 'build:*:*', 'jshint' ] );
-
-	// Default grunt
-	grunt.registerTask( 'default', [ 'concat', 'beep' ] );
+	grunt.registerTask( 'default', [ 'concat' ] );
+	grunt.registerTask( 'test', [ 'connect', 'qunit' ] );
 };
