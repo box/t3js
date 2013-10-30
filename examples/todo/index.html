@@ -40,7 +40,7 @@
 					</li>
 				</ul>
 				<!-- Hidden if no completed items are left ↓ -->
-				<button id="clear-completed">Clear completed (1)</button>
+				<button id="clear-completed" data-type="clear-btn">Clear completed (1)</button>
 			</footer>
 		</section>
 		<footer id="info">
@@ -64,12 +64,14 @@
 				<input class="edit" value="Create a TodoMVC template">
 			</li>
 			<li class="todo-template">
-				<div class="view">
-					<input class="toggle" type="checkbox" data-type="complete-btn">
-					<label data-type="todo-label">Rule the web</label>
-					<button class="destroy" data-type="destroy-btn"></button>
-				</div>
-				<input class="edit" value="Rule the web">
+				<form data-type="edit-form">
+					<div class="view">
+						<input class="toggle" type="checkbox" data-type="complete-btn">
+						<label data-type="todo-label"></label>
+						<button class="destroy" data-type="destroy-btn"></button>
+					</div>
+					<input class="edit" name="title">
+				</form>
 			</li>
 		</ul>
 
@@ -85,6 +87,11 @@
 
 		<!-- App scripts -->
 		<script src="js/app.js"></script>
+		<script>
+			Box.Application.init({
+				debug: true
+			});
+		</script>
 
 	</body>
 </html>

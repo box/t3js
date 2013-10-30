@@ -1,10 +1,10 @@
 Box.Application.addModule('todo', function(context) {
 
-	var $ = document.querySelectorAll.bind(document),
-		$$ = document.querySelector.bind(document);
-
-	var todoTemplate = $$('#templates .todo-template'),
-		todoList = $$('#todo-list');
+	var element,
+		todoTemplate,
+		todoList,
+		$,
+		$$;
 
 	function setEmptyState() {
 		$$('#main').classList.add('hidden');
@@ -16,10 +16,37 @@ Box.Application.addModule('todo', function(context) {
 		$$('#footer').classList.remove('hidden');
 	}
 
+	function updateCounts() {
+		var children = todoList.children,
+			numCompleted = 0;
+
+		for (var i = 0; i < children.length; i++) {
+			if (children[i].classList.contains('completed')) {
+				numCompleted++;
+			}
+		}
+
+		var itemsLeft = children.length - numCompleted;
+
+		$$('#todo-count').innerHTML = '<strong>' + itemsLeft + '</strong> ' + (itemsLeft != 1 ? 'items' : 'item') + ' left';
+
+		if (numCompleted != 0) {
+			$$('#clear-completed').innerHTML = 'Clear completed (' + numCompleted + ')';
+			$$('#clear-completed').classList.remove('hidden');
+		} else {
+			$$('#clear-completed').classList.add('hidden');
+		}
+	}
+
 	return {
 		messages: [],
 
 		init: function() {
+			element = context.getElement();
+			$ = element.querySelectorAll.bind(element);
+			$$ = element.querySelector.bind(element);
+			todoTemplate = document.querySelector('#templates .todo-template');
+			todoList = document.querySelector('#todo-list');
 			setEmptyState();
 		},
 
@@ -42,7 +69,12 @@ Box.Application.addModule('todo', function(context) {
 					case 'delete-btn':
 						this.removeTodo(element);
 						break;
+					case 'clear-btn':
+						this.clearCompleted(element);
+						break;
 				}
+
+				updateCounts();
 			}
 		},
 
@@ -53,15 +85,25 @@ Box.Application.addModule('todo', function(context) {
 		},
 
 		onsubmit: function(event, element, elementType) {
-			if (element && elementType == 'new-todo-form') {
+			var form = element,
+				input;
+
+			if (element) {
+				switch (elementType) {
+					case 'new-todo-form':
+						input = form.elements['new-todo'];
+						this.addTodo(input.value);
+						input.value = '';
+						updateCounts();
+						break;
+
+					case 'edit-form':
+						input = form.elements['title'];
+						this.modifyTodo(form, input.value);
+						break;
+				}
+
 				event.preventDefault();
-
-				var form = element,
-					input = form.elements['new-todo'];
-
-				this.addTodo(input.value);
-
-				input.value = '';
 			}
 		},
 
@@ -78,6 +120,12 @@ Box.Application.addModule('todo', function(context) {
 			todoList.appendChild(node);
 
 			setNonEmptyState();
+		},
+
+		modifyTodo: function(todoEl, text) {
+			todoEl.querySelector('label').innerHTML = text;
+			todoEl.querySelector('input.edit').value = text;
+			jQuery(todoEl).closest('li').removeClass('editing');
 		},
 
 		removeTodo: function(element) {
@@ -98,9 +146,20 @@ Box.Application.addModule('todo', function(context) {
 			jQuery(element).closest('li').removeClass('completed');
 		},
 
+		clearCompleted: function() {
+			var children = todoList.children,
+				nodesToRemove = [];
+
+			for (var i = 0; i < children.length; i++) {
+				if (children[i].classList.contains('completed')) {
+					nodesToRemove.push(children[i]);
+				}
+			}
+
+			for (var j = 0; j < nodesToRemove.length; j++) {
+				todoList.removeChild(nodesToRemove[j]);
+			}
+		}
 	};
 });
 
-Box.Application.init({
-	debug: true
-});
