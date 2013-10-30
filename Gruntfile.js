@@ -45,6 +45,14 @@ module.exports = function( grunt ) {
 				src: ['Gruntfile.js'],
 				jshintrc: '.jshintrc'
 			}
+		},
+		jsdoc : {
+			dist : {
+				src: ['src/**/*.js'],
+				options: {
+					destination: 'doc'
+				}
+			}
 		}
 	});
 
@@ -53,8 +61,9 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks('grunt-contrib-connect');
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-jsdoc');
 
 
 	grunt.registerTask('test', ['connect', 'qunit']);
-	grunt.registerTask('default', ['jshint', 'test', 'concat']);
+	grunt.registerTask('default', ['jshint', 'test', 'concat', 'jsdoc']);
 };
