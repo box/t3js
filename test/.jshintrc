@@ -1,0 +1,26 @@
+{
+	"camelcase":    true,
+	"curly":        true,
+	"immed":        true,
+	"noarg":        true,
+	"noempty":      true,
+	"nonew":        true,
+	"quotmark":     "single",
+	"undef":        true,
+	"unused":       true,
+	"eqeqeq":       true,
+	"globals": {
+		"window": false,
+		"QUnit": false,
+		"module": false,
+		"test": false,
+		"ok": false,
+		"equal": false,
+		"strictEqual": false,
+		"deepEqual": false,
+		"raises": false,
+		"sinon": false,
+		"Box": false,
+		"$": false
+	}
+}

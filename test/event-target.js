@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Tests for event-target
+ * @author Box
+ */
+
 module('Box.EventTarget', {
 
 	setup: function() {

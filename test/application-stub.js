@@ -1,8 +1,14 @@
+/**
+ * @fileoverview Fake application to use during testing
+ * @author Box
+ */
+
 if (!window.Box) {
-	Box = {};
+	window.Box = {};
 }
 
 (function() {
+
 	/**
 	 * When testing actual Application, it should be included after to overwrite this stub.
 	 * Also saved to a local 'application' variable for tests that overwrite the Box.Application global
@@ -69,7 +75,7 @@ if (!window.Box) {
 			},
 
 			// For code that uses services during initializing
-			getService: function(serviceName) {
+			getService: function() {
 				return null;
 			},
 

@@ -1,5 +1,11 @@
+/**
+ * @fileoverview Tests for application core
+ * @author Box
+ */
+
 Box.Context = function() {};
 
+/* jshint unused: false */
 QUnit.testDone(function(details) {
 	Box.Application.destroy();
 });
@@ -463,23 +469,6 @@ test('getService should return null when called for a non-existing service', fun
 
 });
 
-
-module('Passthrough Methods');
-
-
-test('Calling navigate() should pass through to navigation service when called', function() {
-
-	var url = 'http://example.com',
-		state = {},
-		params = {};
-
-	Box.Application.addService('navigation', this.stub().returns({
-		navigate: this.mock().withArgs(url, state, params)
-	}));
-
-	Box.Application.navigate(url, state, params);
-
-});
 
 module('Box.Application.getModuleConfig', {
 

@@ -1,11 +1,11 @@
 /**
  * @fileoverview Contains the main application object that is the heart of the
- * 		JavaScript architecture.
+ *               JavaScript architecture.
  * @author whuang
  * @author nzakas
  */
 
-/*global Box, $, document, window*/
+/*global Box, $, document*/
 /*jshint loopfunc: true */
 
 /**
@@ -109,7 +109,7 @@ Box.Application = (function() {
 	 * @see http://www.nczonline.net/blog/2009/04/28/javascript-error-handling-anti-pattern/
 	 * @param {Object} object Any object whose public methods should be wrapped.
 	 * @param {string} objectName The name that should be reported for the object
-	 * 		when an error occurs.
+	 *                            when an error occurs.
 	 * @returns {void}
 	 * @private
 	 */
@@ -691,30 +691,7 @@ Box.Application = (function() {
 			} else {
 				return null;
 			}
-		},
-
-		//----------------------------------------------------------------------
-		// Passthrough Methods
-		//----------------------------------------------------------------------
-
-		// @TODO(nzakas): Need to get this out of this file somehow
-
-		/**
-		 * Performs URL navigation against a whitelist of patterns. If the pattern
-		 * is matched, then in-page navigation is used. If the pattern is not
-		 * matched, then a regular navigation happens. This passes through to
-		 * the navigation service for the actual implementation.
-		 * @param {string} url The URL to change to.
-		 * @param {Object} [state] Additional state information to store for
-		 * 		the URL change.
-		 * @param {Object} [params] Legacy params for box.load()
-		 * @returns {void}
-		 */
-		navigate: function(url, state, params) {
-			var navigation = this.getService('navigation');
-			return navigation.navigate.apply(navigation, arguments);
 		}
-
 
 	});
 

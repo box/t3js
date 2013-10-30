@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Tests for module context
+ * @author Box
+ */
+
 module('Box.Context');
 
 test('broadcast() should pass through to application when called', function() {
@@ -46,22 +51,6 @@ test('getService() should pass through to application when called with service n
 	var context = new Box.Context(application);
 
 	equal(context.getService(serviceName), service, 'getService() should return correct service');
-
-});
-
-test('navigate() should pass through to application when called', function() {
-
-	var url = '/abc',
-		state = {foo: 1},
-		params = {bar: 2},
-		application = {
-			navigate: function() {}
-		};
-
-	this.mock(application).expects('navigate').withArgs(url, state, params);
-	var context = new Box.Context(application);
-
-	context.navigate(url, state, params);
 
 });
 

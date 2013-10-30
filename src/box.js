@@ -3,8 +3,10 @@
  * @author whuang
  */
 
+/*global window*/
+
 /**
  * The one global object for Box JavaScript.
  * @namespace
  */
-var Box = {};
+window.Box = {};

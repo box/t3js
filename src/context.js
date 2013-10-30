@@ -1,6 +1,6 @@
 /**
  * @fileoverview Contains the Context type which is used by modules to interact
- * 		with the environment.
+ *               with the environment.
  * @author nzakas
  */
 
@@ -74,19 +74,6 @@ Box.Context = function(application, moduleName, moduleId) {
 	this.getElement = function() {
 		var dom = this.getService('dom');
 		return dom.query('#' + moduleId);
-	};
-
-	/**
-	 * Passthrough method to application for navigate
-	 * @param {string} url The URL to change to. If not provided, new page state
-	 *                     should have already been set on Box_Nav
-	 * @param {Object} [state] Additional state information to store for
-	 * 		the URL change.
-	 * @param {Object} [params] Legacy params for box.load()
-	 * @returns {void}
-	 */
-	this.navigate = function(url, state, params) {
-		application.navigate(url, state, params);
 	};
 
 };

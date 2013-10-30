@@ -3,20 +3,17 @@ module.exports = function( grunt ) {
 	'use strict';
 
 	grunt.initConfig({
+		pkg: grunt.file.readJSON('package.json'),
 		concat: {
-			options: {
-				//separator: ';'
-			},
 			dist: {
 				src: ['src/box.js', 'src/event-target.js', 'src/context.js', 'src/application.js'],
-				dest: 'dist/t3.js'
+				dest: 'dist/t3-<%= pkg.version %>.js'
 			}
 		},
 		connect: {
 			server: {
 				options: {
-					port: 9001,
-					base: '.'
+					port: 9001
 				}
 			}
 		},
@@ -30,6 +27,24 @@ module.exports = function( grunt ) {
 					]
 				}
 			}
+		},
+		jshint: {
+			src: {
+				src: ['src/**/*.js'],
+				options: {
+					jshintrc: 'src/.jshintrc'
+				}
+			},
+			test: {
+				src: ['test/**/*.js'],
+				options: {
+					jshintrc: 'test/.jshintrc'
+				}
+			},
+			grunt: {
+				src: ['Gruntfile.js'],
+				jshintrc: '.jshintrc'
+			}
 		}
 	});
 
@@ -37,8 +52,9 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-connect');
 	grunt.loadNpmTasks('grunt-contrib-qunit');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 
 
-	grunt.registerTask( 'default', [ 'concat' ] );
-	grunt.registerTask( 'test', [ 'connect', 'qunit' ] );
+	grunt.registerTask('test', ['connect', 'qunit']);
+	grunt.registerTask('default', ['jshint', 'test', 'concat']);
 };

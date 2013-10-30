@@ -39,7 +39,7 @@
 		 * @returns {void}
 		 */
 		on: function(type, handler) {
-			if (typeof this._handlers[type] == "undefined") {
+			if (typeof this._handlers[type] === 'undefined') {
 				this._handlers[type] = [];
 			}
 
@@ -50,7 +50,7 @@
 		 * Fires an event with the given name and data.
 		 * @param type {string} The type of event to fire.
 		 * @param [data] {Object} An object with properties that should end up on
-		 * 		the event object for the given event.
+		 *                        the event object for the given event.
 		 * @returns {void}
 		 */
 		fire: function(type, data) {
@@ -58,7 +58,6 @@
 			var handlers,
 				i,
 				len,
-				property,
 				event = {
 					type: type,
 					data: data
