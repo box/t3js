@@ -1,11 +1,9 @@
 /**
  * @fileoverview Contains the main application object that is the heart of the
  *               JavaScript architecture.
- * @author whuang
- * @author nzakas
+ * @author Box
  */
 
-/*global Box, $, document*/
 /*jshint loopfunc: true */
 
 /**
@@ -305,9 +303,6 @@ Box.Application = (function() {
 		for (i = 0; i < eventTypes.length; i++) {
 			eventHandlerFunctions = [];
 
-			// @REVIEW(jengler): Breakout into its own function: bindEventListener()  This will make that function
-			// easier to test and simplifies this one to just being a loop over it. This also always for easier
-			// comparison between the binding and unbinding actions (to ensure they are complimentary).
 			type = eventTypes[i];
 			eventHandlerName = 'on' + type;
 
@@ -423,7 +418,6 @@ Box.Application = (function() {
 			if (!this.isStarted(element) && !deferred) {
 				// Auto-assign module id to element
 				if (!element.id) {
-					// @REVIEW(jengler): Low-level, put in function
 					element.id = 'mod-' + moduleName + '-' + moduleData.counter;
 				}
 
@@ -539,9 +533,6 @@ Box.Application = (function() {
 		 * @returns {void}
 		 */
 		addModule: function(moduleName, creator) {
-			// @REVIEW(jengler): Validate moduleName. Otherwise, a module could theoretically register itself as the
-			// module not found module. (With a name of '')
-			// @REVIEW(jengler): Duplicate includes of modules/services are not handled.
 			modules[moduleName] = {
 				creator: creator,
 				counter: 1 // increments for each new instance
@@ -604,7 +595,6 @@ Box.Application = (function() {
 			};
 		},
 
-		// @TODO(nzakas) 2013-06-11: See if the method definition can be moved back here
 		/**
 		 * Returns the requested service
 		 * @param {string} serviceName The name of the service to retrieve.

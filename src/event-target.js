@@ -2,10 +2,8 @@
  * @fileoverview Definition of a custom event type. This is used as a utility
  * throughout the framework whenever custom events are used. It is intended to
  * be inherited from, either through the prototype or via mixin.
- * @author nzakas
+ * @author Box
  */
-
-/*global Box*/
 
 (function() {
 

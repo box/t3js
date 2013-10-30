@@ -1,9 +1,7 @@
 /**
  * @fileoverview Base namespaces for Box JavaScript.
- * @author whuang
+ * @author Box
  */
-
-/*global window*/
 
 /**
  * The one global object for Box JavaScript.

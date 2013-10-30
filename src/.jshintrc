@@ -9,5 +9,11 @@
 	"undef":        true,
 	"unused":       true,
 	"strict":       true,
-	"eqeqeq":       true
+	"eqeqeq":       true,
+	"globals": {
+		"window": false,
+		"document": false,
+		"Box": false,
+		"$": false
+	}
 }

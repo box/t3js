@@ -1,10 +1,8 @@
 /**
  * @fileoverview Contains the Context type which is used by modules to interact
  *               with the environment.
- * @author nzakas
+ * @author Box
  */
-
-/*global Box, $*/
 
 /**
  * The object type that modules use to interact with the environment. Used

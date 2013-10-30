@@ -12,6 +12,7 @@
 	"globals": {
 		"window": false,
 		"document": false,
+
 		"QUnit": false,
 		"module": false,
 		"test": false,
@@ -21,6 +22,7 @@
 		"deepEqual": false,
 		"raises": false,
 		"sinon": false,
+
 		"Box": false,
 		"$": false
 	}
