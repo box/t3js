@@ -57,18 +57,13 @@ test('getService() should pass through to application when called with service n
 test('getConfig() should pass through module element and config name to application.getModuleConfig() when called', function() {
 
 	var config = {},
-		element = {},
+		element = document.querySelector('#mod-test1'),
 		application = {
-			getModuleConfig: function() {},
-
-			// stub out DOM service
-			getService: this.stub().returns({
-				query: this.stub().returns(element)
-			})
+			getModuleConfig: function() {}
 		};
 
 	this.mock(application).expects('getModuleConfig').withArgs(element, 'foo').returns(config);
-	var context = new Box.Context(application, 'test', 'test1');
+	var context = new Box.Context(application, 'test', 'mod-test1');
 
 	context.getConfig('foo');
 
@@ -81,7 +76,7 @@ test('getGlobalConfig() should pass through to application when called', functio
 	};
 
 	this.mock(application).expects('getGlobalConfig').withArgs('foo').returns('bar');
-	var context = new Box.Context(application, 'test', 'test1');
+	var context = new Box.Context(application, 'test', 'mod-test1');
 
 	equal(context.getGlobalConfig('foo'), 'bar', 'correct config value returned');
 

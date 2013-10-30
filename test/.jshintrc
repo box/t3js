@@ -11,6 +11,7 @@
 	"eqeqeq":       true,
 	"globals": {
 		"window": false,
+		"document": false,
 		"QUnit": false,
 		"module": false,
 		"test": false,
