@@ -257,13 +257,6 @@ test('onclick should be called when a click occurs inside of a started module', 
 		onclick: this.mock()
 	}));
 
-	Box.Application.addService('dom', this.stub().returns({
-		getNearestTypeElement: function() {
-		},
-		getData: function() {
-		}
-	}));
-
 	Box.Application.start(this.testModule);
 
 	$('#module-target').trigger({
@@ -291,13 +284,6 @@ test('onclick should be called on behaviors in correct order when defined', func
 		onclick: behavior2ClickSpy
 	}));
 
-	Box.Application.addService('dom', this.stub().returns({
-		getNearestTypeElement: function() {
-		},
-		getData: function() {
-		}
-	}));
-
 	Box.Application.start(this.testModule);
 
 	$('#module-target').trigger({
@@ -314,15 +300,6 @@ test('onclick should be called with the nearest type element and type when a cli
 
 	Box.Application.addModule('test', this.stub().returns({
 		onclick: this.mock().withArgs(sinon.match.any, $('#module-target')[0], $('#module-target').data('type'))
-	}));
-
-	Box.Application.addService('dom', this.stub().returns({
-		getNearestTypeElement: function() {
-			return $('#module-target')[0];
-		},
-		getData: function() {
-			return $('#module-target').data('type');
-		}
 	}));
 
 	Box.Application.start(this.testModule);

@@ -13,7 +13,7 @@ if (!window.Box) {
 	 * When testing actual Application, it should be included after to overwrite this stub.
 	 * Also saved to a local 'application' variable for tests that overwrite the Box.Application global
 	 */
-	var application = Box.Application = (function() {
+	Box.Application = (function() {
 
 		var modules = {},
 			services = {},
@@ -74,11 +74,6 @@ if (!window.Box) {
 				return null;
 			},
 
-			// For code that uses services during initializing
-			getService: function() {
-				return null;
-			},
-
 			on: function() {
 			}
 
@@ -87,46 +82,17 @@ if (!window.Box) {
 	}());
 
 
-	Box.TestV5 = function(globals) {
-		this.globals = globals || {};
-	};
-
-	Box.TestV5.prototype = {
-		get: function(name) {
-			var object = this.globals[name];
-
-			if (object && typeof object.get === 'function') {
-				object = object.get();
-			}
-
-			return object;
-		}
-	};
-
-	// Create a default, empty v5
-	Box.Application.addService('v5', function() {
-		return new Box.TestV5();
-	});
-
-
 	Box.TestServiceProvider = function(config) {
 		this.stubs = config || {};
 	};
 
+
 	Box.TestServiceProvider.prototype = {
 		getService: function(serviceName) {
-			var service,
-				preRegisteredService;
+			var service = this.stubs[serviceName];
 
-			service = this.stubs[serviceName];
 			if (service) {
 				return service;
-			}
-
-			// Return services available by default in tests (eg. dummy v5, dom)
-			preRegisteredService = application.getServiceForTest(serviceName, this);
-			if (preRegisteredService) {
-				return preRegisteredService;
 			}
 
 			return null;
