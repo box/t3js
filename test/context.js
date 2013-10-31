@@ -3,7 +3,13 @@
  * @author Box
  */
 
-module('Box.Context');
+module('Box.Context', {
+
+	setup: function() {
+		this.element = document.querySelector('#mod-test1');
+	}
+
+});
 
 test('broadcast() should pass through to application when called', function() {
 
@@ -14,7 +20,7 @@ test('broadcast() should pass through to application when called', function() {
 	};
 
 	this.mock(application).expects('broadcast').withArgs(message);
-	var context = new Box.Context(application);
+	var context = new Box.Context(application, this.element);
 
 	context.broadcast(message);
 
@@ -31,7 +37,7 @@ test('broadcast() should pass through to application when called with arguments'
 	};
 
 	this.mock(application).expects('broadcast').withArgs(message, data);
-	var context = new Box.Context(application);
+	var context = new Box.Context(application, this.element);
 
 	context.broadcast(message, data);
 
@@ -48,7 +54,7 @@ test('getService() should pass through to application when called with service n
 	};
 
 	this.mock(application).expects('getService').withArgs(serviceName).returns(service);
-	var context = new Box.Context(application);
+	var context = new Box.Context(application, this.element);
 
 	equal(context.getService(serviceName), service, 'getService() should return correct service');
 
@@ -57,13 +63,12 @@ test('getService() should pass through to application when called with service n
 test('getConfig() should pass through module element and config name to application.getModuleConfig() when called', function() {
 
 	var config = {},
-		element = document.querySelector('#mod-test1'),
 		application = {
 			getModuleConfig: function() {}
 		};
 
-	this.mock(application).expects('getModuleConfig').withArgs(element, 'foo').returns(config);
-	var context = new Box.Context(application, 'test', 'mod-test1');
+	this.mock(application).expects('getModuleConfig').withArgs(this.element, 'foo').returns(config);
+	var context = new Box.Context(application, this.element);
 
 	context.getConfig('foo');
 
@@ -76,7 +81,7 @@ test('getGlobalConfig() should pass through to application when called', functio
 	};
 
 	this.mock(application).expects('getGlobalConfig').withArgs('foo').returns('bar');
-	var context = new Box.Context(application, 'test', 'mod-test1');
+	var context = new Box.Context(application, this.element);
 
 	equal(context.getGlobalConfig('foo'), 'bar', 'correct config value returned');
 

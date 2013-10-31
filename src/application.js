@@ -423,7 +423,7 @@ Box.Application = (function() {
 
 				moduleData.counter++;
 
-				context = new Box.Context(this, moduleName, element.id);
+				context = new Box.Context(this, element);
 
 				module = moduleData.creator(context);
 

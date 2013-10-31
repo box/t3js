@@ -8,11 +8,10 @@
  * The object type that modules use to interact with the environment. Used
  * exclusively within Box.Application, but exposed publicly for easy testing.
  * @param {Box.Application} application The application object to wrap.
- * @param {string} moduleName The name of the module that will use this object.
- * @param {string} moduleId ID of module's DOM element
+ * @param {HTMLElement} element Module's DOM element
  * @constructor
  */
-Box.Context = function(application, moduleName, moduleId) {
+Box.Context = function(application, element) {
 
 	'use strict';
 
@@ -47,7 +46,7 @@ Box.Context = function(application, moduleName, moduleId) {
 	 *                if no name is specified (null if either not found)
 	 */
 	this.getConfig = function(name) {
-		return application.getModuleConfig(this.getElement(), name);
+		return application.getModuleConfig(element, name);
 	};
 
 	/**
@@ -65,12 +64,11 @@ Box.Context = function(application, moduleName, moduleId) {
 	//-------------------------------------------------------------------------
 
 	/**
-	 * Returns the element that represents the module. This is determined by using
-	 * the moduleName as part of the HTML element ID.
+	 * Returns the element that represents the module.
 	 * @returns {HTMLElement} The element representing the module.
 	 */
 	this.getElement = function() {
-		return $('#' + moduleId)[0];
+		return element;
 	};
 
 };
