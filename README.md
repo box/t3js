@@ -22,7 +22,7 @@ Install dependencies:
 cd T3 && npm install
 ```
 
-Build concatenated file (dist/t3-<version>.js) and docs (doc/index.html):
+Build concatenated file (dist/t3-\<version\>.js) and docs (doc/index.html):
 
 ```bash
 grunt build
