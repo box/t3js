@@ -159,21 +159,6 @@ Box.Application = (function() {
 	}
 
 	/**
-	 * Returns whether the module associated with a DOM element should not be started automatically
-	 * @param {HTMLElement} element DOM element associated with the module
-	 * @returns {boolean} True if module is declared to be deferred (false if not a module)
-	 * @private
-	 */
-	function isModuleDeferred(element) {
-		var moduleDeclaration = $(element).data('module');
-
-		if (moduleDeclaration) {
-			return ($.inArray('deferred', moduleDeclaration.split(' ')) !== -1);
-		}
-		return false;
-	}
-
-	/**
 	 * Calls a method on an object if it exists
 	 * @param {Box.Application~ModuleInstance} instance Module object to call the method on.
 	 * @param {string} method Name of method
@@ -405,7 +390,6 @@ Box.Application = (function() {
 		 */
 		start: function(element) {
 			var moduleName = getModuleName(element),
-				deferred = isModuleDeferred(element),
 				moduleData = modules[moduleName],
 				instanceData,
 				context,
@@ -415,7 +399,7 @@ Box.Application = (function() {
 				error('Module type "' + moduleName + '" is not defined.');
 			}
 
-			if (!this.isStarted(element) && !deferred) {
+			if (!this.isStarted(element)) {
 				// Auto-assign module id to element
 				if (!element.id) {
 					element.id = 'mod-' + moduleName + '-' + moduleData.counter;

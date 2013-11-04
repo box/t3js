@@ -81,16 +81,6 @@ test('start generates different IDs for modules when two modules of the same typ
 
 });
 
-test('start does not create a new module when "deferred" is present in data-module attribute on element', function() {
-
-	this.testModule.setAttribute('data-module', 'test deferred');
-	Box.Application.addModule('test', this.stub().returns({}));
-	Box.Application.start(this.testModule);
-
-	ok(!Box.Application.isStarted(this.testModule), 'Module should not be started');
-
-});
-
 test('start calls init() on a new module when called with an HTML element with data-module', function() {
 
 	Box.Application.addModule('test', this.mock().withArgs(sinon.match.any).returns({
