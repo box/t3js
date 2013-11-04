@@ -11,7 +11,6 @@ if (!window.Box) {
 
 	/**
 	 * When testing actual Application, it should be included after to overwrite this stub.
-	 * Also saved to a local 'application' variable for tests that overwrite the Box.Application global
 	 */
 	Box.Application = (function() {
 
