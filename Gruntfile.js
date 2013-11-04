@@ -10,7 +10,11 @@ module.exports = function( grunt ) {
 		concat: {
 			dist: {
 				src: ['src/box.js', 'src/event-target.js', 'src/context.js', 'src/application.js'],
-				dest: '<%= distName %>'
+				dest: '<%= distName %>',
+				options: {
+					stripBanners: true,
+					banner: '/*! <%= pkg.name %> v<%= pkg.version %> */\n'
+				}
 			}
 		},
 		connect: {
