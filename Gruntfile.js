@@ -1,13 +1,16 @@
+/*global module*/
+
 module.exports = function( grunt ) {
 
 	'use strict';
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
+		distName: 'dist/t3-<%= pkg.version %>.js',
 		concat: {
 			dist: {
 				src: ['src/box.js', 'src/event-target.js', 'src/context.js', 'src/application.js'],
-				dest: 'dist/t3-<%= pkg.version %>.js'
+				dest: '<%= distName %>'
 			}
 		},
 		connect: {
@@ -43,7 +46,15 @@ module.exports = function( grunt ) {
 			},
 			grunt: {
 				src: ['Gruntfile.js'],
-				jshintrc: '.jshintrc'
+				options: {
+					jshintrc: '.jshintrc'
+				}
+			},
+			dist: {
+				src: ['<%= distName %>'],
+				options: {
+					jshintrc: 'src/.jshintrc'
+				}
 			}
 		},
 		jsdoc : {
@@ -65,6 +76,7 @@ module.exports = function( grunt ) {
 
 
 	grunt.registerTask('test', ['connect', 'qunit']);
-	grunt.registerTask('default', ['jshint', 'test']);
-	grunt.registerTask('build', ['jshint', 'test', 'concat', 'jsdoc']);
+	grunt.registerTask('jshintdev', ['jshint:src', 'jshint:test', 'jshint:grunt']);
+	grunt.registerTask('default', ['jshintdev', 'test']);
+	grunt.registerTask('build', ['jshintdev', 'test', 'concat', 'jshint:dist', 'jsdoc']);
 };
