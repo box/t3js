@@ -4,8 +4,6 @@
  * @author Box
  */
 
-/*jshint loopfunc: true */
-
 /**
  * The core application object where components are registered and managed
  * @mixes Box.EventTarget
@@ -52,6 +50,7 @@ Box.Application = (function() {
 		services = {},     // Information about each registered service by serviceName
 		behaviors = {},    // Information about each registered behavior by behaviorName
 		instances = {},    // Module instances keyed by DOM element id
+		exports = [],      // Method names that were added to application/context by services
 
 		application = new Box.EventTarget();	// base object for application
 
@@ -71,6 +70,12 @@ Box.Application = (function() {
 		services = {};
 		behaviors = {};
 		instances = {};
+
+		for (var i = 0; i < exports.length; i++) {
+			delete application[exports[i]];
+			delete Box.Context.prototype[exports[i]];
+		}
+		exports = [];
 	}
 
 	/**
@@ -129,6 +134,7 @@ Box.Application = (function() {
 				 * us to create a function with specific information even though
 				 * it's inside of a loop.
 				 */
+				// jshint loopfunc: true
 				object[propertyName] = (function(methodName, method){
 					return function(){
 						try {
@@ -471,6 +477,7 @@ Box.Application = (function() {
 
 				if (globalConfig.debug) {
 					error('Unable to stop module associated with element: ' + element.id);
+					return;
 				}
 
 			} else {
@@ -586,13 +593,49 @@ Box.Application = (function() {
 		 * Registers a new service
 		 * @param {string} serviceName Unique service identifier
 		 * @param {Function} creator Factory function used to generate the service
+		 * @param {Object} [options]
+		 * @param {string[]} [options.exports] Method names to expose on context and application
 		 * @returns {void}
 		 */
-		addService: function(serviceName, creator) {
+		addService: function(serviceName, creator, options) {
+			options = options || {};
+
 			services[serviceName] = {
 				creator: creator,
 				instance: null
 			};
+
+			if (options.exports) {
+
+				for (var i = 0; i < options.exports.length; i++) {
+
+					var methodName = options.exports[i];
+
+					// jshint loopfunc: true
+					var handler = (function(methodName) {
+						return function() {
+							var service = getService(serviceName);
+							return service[methodName].apply(service, arguments);
+						};
+					}(methodName));
+
+					if (methodName in this) {
+						error(methodName + ' already exists on Application object');
+						return;
+					} else {
+						this[methodName] = handler;
+					}
+
+					if (methodName in Box.Context.prototype) {
+						error(methodName + ' already exists on Context prototype');
+						return;
+					} else {
+						Box.Context.prototype[methodName] = handler;
+					}
+
+					exports.push(methodName);
+				}
+			}
 		},
 
 		/**

@@ -5,7 +5,7 @@
  * @author Box
  */
 
-(function() {
+Box.EventTarget = (function() {
 
 	'use strict';
 
@@ -14,7 +14,7 @@
 	 * executing handlers for events when they occur.
 	 * @constructor
 	 */
-	Box.EventTarget = function() {
+	var EventTarget = function() {
 
 		/**
 		 * Map of events to handlers. The keys in the object are the event names.
@@ -25,10 +25,10 @@
 		this._handlers = {};
 	};
 
-	Box.EventTarget.prototype = {
+	EventTarget.prototype = {
 
 		// restore constructor
-		constructor: Box.EventTarget,
+		constructor: EventTarget,
 
 		/**
 		 * Adds a new event handler for a particular type of event.
@@ -92,5 +92,7 @@
 			}
 		}
 	};
+
+	return EventTarget;
 
 }());
