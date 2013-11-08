@@ -397,6 +397,7 @@ Box.Application = (function() {
 
 			if (!moduleData) {
 				error('Module type "' + moduleName + '" is not defined.');
+				return;
 			}
 
 			if (!this.isStarted(element)) {

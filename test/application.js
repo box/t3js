@@ -70,6 +70,18 @@ test('start creates a new module when called with an HTML element with data-modu
 
 });
 
+test('start should raise an error when no matching module has been registered', function() {
+
+	var mock = this.mock();
+
+	Box.Application.on('error', mock);
+
+	Box.Application.start(this.testModule);
+
+	Box.Application.off('error', mock);
+
+});
+
 test('start generates different IDs for modules when two modules of the same type are started', function() {
 
 	Box.Application.addModule('test', this.mock().twice().returns({}));
