@@ -192,10 +192,8 @@ module('Box.Application.startAll', {
 		// add after init() to ensure we won't have errors due to missing
 		// module definitions
 		this.testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-		this.testModule2 = $('<div class="module" data-module="test" />')[0];
-		this.privilegedModule = $('<div class="module" data-module="privileged" />')[0];
 		this.nestedModule = $('<div class="module" data-module="parent"><div class="module" data-module="child"></div></div>')[0];
-		$('#qunit-fixture').append(this.testModule, this.testModule2, this.privilegedModule, this.nestedModule);
+		$('#qunit-fixture').append(this.testModule, this.nestedModule);
 	}
 
 });
@@ -220,22 +218,23 @@ module('Box.Application.stopAll', {
 		// add after init() to ensure we won't have errors due to missing
 		// module definitions
 		this.testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-		this.testModule2 = $('<div class="module" data-module="test" />')[0];
-		this.privilegedModule = $('<div class="module" data-module="privileged" />')[0];
 		this.nestedModule = $('<div class="module" data-module="parent"><div class="module" data-module="child"></div></div>')[0];
-		$('#qunit-fixture').append(this.testModule, this.testModule2, this.privilegedModule, this.nestedModule);
+		$('#qunit-fixture').append(this.testModule, this.nestedModule);
 	}
 
 });
 
 test('stopAll stops nested module', function() {
+
 	Box.Application.addModule('child', this.stub().returns({}));
 
 	Box.Application.startAll(this.nestedModule);
 	Box.Application.stopAll(this.nestedModule);
 
 	ok(!Box.Application.isStarted(this.nestedModule.children[0]), 'child module stopped');
+
 });
+
 
 module('Event Handling', {
 
@@ -245,10 +244,8 @@ module('Event Handling', {
 		// add after init() to ensure we won't have errors due to missing
 		// module definitions
 		this.testModule = $('<div class="module" data-module="test"><span id="module-target" data-type="target"></span></div>')[0];
-		this.testModule2 = $('<div class="module" data-module="test" />')[0];
-		this.privilegedModule = $('<div class="module" data-module="privileged" />')[0];
 		this.nestedModule = $('<div class="module" data-module="parent"><div class="module" data-module="child"></div></div>')[0];
-		$('#qunit-fixture').append(this.testModule, this.testModule2, this.privilegedModule, this.nestedModule);
+		$('#qunit-fixture').append(this.testModule, this.nestedModule);
 	}
 
 });
@@ -338,10 +335,8 @@ module('Box.Application.broadcast', {
 		// add after init() to ensure we won't have errors due to missing
 		// module definitions
 		this.testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-		this.testModule2 = $('<div class="module" data-module="test" />')[0];
-		this.privilegedModule = $('<div class="module" data-module="privileged" />')[0];
-		this.nestedModule = $('<div class="module" data-module="parent"><div class="module" data-module="child"></div></div>')[0];
-		$('#qunit-fixture').append(this.testModule, this.testModule2, this.privilegedModule, this.nestedModule);
+		this.testModule2 = $('<div class="module" data-module="test2" />')[0];
+		$('#qunit-fixture').append(this.testModule, this.testModule2);
 	}
 
 });
@@ -354,12 +349,12 @@ test('onmessage should be called on all modules listening for it when the messag
 		messages: ['abc'],
 		onmessage: this.mock().withArgs('abc', messageData)
 	}));
-	Box.Application.addModule('privileged', this.stub().returns({
+	Box.Application.addModule('test2', this.stub().returns({
 		messages: ['abc'],
 		onmessage: this.mock().withArgs('abc', messageData)
 	}));
 	Box.Application.start(this.testModule);
-	Box.Application.start(this.privilegedModule);
+	Box.Application.start(this.testModule2);
 
 	Box.Application.broadcast('abc', messageData);
 
@@ -445,6 +440,67 @@ test('getService should return null when called for a non-existing service', fun
 
 	var service = Box.Application.getService('test');
 	equal(service, null, 'null returned');
+
+});
+
+test('getService should register methods on Application when passed multiple exports', function() {
+
+	Box.Application.addService('test', this.stub().returns({
+		foo: this.mock().returns(1),
+		bar: this.mock().returns(2)
+	}), {
+		exports: ['foo', 'bar']
+	});
+
+	equal(Box.Application.foo(), 1);
+	equal(Box.Application.bar(), 2);
+
+});
+
+test('getService should register methods on the context object when passed multiple exports', function() {
+
+	this.testModule = $('<div class="module" data-module="test"><span id="module-target" data-type="target"></span></div>')[0];
+	$('#qunit-fixture').append(this.testModule);
+
+	Box.Application.addService('test', this.stub().returns({
+		foo: this.mock().returns(1),
+		bar: this.mock().returns(2)
+	}), {
+		exports: ['foo', 'bar']
+	});
+
+	Box.Application.addModule('test', function(context) {
+		return {
+			init: function() {
+				equal(context.foo(), 1);
+				equal(context.bar(), 2);
+			}
+		};
+	});
+
+	Box.Application.start(this.testModule);
+
+});
+
+test('getService should throw an error when an extension already exists', function() {
+
+	Box.Application.init({
+		debug: true
+	});
+
+	Box.Application.addService('test', this.stub().returns({
+		foo: function() {}
+	}), {
+		exports: ['foo']
+	});
+
+	raises(function() {
+		Box.Application.addService('test2', this.stub().returns({
+			foo: function() {}
+		}), {
+			exports: ['foo']
+		});
+	});
 
 });
 
