@@ -358,7 +358,7 @@ Box.Application = (function() {
 		init: function(params) {
 			$.extend(globalConfig, params || {});
 
-			this.startAll(document.body);
+			this.startAll(document.documentElement);
 
 			this.fire('init');
 		},
@@ -368,7 +368,7 @@ Box.Application = (function() {
 		 * @returns {void}
 		 */
 		destroy: function() {
-			this.stopAll(document.body);
+			this.stopAll(document.documentElement);
 
 			reset();
 		},

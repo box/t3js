@@ -10,6 +10,20 @@ QUnit.testDone(function(details) {
 	Box.Application.destroy();
 });
 
+module('Box.Application.init');
+
+test('init passes <html> element to startAll', function() {
+	this.mock(Box.Application).expects('startAll').withArgs(document.documentElement);
+	Box.Application.init();
+});
+
+module('Box.Application.destroy');
+
+test('destroy passes <html> element to stopAll', function() {
+	this.mock(Box.Application).expects('stopAll').withArgs(document.documentElement);
+	Box.Application.destroy();
+});
+
 module('Box.Application.isStarted', {
 
 	setup: function() {
