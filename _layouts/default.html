@@ -7,10 +7,10 @@
         <meta name="viewport" content="width=device-width">
 
         <!-- syntax highlighting CSS -->
-        <link rel="stylesheet" href="/css/syntax.css">
+        <link rel="stylesheet" href="{{ site.baseurl }}/css/syntax.css">
 
         <!-- Custom CSS -->
-        <link rel="stylesheet" href="/css/main.css">
+        <link rel="stylesheet" href="{{ site.baseurl }}/css/main.css">
 
     </head>
     <body>
@@ -18,11 +18,11 @@
         <div class="site">
             <div class="header">
                 <h1 class="title"><a href="/">{{ site.name }}</a></h1>
-                <a class="extra" href="/">overview</a>
-                <a class="extra" href="/documentation">documentation</a>
-                <a class="extra" href="/tutorials">tutorials</a>
-                <a class="extra" href="/download">download</a>
-                <a class="extra" href="/examples">examples</a>
+                <a class="extra" href="{{ site.baseurl }}/">overview</a>
+                <a class="extra" href="{{ site.baseurl }}/documentation">documentation</a>
+                <a class="extra" href="{{ site.baseurl }}/tutorials">tutorials</a>
+                <a class="extra" href="{{ site.baseurl }}/download">download</a>
+                <a class="extra" href="{{ site.baseurl }}/examples">examples</a>
             </div>
 
             {{ content }}
