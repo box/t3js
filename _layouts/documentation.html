@@ -5,7 +5,10 @@
         {% include header.html %}
 
         <div class="content container">
-            <div class="sixteen columns">
+            <div class="three columns">
+                {% include documentation-nav.html %}
+            </div>
+            <div class="twelve columns offset-by-one">
                 {{ content }}
             </div>
         </div>

@@ -1,0 +1,17 @@
+<ul>
+    <li class="{% if page.overviewpage %}current{% endif %}">
+        <a href="{{ site.baseurl }}/">overview</a>
+    </li>
+    <li class="{% if page.url contains '/documentation/' %}current{% endif %}">
+        <a href="{{ site.baseurl }}/documentation">documentation</a>
+    </li>
+    <li class="{% if page.url contains '/tutorials/' %}current{% endif %}">
+        <a href="{{ site.baseurl }}/tutorials">tutorials</a>
+    </li>
+    <li class="{% if page.downloadpage %}current{% endif %}">
+        <a href="{{ site.baseurl }}/download">download</a>
+    </li>
+    <li class="{% if page.url contains '/examples/' %}current{% endif %}">
+        <a href="{{ site.baseurl }}/examples">examples</a>
+    </li>
+</ul>
