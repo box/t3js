@@ -4,7 +4,11 @@
 /*
 /*****************************************************************************/
 .header {
+	position: fixed;
+	top: 0;
+	width: 100%;
 	background-color: #660000;
+	z-index: 100;
 }
 
 .header-nav ul {
@@ -18,11 +22,17 @@
 
 .header-nav li a {
 	color: #CCC;
+	text-decoration: none;
 }
 
 .header-nav li.current a {
 	color: #FFF;
 	border-radius: 1px;
+	text-decoration: underline;
+}
+
+.header-spacer {
+	height: 40px;
 }
 
 /*****************************************************************************/
@@ -33,4 +43,99 @@
 
 .content {
 	margin-top: 20px;
+}
+
+.anchor {
+	display: block;
+	height: 60px;
+	margin-top: -60px;
+	visibility: hidden;
+}
+
+.separator {
+	margin: 40px 0;
+}
+
+.nav h4 a {
+	text-decoration: none;
+}
+.nav h4 a.current {
+	font-weight: bold;
+	color: #995555
+}
+
+.documentation h2 {
+	font-size: 250%;
+}
+
+.documentation h3 {
+	font-size: 150%;
+}
+
+.documentation .required {
+	font-weight: bold;
+}
+
+.documentation .optional {
+	font-style: italic;
+}
+.documentation thead tr {
+	font-weight: bold;
+	background-color: #faa2a2;
+}
+
+/*****************************************************************************/
+/*
+/* Bootstrap Table
+/*
+/*****************************************************************************/
+
+table {
+	max-width: 100%;
+	background-color: transparent;
+	border-bottom: 1px solid #ddd;
+}
+th {
+	text-align: left;
+}
+.table {
+	width: 100%;
+	margin-bottom: 20px;
+}
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+	padding: 8px;
+	line-height: 1.428571429;
+	vertical-align: top;
+	border-top: 1px solid #ddd;
+}
+.table > thead > tr > th {
+	vertical-align: bottom;
+	border-bottom: 2px solid #ddd;
+}
+.table > caption + thead > tr:first-child > th,
+.table > colgroup + thead > tr:first-child > th,
+.table > thead:first-child > tr:first-child > th,
+.table > caption + thead > tr:first-child > td,
+.table > colgroup + thead > tr:first-child > td,
+.table > thead:first-child > tr:first-child > td {
+	border-top: 0;
+}
+.table > tbody + tbody {
+	border-top: 2px solid #ddd;
+}
+.table .table {
+	background-color: #fff;
+}
+.table-striped > tbody > tr:nth-child(odd) > td,
+.table-striped > tbody > tr:nth-child(odd) > th {
+	background-color: #f9f9f9;
+}
+.table-hover > tbody > tr:hover > td,
+.table-hover > tbody > tr:hover > th {
+	background-color: #f5f5f5;
 }

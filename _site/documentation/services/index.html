@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>T3 Javascript Framework - Documentation & API</title>
+        <title>T3 Javascript Framework - API - Services</title>
 
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -201,7 +201,7 @@
 
 
 </ul>
-    <h4><a class="" href="/documentation/services/">Services</a></h4>
+    <h4><a class="current" href="/documentation/services/">Services</a></h4>
     
 
 <ul>
@@ -273,27 +273,21 @@
 </div>
             </div>
             <div class="documentation twelve columns offset-by-one">
-                <h1>API Documentation</h1>
+                <h1>Services</h1>
 
-<h2>Application</h2>
+<p>Services provide new capabilities to the Application or modules.
+Services are able to be swapped in and out so long as they adhere to certain interfaces.
+This is how the Application is able to extend and change over time.
+Services may interact with the Application and other services.</p>
 
-<h2>Event Target</h2>
+<h2>General Rules</h2>
 
-<h2>Context</h2>
-
-<h2>Services</h2>
-
-<p>something something</p>
-
-<h2>Modules</h2>
-
-<p>something something</p>
-
-<h2>Behaviors</h2>
-
-<p>something something</p>
-
-<p>more stuff</p>
+<ol>
+<li>Services should avoid initialization logic.</li>
+<li>Services should not reach into modules that it did not create itself.</li>
+<li>Do not expose helper or testing functions on the public API.</li>
+<li>Service names should be lower-case, with no underscores or dashes. (e.g. windowpopup)</li>
+</ol>
 
             </div>
         </div>

@@ -1,67 +1,16 @@
-<ul>
-    <li>Application</li>
-    <li>
-        <ul>
-            <li>init</li>
-            <li>destroy</li>
-            <li>addService</li>
-            <li>addModule</li>
-            <li>addBehavior</li>
-            <li>broadcast</li>
-            <li>getService</li>
-            <li>getGlobalConfig</li>
-            <li>getModuleConfig</li>
-            <li>start</li>
-            <li>startAll</li>
-            <li>stop</li>
-            <li>stopAll</li>
-            <li>isStarted</li>
-            <li>on</li>
-            <li>off</li>
-            <li>fire</li>
-        </ul>
-    </li>
-    <li>EventTarget</li>
-    <li>
-        <ul>
-            <li>on</li>
-            <li>off</li>
-            <li>fire</li>
-        </ul>
-    </li>
-    <li>Context</li>
-    <li>
-        <ul>
-            <li>broadcast</li>
-            <li>getService</li>
-            <li>getConfig</li>
-            <li>getGlobalConfig</li>
-            <li>getElement</li>
-        </ul>
-    </li>
-    <li>Services</li>
-    <li>
-        <ul>
-            <li>Singleton</li>
-            <li>Factory</li>
-        </ul>
-    </li>
-    <li>Modules</li>
-    <li>
-        <ul>
-            <li>init</li>
-            <li>destroy</li>
-            <li>Event Handlers</li>
-            <li>Messages</li>
-        </ul>
-    </li>
-    <li>Behaviors</li>
-    <li>
-        <ul>
-            <li>init</li>
-            <li>destroy</li>
-            <li>Event Handlers</li>
-            <li>Messages</li>
-        </ul>
-    </li>
-</ul>
+<div class="nav">
+  <aside>
+    <h4><a class="{% if page.url contains '/documentation/application' %}current{% endif %}" href="{{ site.url }}/documentation/application/">Application</a></h4>
+    {% include documentation-ul.html directory='application' items='init destroy addService addModule addBehavior getService getGlobalConfig getModuleConfig start startAll stop stopAll isStarted broadcast on off fire' %}
+    <h4><a class="{% if page.url contains '/documentation/event-target' %}current{% endif %}" href="{{ site.url }}/documentation/event-target/">Event Target</a></h4>
+    {% include documentation-ul.html directory='event-target' items='on off fire' %}
+    <h4><a class="{% if page.url contains '/documentation/context' %}current{% endif %}" href="{{ site.url }}/documentation/context/">Context</a></h4>
+    {% include documentation-ul.html directory='context' items='getElement getConfig broadcast getService getGlobalConfig' %}
+    <h4><a class="{% if page.url contains '/documentation/services' %}current{% endif %}" href="{{ site.url }}/documentation/services/">Services</a></h4>
+    {% include documentation-ul.html directory='services' items='Singleton Factory' %}
+    <h4><a class="{% if page.url contains '/documentation/modules' %}current{% endif %}" href="{{ site.url }}/documentation/modules/">Modules</a></h4>
+    {% include documentation-ul.html directory='modules' items='init destroy messages event-handlers' %}
+    <h4><a class="{% if page.url contains '/documentation/behaviors' %}current{% endif %}" href="{{ site.url }}/documentation/behaviors/">Behaviors</a></h4>
+    {% include documentation-ul.html directory='behaviors' items='init destroy messages event-handlers' %}
+  </aside>
+</div>
