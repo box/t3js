@@ -18,7 +18,7 @@ for unit testing. This is a completely different methodology than normal and sho
 init
 ----
 ### Description
-Initializes the module. This method is fired automatically by <a href="{{ site.url }}/documentation/application/#start">Application.start</a>
+Initializes the module. This method is fired automatically by <a href="{{ site.baseurl }}/documentation/application/#start">Application.start</a>
 
 ### Example
 {% highlight html %}
@@ -48,7 +48,7 @@ Application.start(moduleEl);
 destroy
 -------
 ### Description
-Destroys the module. This method is fired automatically by <a href="{{ site.url }}/documentation/application/#stop">Application.stop</a>
+Destroys the module. This method is fired automatically by <a href="{{ site.baseurl }}/documentation/application/#stop">Application.stop</a>
 
 ### Example
 {% highlight html %}
