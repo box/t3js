@@ -77,10 +77,12 @@
 	white-space: nowrap;
 	display: block;
 	font-size: 13px;
+	font-family: Menlo, Consolas, "Courier New", Courier, "Liberation Mono", monospace;
 	line-height: 1.428571429;
 	word-break: break-all;
 	word-wrap: break-word;
 	color: #333;
+
 }
 
 .highlight pre code {
