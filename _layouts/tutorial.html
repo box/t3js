@@ -10,6 +10,14 @@
             </div>
             <div class="tutorial twelve columns offset-by-one">
                 {{ content }}
+
+                {% if page.prev %}
+                  <a class="prev" href="{{ site.baseurl }}/tutorials/{{ page.prev }}">← {{ page.prev_title }}</a>
+                {% endif %}
+
+                {% if page.next %}
+                  <a class="next" href="{{ site.baseurl }}/tutorials/{{ page.next }}">{{ page.next_title }} →</a>
+                {% endif %}
             </div>
         </div>
 

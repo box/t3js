@@ -1,24 +1,12 @@
 ---
 layout: tutorial
 title: T3 Javascript Framework - Tutorials
+next: initial-setup
+next_title: Initial Setup
 ---
 
+# Tutorials
 
-Tutorials
----------
+Greetings, welcome to T3! In this tutorial example we will use the T3 framework to build a meme generator. (What's a meme generator? Look [here](http://imgur.com/memegen) before proceeding.) We are assuming that you are comfortable with technologies on the web (HTML/CSS/JS). If you ever have a question related to T3 functionality you can always pull up another tab with the handy documentation we have available [here](/Pages/Box/T3/documentation).
 
-...
-
-Build a T3 Meme Generator!
-
-base HTML
-{% highlight html %}
-<html>
-<body>
-	<form>
-	stuff
-	<button>Generate!</button>
-	</form>
-</body>
-</html>
-{% endhighlight %}
+Let's get started!
