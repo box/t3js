@@ -28,7 +28,7 @@ Initializes the application. This will start modules on the page.
 		<tr>
 			<td class="optional">config</td>
 			<td>Object</td>
-			<td>Used to pass configuration information to services.</td>
+			<td>Used to pass configuration information to services. See <a href="#getGlobalConfig">getGlobalConfig</a>.</td>
 		</tr>
 		<tr>
 			<td class="optional">config.debug</td>

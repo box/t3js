@@ -1,0 +1,17 @@
+.credit-card-container {
+	font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	margin-top: 100px;
+	border:solid 2px #b7ddf2;
+	background: #ebf4fb;
+	margin: 0 auto;
+	width: 220px;
+	padding: 14px;
+}
+
+.clear {
+	clear:both; height:1px;
+}
+.spacer {
+	clear:both; height: 100px;
+}

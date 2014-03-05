@@ -6,19 +6,6 @@ title: T3 Javascript Framework - Documentation & API
 API Documentation
 =================
 
-## Application
+Welcome to the T3 API Documentation Page! Find what you need on the left sidebar.
 
-## Event Target
-
-## Context
-
-## Services
-something something
-
-## Modules
-something something
-
-## Behaviors
-something something
-
-more stuff
+To get started with T3, try out the <a href="{{ site.baseurl }}/tutorial">Tutorial</a> page!

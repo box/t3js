@@ -83,9 +83,9 @@ Message Handling
 Messages are an important piece of the application. They are the protocol in which modules can broadcast information
 about itself while maintaining isolation. Modules should not care about other modules listening the message
 and should not have any assumptions about what the resulting actions. Therefore, message names must be generic
-and should not be an RPC call between modules. For example, 'updateheader' message from a search module is BAD
-since it indicates that it wants to update the header. Instead, if the search module broadcasted a message like
-'searchkeywordchanged' and the header module was listening for such messages, we create a much cleaner module with less
+and should not be a RPC call between modules. For example, an 'updateheader' message broadcasted from a search module is BAD
+since it indicates that the module knows about some header module. Instead, if the search module broadcasted a message like
+'searchkeywordchanged' and the header module was listening for such messages, we create a much cleaner system with less
 implicit coupling.
 
 messages
@@ -151,7 +151,7 @@ Application.addModule('abc', function(context) {
 		messages: ['statechanged', 'searchcomplete'],
 		onmessage: function(name, data) {
 
-			switch (elementType) {
+			switch (name) {
 
 				case 'statechanged':
 					console.log('Navigating somewhere!');
@@ -187,19 +187,7 @@ For example, 'onclick' handles click events and 'oncontextmenu' handles right cl
 
 List of handled events:
 
-* click
-* mouseover
-* mouseout
-* mousedown
-* mouseup
-* mouseenter
-* mouseleave
-* keydown
-* keyup
-* submit
-* change
-* contextmenu
-* dblclick
+{% include event-types.html %}
 
 Note: blur/focus events are very flaky and are not supported by Application. For special events, you should define
 regular javascript event handlers in init() and remove them in destroy()

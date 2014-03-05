@@ -1,0 +1,20 @@
+{% include top.html %}
+
+    <body>
+
+        {% include header.html %}
+
+        <div class="content container">
+            <div class="three columns">
+                {% include examples-nav.html %}
+            </div>
+            <div class="examples twelve columns offset-by-one">
+                {{ content }}
+            </div>
+        </div>
+
+        {% include footer.html %}
+
+    </body>
+
+{% include bottom.html %}
