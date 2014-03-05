@@ -7,4 +7,4 @@
  * The one global object for Box JavaScript.
  * @namespace
  */
-window.Box = {};
+window.Box = window.Box || {};
