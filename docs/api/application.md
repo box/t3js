@@ -1,17 +1,15 @@
 ---
 layout: documentation
-title: T3 Javascript Framework - API - Application
-permalink: /documentation/application/
+title: T3 JavaScript Framework - API - Application
+permalink: /docs/api/application/
 ---
 
-Application
------------
+# Application
 The core application object where components are registered and managed
 
 
 <div class="anchor" id="init"></div>
-init
-----
+## init
 ### Description
 Initializes the application. This will start modules on the page.
 
@@ -54,8 +52,7 @@ Application.init({
 <hr class="separator">
 
 <div class="anchor" id="destroy"></div>
-destroy
--------
+## destroy
 ### Description
 Destroys the application. This will stop modules on the page and unregister modules, services, and behaviors.
 
@@ -67,8 +64,7 @@ Application.destroy();
 <hr class="separator">
 
 <div class="anchor" id="addService"></div>
-addService
-----------
+## addService
 ### Description
 Register a T3 Service component.
 
@@ -130,8 +126,7 @@ Application.route(...);
 <hr class="separator">
 
 <div class="anchor" id="addModule"></div>
-addModule
----------
+## addModule
 ### Description
 Register a T3 Module component.
 
@@ -171,8 +166,7 @@ Application.addModule('some-module', function(context) {
 <hr class="separator">
 
 <div class="anchor" id="addBehavior"></div>
-addBehavior
------------
+## addBehavior
 ### Description
 Register a T3 Behavior component.
 
@@ -212,8 +206,7 @@ Application.addBehavior('some-behavior', function(context) {
 <hr class="separator">
 
 <div class="anchor" id="getService"></div>
-getService
-----------
+## getService
 ### Description
 Retrieves an instance of a registered service.
 
@@ -246,8 +239,7 @@ service.foo();
 <hr class="separator">
 
 <div class="anchor" id="getGlobalConfig"></div>
-getGlobalConfig
----------------
+## getGlobalConfig
 ### Description
 Retrieves a configuration value that was passed through init.
 
@@ -282,8 +274,7 @@ console.log(Application.getGlobalConfig('username')); // Outputs "bob"
 <hr class="separator">
 
 <div class="anchor" id="getModuleConfig"></div>
-getModuleConfig
----------------
+## getModuleConfig
 ### Description
 Retrieves a module's configuration data from embedded JSON in a 'text/x-config' script tag.
 See <a href="../context/#getConfig">Context.getConfig</a>.
@@ -336,8 +327,7 @@ console.log(Application.getModuleConfig(moduleEl, 'baz'));
 <hr class="separator">
 
 <div class="anchor" id="start"></div>
-start
------
+## start
 ### Description
 Begins the lifecycle of a module (registers and binds listeners).
 
@@ -375,8 +365,7 @@ Application.start(moduleEl);
 <hr class="separator">
 
 <div class="anchor" id="startAll"></div>
-startAll
---------
+## startAll
 ### Description
 Starts all modules contained within an element.
 
@@ -419,8 +408,7 @@ Application.startAll(contentEl); // starts both modules
 <hr class="separator">
 
 <div class="anchor" id="stop"></div>
-stop
-----
+##stop
 ### Description
 Ends the lifecycle of a module (unregisters and unbinds listeners).
 
@@ -458,8 +446,7 @@ Application.stop(moduleEl);
 <hr class="separator">
 
 <div class="anchor" id="stopAll"></div>
-stopAll
--------
+## stopAll
 ### Description
 Stops all modules contained within an element.
 
@@ -502,8 +489,7 @@ Application.stopAll(contentEl); // stop both modules
 <hr class="separator">
 
 <div class="anchor" id="isStarted"></div>
-isStarted
----------
+## isStarted
 ### Description
 Determines if a module represented by the HTML element is started.
 If the element doesn't have a data-module attribute, this method always returns false.
@@ -546,8 +532,7 @@ console.log(Application.isStarted(moduleEl)); // Returns true
 <hr class="separator">
 
 <div class="anchor" id="broadcast"></div>
-broadcast
----------
+## broadcast
 ### Description
 Broadcasts a message to all registered listeners
 

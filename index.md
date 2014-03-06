@@ -1,6 +1,6 @@
 ---
 layout: default
-title: T3 Javascript Framework
+title: T3 JavaScript Framework
 overviewpage: true
 ---
 

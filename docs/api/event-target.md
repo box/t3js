@@ -1,11 +1,10 @@
 ---
 layout: documentation
-title: T3 Javascript Framework - API - Event Target
-permalink: /documentation/event-target/
+title: T3 JavaScript Framework - API - Event Target
+permalink: /docs/api/event-target/
 ---
 
-Event Target
-------------
+# Event Target
 Definition of a custom event type. This is used as a utility throughout the framework whenever custom events are used.
 It is intended to be inherited from, either through the prototype or via mixin.
 
@@ -56,8 +55,7 @@ EventTarget.fire('custom-event'); // Triggers an output of "test"
 <hr class="separator">
 
 <div class="anchor" id="off"></div>
-off
----
+## off
 ### Description
 Removes an event handler from a given event.
 
@@ -101,8 +99,7 @@ EventTarget.fire('custom-event'); // Triggers nothing
 <hr class="separator">
 
 <div class="anchor" id="fire"></div>
-fire
-----
+## fire
 ### Description
 Fires an event with the given name and data.
 

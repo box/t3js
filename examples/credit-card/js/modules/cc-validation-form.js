@@ -1,3 +1,11 @@
+/**
+ * @fileoverview Credit Card Form Module
+ * @author jtan
+ */
+
+/**
+ * Manages a form that does credit card validation
+ */
 Box.Application.addModule('cc-validation-form', function(context) {
 
 	'use strict';

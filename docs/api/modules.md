@@ -1,11 +1,10 @@
 ---
 layout: documentation
-title: T3 Javascript Framework - API - Modules
-permalink: /documentation/modules/
+title: T3 JavaScript Framework - API - Modules
+permalink: /docs/api/modules/
 ---
 
-Modules
--------
+# Modules
 The following methods are optional for you to implement per module.
 
 Modules are only accessible by Application which opens up the possibility of a less strict interface for the module's
@@ -15,10 +14,9 @@ for unit testing. This is a completely different methodology than normal and sho
 <hr class="separator">
 
 <div class="anchor" id="init"></div>
-init
-----
+## init
 ### Description
-Initializes the module. This method is fired automatically by <a href="{{ site.baseurl }}/documentation/application/#start">Application.start</a>
+Initializes the module. This method is fired automatically by <a href="{{ site.baseurl }}/docs/api/application/#start">Application.start</a>
 
 ### Example
 {% highlight html %}
@@ -45,10 +43,9 @@ Application.start(moduleEl);
 <hr class="separator">
 
 <div class="anchor" id="destroy"></div>
-destroy
--------
+## destroy
 ### Description
-Destroys the module. This method is fired automatically by <a href="{{ site.baseurl }}/documentation/application/#stop">Application.stop</a>
+Destroys the module. This method is fired automatically by <a href="{{ site.baseurl }}/docs/api/application/#stop">Application.stop</a>
 
 ### Example
 {% highlight html %}
@@ -76,20 +73,16 @@ Application.stop(moduleEl);
 <hr class="separator">
 
 
-
 <div class="anchor" id="messages"></div>
-Message Handling
-================
-Messages are an important piece of the application. They are the protocol in which modules can broadcast information
-about itself while maintaining isolation. Modules should not care about other modules listening the message
-and should not have any assumptions about what the resulting actions. Therefore, message names must be generic
-and should not be a RPC call between modules. For example, an 'updateheader' message broadcasted from a search module is BAD
-since it indicates that the module knows about some header module. Instead, if the search module broadcasted a message like
-'searchkeywordchanged' and the header module was listening for such messages, we create a much cleaner system with less
-implicit coupling.
+# Message Handling
+Messages are part of the built-in T3 pub/sub system for module events. Each module can broadcast information
+about events that have happened whlie other modules can subscribe to those messages via the 'onmessage' handler.
+As a rule of thumb, message names should be describe what event has taken place and not be used as a RPC call
+to other modules. A good name for a message would be 'keywordchanged' which aptly names what specific event
+has occurred. A bad message name would be 'updateheader' since it implies what action to be taken as a result
+of an event. Modules are isolated and should never be aware of other modules on the page!
 
-messages
---------
+## messages
 ### Description
 List of messages that this module will listen for. This is used by Application to fire onmessage handlers.
 You should place this at the top of the module API so it is easy to find.
@@ -107,8 +100,7 @@ Application.addModule('abc', function(context) {
 <hr class="separator">
 
 <div class="anchor" id="onmessage"></div>
-onmessage
----------
+## onmessage
 ### Description
 Handles application messages.
 
@@ -179,8 +171,7 @@ Application.broadcast('searchcomplete', {
 <hr class="separator">
 
 <div class="anchor" id="event-handlers"></div>
-Event Handlers
-==============
+# Event Handlers
 ### Description
 Handles specific DOM events that are fired within the module. These handlers follow the on<event> convention.
 For example, 'onclick' handles click events and 'oncontextmenu' handles right click.
@@ -190,7 +181,7 @@ List of handled events:
 {% include event-types.html %}
 
 Note: blur/focus events are very flaky and are not supported by Application. For special events, you should define
-regular javascript event handlers in init() and remove them in destroy()
+regular JavaScript event handlers in init() and remove them in destroy()
 
 
 The handler function should delegate complex logic to other functions. As a rule of thumb, try NOT to pass
@@ -256,8 +247,7 @@ Application.addModule('abc', function(context) {
 {% endhighlight %}
 
 
-Behaviors
-=========
+# Behaviors
 ### Description
 Behaviors work in parallel with modules. They are intended to be drop-in functionality that needs little additional
 interaction with the module. For example, a tabbed UI view where the UI logic is not necessarily important to the

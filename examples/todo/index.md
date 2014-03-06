@@ -1,5 +1,5 @@
 ---
-title: T3 Javascript Framework - Todo.js Example
+title: T3 JavaScript Framework - Todo.js Example
 permalink: /examples/todo/
 todolink: /examples/todo/
 ---

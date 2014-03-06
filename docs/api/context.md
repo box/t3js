@@ -1,17 +1,15 @@
 ---
 layout: documentation
-title: T3 Javascript Framework - API - Context
-permalink: /documentation/context/
+title: T3 JavaScript Framework - API - Context
+permalink: /docs/api/context/
 ---
 
-Context
--------
+# Context
 The object type that modules use to interact with the environment.
 Used exclusively within Application, but exposed publicly for easy testing.
 
 <div class="anchor" id="getElement"></div>
-getElement
-----------
+## getElement
 ### Description
 Returns the element that represents the module.
 
@@ -33,8 +31,7 @@ Application.addModule('abc', function(context) {
 <hr class="separator">
 
 <div class="anchor" id="getConfig"></div>
-getConfig
----------------
+## getConfig
 ### Description
 Retrieves a module's configuration data from embedded JSON in a 'text/x-config' script tag.
 This method is a proxy to <a href="../application/#getModuleConfig">Application.getModuleConfig</a> but with a shorter name.
@@ -88,8 +85,7 @@ Application.addModule('abc', function(context) {
 <hr class="separator">
 
 <div class="anchor" id="broadcast"></div>
-broadcast
----------
+## broadcast
 
 ### Description
 Broadcasts a message to all registered listeners. A proxy to <a href="../application/#broadcast">Application.broadcast</a>
@@ -139,8 +135,7 @@ Application.addModule('search-bar', function(context) {
 <hr class="separator">
 
 <div class="anchor" id="getService"></div>
-getService
-----------
+## getService
 
 ### Description
 Retrieves an instance of a registered service.
@@ -181,8 +176,7 @@ Application.addModule('abc', function(context) {
 <hr class="separator">
 
 <div class="anchor" id="getGlobalConfig"></div>
-getGlobalConfig
----------------
+## getGlobalConfig
 
 ### Description
 Retrieves a configuration value that was passed through init.

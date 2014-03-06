@@ -1,6 +1,6 @@
 ---
 layout: examples
-title: T3 Javascript Framework - Credit Card
+title: T3 JavaScript Framework - Credit Card
 permalink: /examples/credit-card/
 ---
 

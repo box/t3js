@@ -1,3 +1,11 @@
+/**
+ * @fileoverview Credit Card Validation Service
+ * @author jtan
+ */
+
+/**
+ * Verifies credit card numbers and expiration dates
+ */
 Box.Application.addService('credit-card', function(application) {
 
 	'use strict';
@@ -17,27 +25,26 @@ Box.Application.addService('credit-card', function(application) {
 			return false;
 		}
 
-		var nCheck = 0,
-			nDigit = 0,
-			bEven = false;
+		var checksum = 0,
+			digit = 0,
+			isEven = false;
 
 		ccNumber = ccNumber.replace(/\D/g, "");
 
 		for (var n = ccNumber.length - 1; n >= 0; n--) {
-			var cDigit = ccNumber.charAt(n),
-				nDigit = parseInt(cDigit, 10);
+			digit = parseInt(ccNumber.charAt(n), 10);
 
-			if (bEven) {
-				if ((nDigit *= 2) > 9) {
-					nDigit -= 9;
+			if (isEven) {
+				if ((digit *= 2) > 9) {
+					digit -= 9;
 				}
 			}
 
-			nCheck += nDigit;
-			bEven = !bEven;
+			checksum += digit;
+			isEven = !isEven;
 		}
 
-		return (nCheck % 10) == 0;
+		return (checksum % 10) == 0;
 	}
 
 	//--------------------------------------------------------------------------

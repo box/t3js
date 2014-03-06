@@ -1,42 +1,42 @@
 ---
 layout: documentation
-title: T3 Javascript Framework - API - Services
-permalink: /documentation/services/
+title: T3 JavaScript Framework - API - Services
+permalink: /docs/api/services/
 ---
 
-Services
-========
-Services are essentially Application extensions that provide new capabilities.
-The most important aspect of a service is the interface, it must be well formed
-and should adhere to the rules that any standard API does.
+<div class="anchor" id="Overview"></div>
+# Services
+Services are Application extensions that provide new capabilities to the entire system.
+The most important aspect of a service is its interface. Other modules and services
+may depend on it and so the interface must remain stable so as not to unexpectedly break code.
 
-Unlike modules, Services can interact directly with the Application layer and may access
+Unlike modules, services can interact directly with the Application layer and may access
 lower level libraries such as jQuery and 3rd party plug-ins. In general, modules
 should only use services to get work done. Therefore, plugins, such as jQuery UI, should be wrapped
-or abstracted out into a T3 service.
+or abstracted by a T3 service.
 
-
-General Rules
-=============
+<div class="anchor" id="Rules"></div>
+# Rules
 1. Helper/Testing functions should not be exposed on the service API
 1. Unit testing should be done on the interface, not the implementation.
 1. Service names should be lower-case, with no underscores or dashes. (e.g. windowpopup)
-1. No Application or Business Logic
+1. No Application/Business Logic
 
+# Classification
+Services can be classified into two major categories: Widgets (UI-specific) and Utilities (non-UI).
 
-<div class="anchor" id="Utilities"></div>
-Utilities
-=========
+<div class="anchor" id="Utility"></div>
+## Utility
 Utility services add functionality to the Application layer. T3 does not define
 any specific implementation details around utilities but does have a few guidelines.
 
 Example Utilities: cookies, ajax, date, strings
 
-Guidelines
-----------
+### Guidelines
 1. Utilities should not have a public initialization function (no init or constructor methods)
 1. No UI-Specific Logic.
-1. Service are created exactly once per page. Make sure not to persist state unintentionally.
+1. Service are created exactly once per page. Any state stored on the service will be shared amongst
+all users of the service. Be sure that is what you want.
 
 
 {% highlight js %}
@@ -53,10 +53,10 @@ router.route('/home', {});
 
 {% endhighlight %}
 
-Export Functions
-----------------
+### Export Functions
 A service can optionally export a function onto Application for convenience. This should be
-done with care since it does pollute the Application's interface.
+done with care since it does pollute the Application's interface. Here is the example above
+with an added export option:
 
 {% highlight js %}
 Application.addService('router', function(application) {
@@ -73,20 +73,13 @@ Application.route('/home', {});
 
 {% endhighlight %}
 
-<div class="anchor" id="Widgets"></div>
-Widgets
-=======
+<div class="anchor" id="Widget"></div>
+## Widgets
 Widgets are reusable UI-specific pieces of code. They do not contain application logic
 and should not contain initialization functions. Widgets are still services though and
 these guidelines are here for creating better interfaces. None not restrictions imposed by the framework.
 
-
-Singleton
----------
-Some UI specific components may follow the singleton pattern, especially if one
-instance could ever be shown to the user.
-
-Examples: notifications, popups
+Examples: popups, tooltips, menus
 
 {% highlight js %}
 Application.addService('popups', function(application) {
@@ -102,11 +95,39 @@ var popupsService = Application.getService('popups');
 popupsService.alert('Hello World!');
 {% endhighlight %}
 
-Factory
--------
-Factories should have a create() function that return a new instance of a widget object.
-The developer can decide what the parameters of create() are. Instantiated objects
-can have initialization/constructor logic.
+# Patterns
+There are two major patterns that services should follow. The following guidelines are for convention
+purposes and not hard requirements.
+
+<div class="anchor" id="Singleton"></div>
+## Singleton
+Most utility services follow the singleton pattern.
+
+Examples: dom, cookies, ajax
+
+{% highlight js %}
+Application.addService('dom', function(application) {
+
+	return {
+		query: function(selector) { ... },
+		addClass: function(element, className) { ... }
+		removeClassClass: function(element, className) { ... }
+	};
+
+});
+
+var dom = Application.getService('dom');
+
+var element = dom.query('#test');
+dom.addClass(element, 'style1');
+dom.removeClass(element, 'style2');
+{% endhighlight %}
+
+<div class="anchor" id="Factory"></div>
+## Factory
+As a convention, factories should have a `create()` method that returns a new instance of an object.
+You can decide what the parameters of `create()` are and unlike singletons, you can have initialization
+and constructor logic within these objects.
 
 Example Widgets: tooltips, menus, tabs
 
@@ -136,3 +157,4 @@ var tooltip = Application.getService('tooltips').create({
 });
 tooltip.show();
 {% endhighlight %}
+

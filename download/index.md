@@ -1,6 +1,6 @@
 ---
 layout: default
-title: T3 Javascript Framework - Download & View Source
+title: T3 JavaScript Framework - Download & View Source
 downloadpage: true
 ---
 
