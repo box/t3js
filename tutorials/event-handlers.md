@@ -1,6 +1,6 @@
 ---
 layout: tutorial
-title: T3 Javascript Framework - Tutorials
+title: T3 JavaScript Framework - Tutorials
 permalink: /tutorials/event-handlers/
 prev: passing-messages
 prev_title: Passing Messages

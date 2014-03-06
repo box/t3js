@@ -1,6 +1,6 @@
 ---
 layout: tutorial
-title: T3 Javascript Framework - Tutorials
+title: T3 JavaScript Framework - Tutorials
 permalink: /tutorials/passing-messages/
 prev: create-a-module
 prev_title: Create a Module
@@ -10,7 +10,7 @@ next_title: Event Handlers
 
 # Passing Messages
 
-Now that we have all of our encapsulated modules on that page, we can get our Javascript in there to do the job of creating memes. There's one problem: how does the `meme-menu` module communicate with the `meme-generator` module? The menu is handling the input values that need to update the overlay text on the image. This type of communication is handled by T3 and it is known as *messages*.
+Now that we have all of our encapsulated modules on that page, we can get our JavaScript in there to do the job of creating memes. There's one problem: how does the `meme-menu` module communicate with the `meme-generator` module? The menu is handling the input values that need to update the overlay text on the image. This type of communication is handled by T3 and it is known as *messages*.
 
 Similar to a publisher-subscriber model, T3 components are able to use the global `Application.broadcast` method to send out messages to anyone who is listening. This broadcast can be captured by the modules `onmessage` method. By using the `messages` array on the public interface, the module will be able to explicitly defined which messages it is listening to.
 

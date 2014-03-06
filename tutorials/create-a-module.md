@@ -1,6 +1,6 @@
 ---
 layout: tutorial
-title: T3 Javascript Framework - Tutorials
+title: T3 JavaScript Framework - Tutorials
 permalink: /tutorials/create-a-module/
 prev: initial-setup
 prev_title: Initial Setup

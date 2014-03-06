@@ -1,6 +1,6 @@
 ---
 layout: tutorial
-title: T3 Javascript Framework - Tutorials
+title: T3 JavaScript Framework - Tutorials
 permalink: /tutorials/use-a-service/
 prev: event-handlers
 prev_title: Event Handlers

@@ -1,19 +1,9 @@
 ---
-layout: default
-title: T3 Javascript Framework - Code Examples
+layout: examples
+title: T3 JavaScript Framework - Code Examples
 ---
 
 
 Examples
 --------
-todo list
-credit-card service/module
-
-service example
-
-widget example
-
-module example - full
-
-behavior example
-...
+Click on an example in the sidebar!
