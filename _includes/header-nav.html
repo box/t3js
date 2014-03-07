@@ -1,8 +1,7 @@
+<a id="nav-icon" href="{{ site.baseurl }}/">T3 Home</a>
+
 <ul>
-    <li class="{% if page.overviewpage %}current{% endif %}">
-        <a href="{{ site.baseurl }}/">overview</a>
-    </li>
-    <li class="{% if page.url contains '/documentation/' %}current{% endif %}">
+    <li class="{% if page.url contains '/docs/' %}current{% endif %}">
         <a href="{{ site.baseurl }}/docs/">documentation</a>
     </li>
     <li class="{% if page.url contains '/tutorials/' %}current{% endif %}">

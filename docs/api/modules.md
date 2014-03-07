@@ -4,6 +4,7 @@ title: T3 JavaScript Framework - API - Modules
 permalink: /docs/api/modules/
 ---
 
+<div class="anchor" id="Overview"></div>
 # Modules
 The following methods are optional for you to implement per module.
 

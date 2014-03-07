@@ -1,25 +1,46 @@
 <div class="nav">
   <aside>
-    <h4><a class="{% if page.url contains '/docs/api/application' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/application/">Application</a></h4>
-    {% include documentation-ul.html directory='application' items='init destroy addService addModule addBehavior getService getGlobalConfig getModuleConfig start startAll stop stopAll isStarted broadcast on off fire' %}
-    <h4><a class="{% if page.url contains '/docs/api/event-target' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/event-target/">Event Target</a></h4>
-    {% include documentation-ul.html directory='event-target' items='on off fire' %}
-    <h4><a class="{% if page.url contains '/docs/api/context' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/context/">Context</a></h4>
-    {% include documentation-ul.html directory='context' items='getElement getConfig broadcast getService getGlobalConfig' %}
-
-    <h4><a class="{% if page.url contains '/docs/api/services' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/services/">Services</a></h4>
-    {% include documentation-ul.html directory='services' items='Overview Rules' %}
-    <ul>
-        <li>Classification</li>
-        <li>{% include documentation-ul.html directory='services' items='Utility Widget' %}</li>
-    </ul>
-    <ul>
-        <li>Patterns</li>
-        <li>{% include documentation-ul.html directory='services' items='Singleton Factory' %}</li>
-    </ul>
-    <h4><a class="{% if page.url contains '/docs/api/modules' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/modules/">Modules</a></h4>add
-    {% include documentation-ul.html directory='modules' items='init destroy messages event-handlers' %}
-    <h4><a class="{% if page.url contains '/docs/api/behaviors' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/behaviors/">Behaviors</a></h4>
-    {% include documentation-ul.html directory='behaviors' items='init destroy messages event-handlers' %}
+    <div id="side-nav-application">
+        <h4><a class="{% if page.url contains '/docs/api/application' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/application/">Application</a></h4>
+        {% if page.url contains '/docs/api/application' %}
+            {% include documentation-ul.html directory='application' items='init destroy addService addModule addBehavior getService getGlobalConfig getModuleConfig start startAll stop stopAll isStarted broadcast on off fire' %}
+        {% endif %}
+    </div>
+    <div id="side-nav-event-target">
+        <h4><a class="{% if page.url contains '/docs/api/event-target' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/event-target/">Event Target</a></h4>
+        {% if page.url contains '/docs/api/event-target' %}
+            {% include documentation-ul.html directory='event-target' items='on off fire' %}
+        {% endif %}
+    </div>
+    <div id="side-nav-context">
+        <h4><a class="{% if page.url contains '/docs/api/context' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/context/">Context</a></h4>
+        {% if page.url contains '/docs/api/context' %}
+            {% include documentation-ul.html directory='context' items='getElement getConfig broadcast getService getGlobalConfig' %}
+        {% endif %}
+    </div>
+    <div id="side-nav-services">
+        <h4><a class="{% if page.url contains '/docs/api/services' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/services/">Services</a></h4>
+        {% if page.url contains '/docs/api/services' %}
+        <ul>
+            <li>Classification</li>
+            <li class="sub">{% include documentation-ul.html directory='services' items='Utility Widget' %}</li>
+            <li>Patterns</li>
+            <li class="sub">{% include documentation-ul.html directory='services' items='Singleton Factory' %}</li>
+        </ul>
+        
+        {% endif %}
+    </div>
+    <div id="side-nav-modules">
+        <h4><a class="{% if page.url contains '/docs/api/modules' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/modules/">Modules</a></h4>
+        {% if page.url contains '/docs/api/modules' %}
+            {% include documentation-ul.html directory='modules' items='init destroy messages event-handlers' %}
+        {% endif %}
+    </div>
+    <div id="side-nav-behaviors">
+        <h4><a class="{% if page.url contains '/docs/api/behaviors' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/behaviors/">Behaviors</a></h4>
+        {% if page.url contains '/docs/api/behaviors' %}
+            {% include documentation-ul.html directory='behaviors' items='init destroy messages event-handlers' %}
+        {% endif %}
+    </div>
   </aside>
 </div>

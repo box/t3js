@@ -4,8 +4,12 @@
 
         {% include header.html %}
 
-        <div class="content container">
-            <div class="sixteen columns">
+        {% if page.overviewpage %}
+        	{% include hero.html %}
+        {% endif %}
+
+        <div id="content-start" class="content row">
+            <div class="tutorial medium-12 columns">
                 {{ content }}
             </div>
         </div>

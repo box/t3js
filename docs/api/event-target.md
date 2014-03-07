@@ -4,6 +4,7 @@ title: T3 JavaScript Framework - API - Event Target
 permalink: /docs/api/event-target/
 ---
 
+<div class="anchor" id="Overview"></div>
 # Event Target
 Definition of a custom event type. This is used as a utility throughout the framework whenever custom events are used.
 It is intended to be inherited from, either through the prototype or via mixin.

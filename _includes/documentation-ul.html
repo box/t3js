@@ -4,7 +4,7 @@
 {% for item in items %}
     {% capture item_url %}/docs/api/{{ include.directory }}/#{{ item }}{% endcapture %}
 
-    <li><a href="{{ site.baseurl }}{{ item_url }}">{{ item }}</a></li>
+    <li><a class="sidebar-nav {{ item }}" href="{{ site.baseurl }}{{ item_url }}">{{ item }}</a></li>
 
 {% endfor %}
 </ul>
