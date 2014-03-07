@@ -22,6 +22,7 @@ or abstracted by a T3 service.
 1. Service names should be lower-case, with no underscores or dashes. (e.g. windowpopup)
 1. No Application/Business Logic
 
+<div class="anchor" id="Classification"></div>
 # Classification
 Services can be classified into two major categories: Widgets (UI-specific) and Utilities (non-UI).
 
@@ -95,6 +96,7 @@ var popupsService = Application.getService('popups');
 popupsService.alert('Hello World!');
 {% endhighlight %}
 
+<div class="anchor" id="Patterns"></div>
 # Patterns
 There are two major patterns that services should follow. The following guidelines are for convention
 purposes and not hard requirements.

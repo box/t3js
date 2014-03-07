@@ -8,6 +8,10 @@
 	width: 220px;
 	padding: 14px;
 }
+.credit-card-container label {
+	display: block;
+	margin-bottom: 20px;
+}
 
 .clear {
 	clear:both; height:1px;

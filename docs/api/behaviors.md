@@ -4,6 +4,7 @@ title: T3 JavaScript Framework - API - Behaviors
 permalink: /docs/api/behaviors/
 ---
 
+<div class="anchor" id="Overview"></div>
 # Behaviors
 The following methods are optional for you to implement per behavior.
 

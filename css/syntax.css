@@ -62,8 +62,8 @@
 .highlight {
 	padding: 9px 14px;
 	margin-bottom: 14px;
-	background-color: #f7f7f9;
-	border: 1px solid #e1e1e8;
+	background-color: #fcfcfc;
+	border: 1px solid #dde6eb;
 	border-radius: 4px;
 }
 
@@ -76,7 +76,7 @@
 	border-radius: 4px;
 	white-space: nowrap;
 	display: block;
-	font-size: 13px;
+	font-size: 16px;
 	font-family: Menlo, Consolas, "Courier New", Courier, "Liberation Mono", monospace;
 	line-height: 1.428571429;
 	word-break: break-all;

@@ -1,7 +1,13 @@
-<footer class="footer">
-    <div class="container">
-        <div class="sixteen columns">
-            <p>&copy; {{ site.time | date: "%Y" }} Box.com, Inc.</p>
+<footer class="footer margin-top-100">
+    <div class="row margin-top-100">
+        <div id="copyright" class="medium-12 columns">
+            <p><small>&copy; {{ site.time | date: "%Y" }} Box.com, Inc.</small></p>
         </div>
     </div>
 </footer>
+
+<script src="{{ site.baseurl }}/js/vendor/jquery.js"></script>
+<script src="{{ site.baseurl }}/js/vendor/waypoints.min.js"></script>
+<script src="{{ site.baseurl }}/js/foundation/foundation.min.js"></script>
+<script src="{{ site.baseurl }}/js/foundation/foundation.interchange.js"></script>
+<script src="{{ site.baseurl }}/js/functions.js"></script>

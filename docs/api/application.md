@@ -4,6 +4,7 @@ title: T3 JavaScript Framework - API - Application
 permalink: /docs/api/application/
 ---
 
+<div class="anchor" id="Overview"></div>
 # Application
 The core application object where components are registered and managed
 

@@ -4,6 +4,7 @@ title: T3 JavaScript Framework - Credit Card
 permalink: /examples/credit-card/
 ---
 
+<div class="anchor" id="Overview"></div>
 Credit Card Validator
 =====================
 
@@ -137,13 +138,16 @@ Box.Application.addModule('cc-validation-form', function(context) {
 Service
 -------
 {% highlight js %}
+/**
+ * Verifies credit card numbers and expiration dates
+ */
 Box.Application.addService('credit-card', function(application) {
 
 	'use strict';
 
-	//--------------------------------------------------------------------------
+	//--------------------------------------------------------
 	// Private
-	//--------------------------------------------------------------------------
+	//--------------------------------------------------------
 
 	/**
 	 * Returns true if Luhn's algorithm passes
@@ -156,32 +160,31 @@ Box.Application.addService('credit-card', function(application) {
 			return false;
 		}
 
-		var nCheck = 0,
-			nDigit = 0,
-			bEven = false;
+		var checksum = 0,
+			digit = 0,
+			isEven = false;
 
 		ccNumber = ccNumber.replace(/\D/g, "");
 
 		for (var n = ccNumber.length - 1; n >= 0; n--) {
-			var cDigit = ccNumber.charAt(n),
-				nDigit = parseInt(cDigit, 10);
+			digit = parseInt(ccNumber.charAt(n), 10);
 
-			if (bEven) {
-				if ((nDigit *= 2) > 9) {
-					nDigit -= 9;
+			if (isEven) {
+				if ((digit *= 2) > 9) {
+					digit -= 9;
 				}
 			}
 
-			nCheck += nDigit;
-			bEven = !bEven;
+			checksum += digit;
+			isEven = !isEven;
 		}
 
-		return (nCheck % 10) == 0;
+		return (checksum % 10) == 0;
 	}
 
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------
 	// Public
-	//--------------------------------------------------------------------------
+	//---------------------------------------------------------
 
 	return {
 
@@ -217,7 +220,8 @@ Box.Application.addService('credit-card', function(application) {
 
 			if (currentYear > year) {
 				return true;
-			} else if (currentYear === year && (month - 1) < currentDate.getMonth()) {
+			} else if (currentYear === year
+					&& (month - 1) < currentDate.getMonth()) {
 				// Months are zero-indexed, Jan = 0, Feb = 1...
 				return true;
 			} else {
