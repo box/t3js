@@ -5,15 +5,15 @@
 /*****************************************************************************/
 
 #nav-icon {
-  	float: left;
-  	display: block;
-  	width: 55px;
-  	height: 55px;
-  	background: url(/img/icon-T3-nav.png) center center no-repeat;
-  	background: url(/img/icon-T3-nav.svg) center center no-repeat, none;
+	float: left;
+	display: block;
+	width: 55px;
+	height: 55px;
+	background: url(../img/icon-T3-nav.png) center center no-repeat;
+	background: url(../img/icon-T3-nav.svg) center center no-repeat, none;
 
-  	/* hide text */
-  	text-indent: 100%;
+	/* hide text */
+	text-indent: 100%;
 	white-space: nowrap;
 	overflow: hidden;
 }
@@ -21,9 +21,9 @@
 @media 
 (-webkit-min-device-pixel-ratio: 1.25), 
 (min-resolution: 120dpi){ 
-    #nav-icon {
-	  	background: url(/img/icon-T3-nav@2x.png) center center no-repeat;
-	  	background: url(/img/icon-T3-nav.svg) center center no-repeat, none;
+	#nav-icon {
+		background: url(../img/icon-T3-nav@2x.png) center center no-repeat;
+		background: url(../img/icon-T3-nav.svg) center center no-repeat, none;
 	}
 }
 
