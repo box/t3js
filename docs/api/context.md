@@ -159,7 +159,9 @@ A proxy to <a href="../application/#getService">Application.getService</a>
 		</tr>
 	</tbody>
 </table>
-Returns a T3 Service or null.
+
+### Returns
+T3 Service or null.
 
 ### Example
 {% highlight javascript %}
@@ -200,6 +202,9 @@ A proxy to  <a href="../application/#getGlobalConfig">Application.getGlobalConfi
 		</tr>
 	</tbody>
 </table>
+
+### Returns
+Object.
 
 ### Example
 {% highlight javascript %}
