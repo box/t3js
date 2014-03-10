@@ -32,7 +32,7 @@ The todo list app is split into 3 major modules:
 1. The `list` module which renders and displays complete/incomplete tasks
 1. The `footer` module that allows users to filter or clear tasks
 
-A `todo` behavior is used in the `list` module to handle events of each individual todo task. This simplifies the
+A `todo` behavior is used in the `list` module to handle events for each individual todo task. This simplifies the
 overall responsibilities of the module to rendering todos and marking them all as incomplete/complete.
 
 While all modules are independent, each module talks to a service that maintains todo status. The `todos-db` service

@@ -228,7 +228,9 @@ Retrieves an instance of a registered service.
 		</tr>
 	</tbody>
 </table>
-Returns a T3 Service or null.
+
+### Returns
+T3 Service or null.
 
 ### Example
 {% highlight javascript %}
@@ -261,6 +263,9 @@ Retrieves a configuration value that was passed through init.
 		</tr>
 	</tbody>
 </table>
+
+### Returns
+Object.
 
 ### Example
 {% highlight javascript %}
@@ -311,6 +316,9 @@ See <a href="../context/#getConfig">Context.getConfig</a>.
 	...
 </div>
 {% endhighlight %}
+
+### Returns
+Object.
 
 {% highlight javascript %}
 var moduleEl = document.getElementById('mod-test-module');
@@ -512,6 +520,9 @@ If the element doesn't have a data-module attribute, this method always returns 
 		</tr>
 	</tbody>
 </table>
+
+### Returns
+Returns true if module is started. False, otherwise.
 
 ### Example
 {% highlight html %}
