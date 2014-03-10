@@ -76,3 +76,18 @@ test('Event handler should not be called for custom event after being removed', 
 
 });
 
+test('Event handler should be called even after another event handler for the same type removes itself', function() {
+
+	var handler1 = function () {
+			// this handler removes itself
+			this.off('myevent', handler1);
+		},
+		handler2 = sinon.spy();
+
+	this.eventTarget.on('myevent', handler1);
+	this.eventTarget.on('myevent', handler2);
+
+	this.eventTarget.fire('myevent');
+	ok(handler2.called);
+});
+

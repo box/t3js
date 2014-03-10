@@ -64,6 +64,10 @@ Box.EventTarget = (function() {
 			// if there are handlers for the event, call them in order
 			handlers = this._handlers[event.type];
 			if (handlers instanceof Array) {
+				// @NOTE: do a concat() here to create a copy of the handlers array,
+				// so that if another handler is removed of the same type, it doesn't
+				// interfere with the handlers array during this loop
+				handlers = handlers.concat();
 				for (i = 0, len = handlers.length; i < len; i++) {
 					handlers[i].call(this, event);
 				}
