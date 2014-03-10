@@ -5,8 +5,7 @@ permalink: /examples/credit-card/
 ---
 
 <div class="anchor" id="Overview"></div>
-Credit Card Validator
-=====================
+# Credit Card Validator
 
 This is an example of how to build a simple module and service to handle credit card validation.
 
@@ -36,8 +35,7 @@ Sample Credit Cards:
  * AMEX - 378282246310005
  * VISA - 4111111111111111
 
-HTML
-====
+# HTML
 {% highlight html %}
 <div class="module credit-card-container" data-module="cc-validation-form">
 	<form>
@@ -65,8 +63,8 @@ Please note that this example does not cover input validation. Input validation 
 via native HTML5 form validation or a separate T3 service.
 
 <div class="anchor" id="module"></div>
-Module
-------
+## Module
+
 {% highlight js %}
 Box.Application.addModule('cc-validation-form', function(context) {
 
@@ -135,8 +133,8 @@ Box.Application.addModule('cc-validation-form', function(context) {
 {% endhighlight %}
 
 <div class="anchor" id="service"></div>
-Service
--------
+## Service
+
 {% highlight js %}
 /**
  * Verifies credit card numbers and expiration dates
@@ -236,8 +234,8 @@ Box.Application.addService('credit-card', function(application) {
 {% endhighlight %}
 
 <div class="anchor" id="init"></div>
-init
-----
+## init
+
 {% highlight js %}
 
 // Fire up the application
