@@ -11,23 +11,7 @@ next_title: Passing Messages
 # Create a Module
 
 In this step we will be creating a T3 module with Yeoman. There will be two modules: one that is responsible for updating the text and background image that is at the top portion of the application and another that is responsible handling the inputs and image menu at the bottom.
-
-## Application Directory Structure
-
-Let's take a look at our current directory structure, it currently looks like this:
-
-```
-├── css
-├── img
-│   ├── full
-│   └── thumbs
-└── js
-    ├── modules
-    ├── services
-```
-
-It's a best practice in T3 to have separate directories for modules, services, and behaviors. Let's go ahead and create our first module, we will be doing this using Yeoman and this will facilitate being able to consistently scaffold files within our application.
-
+Let's go ahead and create our first module, we will be doing this using Yeoman and this will facilitate being able to consistently scaffold files within our application.
 
 ## Scaffolding with Yeoman
 

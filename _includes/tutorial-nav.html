@@ -1,16 +1,18 @@
-<div>
+<div class="nav">
   <aside>
     <h4><a href="{{ site.baseurl }}/tutorials/">Tutorial</a></h4>
     <ul>
-        <li>Initial Setup</li>
-        <li>Create a Module</li>
-        <li>Passing Messages</li>
-        <li>Event Handlers</li>
-        <li>Use a Service</li>
+        <li><a href="{{ site.baseurl }}/tutorials/initial-setup/" class="{% if page.url contains '/tutorials/initial-setup' %}active{% endif %}">Initial Setup</a></li>
+        <li><a href="{{ site.baseurl }}/tutorials/create-a-module/" class="{% if page.url contains '/tutorials/create-a-module' %}active{% endif %}">Create a Module</a></li>
+        <li><a href="{{ site.baseurl }}/tutorials/passing-messages/" class="{% if page.url contains '/tutorials/passing-messages' %}active{% endif %}">Passing Messages</a></li>
+        <li><a href="{{ site.baseurl }}/tutorials/event-handlers/" class="{% if page.url contains '/tutorials/event-handlers' %}active{% endif %}">Event Handlers</a></li>
+        <li><a href="{{ site.baseurl }}/tutorials/use-a-service/" class="{% if page.url contains '/tutorials/use-a-service' %}active{% endif %}">Use a Service</a></li>
+        <!--
         <li>Add Widgets</li>
         <li>Firing Custom Events</li>
         <li>Use Custom Data</li>
         <li>Add a Behavior</li>
+        -->
     </ul>
   </aside>
 </div>

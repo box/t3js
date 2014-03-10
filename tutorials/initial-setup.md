@@ -27,3 +27,42 @@ We will be creating our very own T3 Meme Generator in this exercise. Let's go ov
 The functionality we will be implementing in this application is simple, the user will be able to click on a meme they would like to use as background text and using the two input fields that are available they will be able to update the text that is overlayed on the image.
 
 Each step of the way has a corresponding branch that you can fast-forward and rewind to. It's the name of tutorial page you are on in the URL, simply do a `git checkout initial-setup` to get started. Now that everything is in order, let's get down to business.
+
+
+## Application Directory Structure
+
+Let's take a look at our current directory structure, it currently looks like this:
+
+```
+├── css
+├── img
+│   ├── full
+│   └── thumbs
+└── js
+    ├── behaviors
+    ├── modules
+    ├── services
+    ├── vendor
+    │   ├── box
+    │   │   └──t3.x.x.js
+    │   └── jquery
+    │       └──jquery.x.x.js
+```
+
+It's a best practice in T3 to have separate directories for modules, services, and behaviors.
+
+To begin the tutorial, make sure you have Yeoman installed:
+
+```
+yo --version
+```
+
+See [Yeoman Confluence Page](https://confluence.inside-box.net/display/ETO/Yeoman+Node.js+Generator) for installation instructions.
+
+In addition, make sure that you have the T3 CLI Utility for Yeoman:
+
+```
+yo t3
+```
+
+See [T3 Yeoman CLI](https://confluence.inside-box.net/display/ETO/Yeoman+T3+CLI+Utility) for installation instructions.
