@@ -7,10 +7,9 @@ overviewpage: true
 What is T3?
 -----------
 
-"Take 3" is a minimalist javascript framework that provides core structure to code.
-It defines the base set of components (services, modules, and behaviors) that help developers organize
-business and application logic while implicitly making code unit testable.
+T3 is a minimalist JavaScript framework that provides core structure to code. It defines the base set of components (services, modules, and behaviors) that help developers organize business and application logic while implicitly making code unit testable.
 
+The name T3 (short for "Take 3") is a nod to the learnings that happened leading to the development of this framework. Take 1 was the very first attempt at a JavaScript framework at Box, Take 2 was a custom MVC solution.
 
 Goals
 -----
@@ -34,7 +33,7 @@ Definitions
 
 Design
 ------
-![T3 Design Architecture](img/t3-design-architecture.png "T3 Design Architecture")
+![T3 Architecture Design](img/t3-design-architecture.png "T3 Architecture Design")
 
 The most important part of the system is the Application, which manages everything else in the system.
 Its primary job is to manage services and modules, including module lifecycle. In this way, the Application
