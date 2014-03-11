@@ -2,8 +2,8 @@
 layout: tutorial
 title: T3 JavaScript Framework - Tutorials
 permalink: /tutorials/passing-messages/
-prev: create-a-module
-prev_title: Create a Module
+prev: create-the-modules
+prev_title: Create the Modules
 next: event-handlers
 next_title: Event Handlers
 ---
