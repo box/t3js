@@ -6,7 +6,6 @@ todolink: /examples/todo/
 sourcecode: https://gitenterprise.inside-box.net/Box/T3/tree/gh-pages/examples/todo/live
 ---
 
-<div class="anchor" id="Overview"></div>
 # Todo List
 An app built for [TodoMVC](http://todomvc.com/)
 

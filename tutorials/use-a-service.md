@@ -54,20 +54,23 @@ Application.addService('meme-fetcher', function() {
 });
 {% endhighlight %}
 
-NCZ: Be careful, you've overloaded the work "users" in this page. Earlier it's users of the application, now it's users of the service? Maybe you should call this consumers instead?
-
-Users will be able to call `context.getService('meme-fetcher')` from within their modules and make use of the available functions. This type of code reuse and abstraction is critical in building modules that are clean and have one responsibility (handle user/inter-module communication).
+You will be able to call `context.getService('meme-fetcher')` from within the module to make use of the available functions. This type of code reuse and abstraction is critical in building modules that are clean and have one responsibility (handle user/inter-module communication).
 
 In the last exercise, you added functionality to update the image source URI when a thumbnail was clicked, there was a point where the image was clicked and either the image URI or the meme name had to be broadcasted. Find where in your implementation the construction of the URI happens and let's exchange that for using the service instead.
 
 {% highlight javascript %}
 Application.addModule('meme-generator', function(context) {
 
-  // NCZ: Again, don't get element references here, do it in init()
-  // NCZ: Also, what about the DOM service?
-  var imageEl = document.querySelector('.meme-image');
+  var imageEl;
 
   ...
+
+  init: function() {
+
+      ...
+
+      imageEl = document.querySelector('.meme-image');
+  }
 
   onmessage: function(name, data) {
       switch(name) {
@@ -83,5 +86,6 @@ Application.addModule('meme-generator', function(context) {
       }
     }
   };
+
 });
 {% endhighlight %}

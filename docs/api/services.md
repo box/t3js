@@ -4,7 +4,7 @@ title: T3 JavaScript Framework - API - Services
 permalink: /docs/api/services/
 ---
 
-<div class="anchor" id="Overview"></div>
+<div class="anchor" id="Services"></div>
 # Services
 Services are Application extensions that provide new capabilities to the entire system.
 The most important aspect of a service is its interface. Other modules and services

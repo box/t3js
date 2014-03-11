@@ -8,7 +8,7 @@ $(document).foundation();
 $('.anchor').waypoint(function(direction) {
 	var itemname = this.id;
 	var $previous = $(this).waypoint('prev');
-	var $sidebar_nav_item = $('a.'+itemname);
+	var $sidebar_nav_item = $('a[data-item="'+itemname+'"]');
 
 	// if we're scrolling down, set the hit to be 
 	if (direction == 'down') {
@@ -16,8 +16,7 @@ $('.anchor').waypoint(function(direction) {
 	} else if (direction == 'up') {
 
 		itemname = $previous.attr('id');
-		$sidebar_nav_item = $('a.'+itemname);
-
+		$sidebar_nav_item = $('a[data-item="'+itemname+'"]');
 		$sidebar_nav_item.addClass('active');
 	}
 
@@ -26,7 +25,7 @@ $('.anchor').waypoint(function(direction) {
 	current_active = $sidebar_nav_item;
 }, { offset: 80 });
 
-$('#Overview').waypoint(function(direction) {
+$('#anchor-top').waypoint(function(direction) {
 	if (direction == 'down') {
 		$('.nav').addClass('fixed');
 	} else if (direction == 'up') {

@@ -4,7 +4,6 @@ title: T3 JavaScript Framework - Credit Card
 permalink: /examples/credit-card/
 ---
 
-<div class="anchor" id="Overview"></div>
 # Credit Card Validator
 
 This is an example of how to build a simple module and service to handle credit card validation.
@@ -27,6 +26,7 @@ This is an example of how to build a simple module and service to handle credit 
 		</label>
 		<input type="button" data-type="validate-btn" value="Validate Card">
 	</form>
+	<br><br>
 	<span class="message"></span>
 </div>
 
@@ -246,7 +246,7 @@ Box.Application.init();
 
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script type="text/javascript" src="{{ site.baseurl }}/js/t3-0.1.1.js"></script>
+<script type="text/javascript" src="{{ site.baseurl }}/js/archive/t3-0.1.1.js"></script>
 <script type="text/javascript" src="{{ site.baseurl }}/examples/credit-card/js/modules/cc-validation-form.js"></script>
 <script type="text/javascript" src="{{ site.baseurl }}/examples/credit-card/js/services/credit-card.js"></script>
 <script>

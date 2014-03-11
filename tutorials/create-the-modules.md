@@ -31,7 +31,34 @@ You now have two scaffolded files in the `js/modules/` directory. Open those mod
 
 The module is initialized and registered with the global `Application` object. It returns it's standard defined interface — `init` and `destroy`. There are methods that deal with messages and events — `onclick` and `onmessage`.
 
-NCZ: Need code example here
+
+```
+Box.Application.addModule('meme-generator', function(context) {
+
+  'use strict';
+
+  return {
+    messages: [],
+
+    init: function() {
+      // code to be run when module is started
+    },
+
+    destroy: function() {
+      // code to be run when module is stopped
+    },
+
+    onclick: function(event, element, elementType) {
+      // code to be run when a click occurs
+    },
+
+    onmessage: function(name, data) {
+      // code to be run when a message is received
+    }
+  };
+
+});
+```
 
 ## Bring the Modules to Life
 
