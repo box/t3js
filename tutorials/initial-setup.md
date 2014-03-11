@@ -18,6 +18,22 @@ Alright let's put this scooter in drive! We're going to pack a few things before
 
 The code we will be walking through is available [here](google.com) on GitHub.
 
+There is a script available at `scripts/bootstrap.sh` that will set up Yeoman and the T3 generator for you. It will need administrator access to install Node and a global Node package (Yeoman). Run `./scripts/bootstrap.sh` from the project root and you should be good to go.
+
+To begin the tutorial, make sure you have Yeoman installed:
+
+```
+yo --version
+```
+
+See [Yeoman Confluence Page](https://confluence.inside-box.net/display/ETO/Yeoman+Node.js+Generator) for installation instructions.
+
+In addition, make sure that you have the T3 CLI Utility for Yeoman:
+
+```
+yo t3
+```
+
 ## The Application
 
 We will be creating our very own T3 Meme Generator in this exercise. Let's go over what we mean by this before getting our hands dirty. First, a quick snapshot of the finished product:
@@ -50,19 +66,5 @@ Let's take a look at our current directory structure, it currently looks like th
 ```
 
 It's a best practice in T3 to have separate directories for modules, services, and behaviors.
-
-To begin the tutorial, make sure you have Yeoman installed:
-
-```
-yo --version
-```
-
-See [Yeoman Confluence Page](https://confluence.inside-box.net/display/ETO/Yeoman+Node.js+Generator) for installation instructions.
-
-In addition, make sure that you have the T3 CLI Utility for Yeoman:
-
-```
-yo t3
-```
 
 See [T3 Yeoman CLI](https://confluence.inside-box.net/display/ETO/Yeoman+T3+CLI+Utility) for installation instructions.
