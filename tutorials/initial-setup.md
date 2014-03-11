@@ -16,7 +16,7 @@ You're going to need a few things in order to complete this tutorial:
 - A terminal application is handy
 - Git and Yeoman installed
 
-The code for this tutorial is available [here](google.com) on GitHub.
+The code for this tutorial is available [here](https://gitenterprise.inside-box.net/Box/t3-tutorial) on GitHub.
 
 There is a script available at `scripts/bootstrap.sh` that will set up Yeoman and the T3 generator for you. It will need administrator access to install Node and a global Node package (Yeoman). Run `./scripts/bootstrap.sh` from the project root and you should be good to go.
 
@@ -73,21 +73,3 @@ Take a look at the directory structure, it currently looks like this:
 ```
 
 It's a best practice in T3 to have separate directories for modules, services, and behaviors.
-
-## Final checks
-
-To begin the tutorial, make sure you have Yeoman installed:
-
-```
-yo --version
-```
-
-See [Yeoman Confluence Page](https://confluence.inside-box.net/display/ETO/Yeoman+Node.js+Generator) for installation instructions.
-
-In addition, make sure that you have the T3 CLI Utility for Yeoman:
-
-```
-yo t3
-```
-
-See [T3 Yeoman CLI](https://confluence.inside-box.net/display/ETO/Yeoman+T3+CLI+Utility) for installation instructions.

@@ -1,7 +1,7 @@
 ---
 layout: tutorial
 title: T3 JavaScript Framework - Tutorials
-permalink: /tutorials/create-a-module/
+permalink: /tutorials/create-the-modules/
 prev: initial-setup
 prev_title: Initial Setup
 next: passing-messages
