@@ -79,9 +79,8 @@
 	min-height: 700px;
 }
 
-#cta {
+.cta {
 	font-size: 18pt;
-	/*font-weight: 200;*/
 }
 
 #learn-more {
@@ -150,6 +149,10 @@
 
 .next {
 	float: right;
+}
+
+iframe {
+	border: none;
 }
 
 
@@ -381,4 +384,12 @@ a.button:active {
 
 .border-bot {
 	border-bottom: 1px solid #dde6eb;
+}
+
+.font-force-dark {
+	color: #252c32 !important;
+}
+
+.font-force-gray {
+	color: #7d868b !important;
 }

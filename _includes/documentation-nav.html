@@ -22,9 +22,9 @@
         <h4><a class="{% if page.url contains '/docs/api/services' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/services/">Services</a></h4>
         {% if page.url contains '/docs/api/services' %}
         <ul>
-            <li>Classification</li>
+            <li><a class="sidebar-nav" data-item="Classification" href="{{ site.baseurl }}/docs/api/services/#Classification">Classification</a></li>
             <li class="sub">{% include documentation-ul.html directory='services' items='Utility Widget' %}</li>
-            <li>Patterns</li>
+            <li><a class="sidebar-nav" data-item="Patterns" href="{{ site.baseurl }}/docs/api/services/#Patterns">Patterns</a></li>
             <li class="sub">{% include documentation-ul.html directory='services' items='Singleton Factory' %}</li>
         </ul>
         

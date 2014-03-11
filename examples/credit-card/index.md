@@ -4,7 +4,6 @@ title: T3 JavaScript Framework - Credit Card
 permalink: /examples/credit-card/
 ---
 
-<div class="anchor" id="Overview"></div>
 # Credit Card Validator
 
 This is an example of how to build a simple module and service to handle credit card validation.

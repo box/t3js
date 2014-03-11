@@ -1209,16 +1209,16 @@ h2 {
   font-size: 1.6875rem; }
 
 h3 {
-  font-size: 1.375rem; }
+  font-size: 1.375rem; font-weight: 400; }
 
 h4 {
-  font-size: 1.125rem; }
+  font-size: 1.125rem; font-weight: 400; }
 
 h5 {
-  font-size: 1.125rem; }
+  font-size: 1.125rem; font-weight: 400; }
 
 h6 {
-  font-size: 1rem; }
+  font-size: 1rem; font-weight: 400; }
 
 .subheader {
   line-height: 1.4;
