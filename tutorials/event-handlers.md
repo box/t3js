@@ -12,7 +12,7 @@ next_title: Use a Service
 
 Now that you have two modules on the page that can communicate with each other, there is only one missing link: communication with the user. User-triggered events are handled by the T3 framework and events are delegated to the nearest ancestor DOM node that is a T3 module. In the framework, there are methods similar to `onmessage` that are for DOM events, and they use the classic DOM event handler names beginning with `on` (such as `onclick`).
 
-These functions pass the triggered event, the module element, and the `data-type` attribute from the target element of the event (more on this in a moment). With these sources of information you will be able to capture any event, have the module do it's thing, and broadcast the event in the case that anybody else cared this happen (they won't know since this it's not their module element scope).
+These functions pass the triggered event, the module element, and the `data-type` attribute from the target element of the event (more on this in a moment). With these sources of information you will be able to capture any event, have the module do it's thing, and broadcast the event in the case to listeners.
 
 ## Using Events
 

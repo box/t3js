@@ -14,7 +14,7 @@ You really can't have just these 3 memes be all you can provide to your users, t
 
 ## Creating a Service
 
-The creation of a service is the same as the creation of a module, you can use T3 Yeoman Generator for this, except this time you'll use the choose the `Service` option. Let's name this one `meme-fetcher`. This should look pretty similar to modules, you return the public interface and register a name with the returned object.
+The creation of a service is the same as the creation of a module, you can use the provided `template/service.js` file as a scaffold for your new service. Let's name this one `meme-fetcher`. This should look pretty similar to modules, you return the public interface and register a name with the returned object.
 
 First, define the public API for this service, you want users of the service to be able to get the available meme images and the service abstracts the returned collection (whether it is remote or local). Let's name the method `fetchMemes()` that will return an object mapping meme name to an image URI and `fetchMemesByName()` that will get a specific image URI. For the purpose of this exercise you will stub out the remote/local nature of the images.
 
