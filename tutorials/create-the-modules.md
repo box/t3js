@@ -23,7 +23,7 @@ The module is initialized and registered with the global `Application` object. T
 The module returns a standard defined interface — `init` and `destroy`. There are methods that deal with messages and events — `onclick` and `onmessage`.
 
 ```
-Application.addModule('meme-generator', function(context) {
+Box.Application.addModule('meme-generator', function(context) {
 
   'use strict';
 

@@ -20,7 +20,7 @@ To make the application work, you need pass a message from the `meme-menu` modul
 
 {% highlight javascript %}
 // In the meme-menu's returned interface, edit the init function
-Application.addModule('meme-menu', function(context) {
+Box.Application.addModule('meme-menu', function(context) {
 
   return {
 
@@ -65,7 +65,7 @@ are:
 To be a more efficient with your module code, cache the element selectors into private scope variables (before the `return`). Make sure to use `init` function to cache element look-ups (do not cache as part of the declaration).
 
 {% highlight javascript %}
-Application.addModule('meme-generator', function(context) {
+Box.Application.addModule('meme-generator', function(context) {
   'use strict';
 
   // Private vars
