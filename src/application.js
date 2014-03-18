@@ -529,7 +529,7 @@ Box.Application = (function() {
 		 */
 		addModule: function(moduleName, creator) {
 			if (typeof modules[moduleName] !== 'undefined') {
-				error(moduleName + ' module has already been added.');
+				error('Module ' + moduleName + ' has already been added.');
 				return;
 			}
 
@@ -592,7 +592,7 @@ Box.Application = (function() {
 		 */
 		addService: function(serviceName, creator, options) {
 			if (typeof services[serviceName] !== 'undefined') {
-				error(serviceName + ' service has already been added.');
+				error('Service ' + serviceName + ' has already been added.');
 				return;
 			}
 
@@ -656,7 +656,7 @@ Box.Application = (function() {
 		 */
 		addBehavior: function(behaviorName, creator) {
 			if (typeof behaviors[behaviorName] !== 'undefined') {
-				error(behaviorName + ' behavior has already been added.');
+				error('Behavior ' + behaviorName + ' has already been added.');
 				return;
 			}
 
@@ -731,7 +731,7 @@ Box.Application = (function() {
 
 		/**
 		 * Sets the global configuration data
-		 * @param {Object} [config] Global configuration object
+		 * @param {Object} config Global configuration object
 		 * @returns {void}
 		 */
 		setGlobalConfig: function(config) {
