@@ -2,3 +2,4 @@ node_modules
 dist
 doc
 *.swp
+.DS_Store

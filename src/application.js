@@ -246,7 +246,7 @@ Box.Application = (function() {
 		while (!found && $element.length && !$element.hasClass('module')) {
 			$element = $element.parent();
 			found = $element.is('[data-type]');
-		}   
+		}
 
 		return found ? $element[0] : null;
 	}
@@ -525,6 +525,11 @@ Box.Application = (function() {
 		 * @returns {void}
 		 */
 		addModule: function(moduleName, creator) {
+			if (typeof modules[moduleName] !== 'undefined') {
+				error(moduleName + ' module has already been added.');
+				return;
+			}
+
 			modules[moduleName] = {
 				creator: creator,
 				counter: 1 // increments for each new instance
@@ -583,6 +588,11 @@ Box.Application = (function() {
 		 * @returns {void}
 		 */
 		addService: function(serviceName, creator, options) {
+			if (typeof services[serviceName] !== 'undefined') {
+				error(serviceName + ' service has already been added.');
+				return;
+			}
+
 			options = options || {};
 
 			services[serviceName] = {
@@ -642,6 +652,11 @@ Box.Application = (function() {
 		 * @returns {void}
 		 */
 		addBehavior: function(behaviorName, creator) {
+			if (typeof behaviors[behaviorName] !== 'undefined') {
+				error(behaviorName + ' behavior has already been added.');
+				return;
+			}
+
 			behaviors[behaviorName] = {
 				creator: creator,
 				instance: null
