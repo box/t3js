@@ -694,7 +694,7 @@ test('addBehavior should throw an error when the behavior name already exists', 
 });
 
 
-module('Global config', {
+module('getGlobalConfig', {
 
 	setup: function() {
 		Box.Application.init({
@@ -723,3 +723,42 @@ test('getGlobalConfig() should not return value when it was not set during initi
 
 });
 
+module('setGlobalConfig');
+
+test('setGlobalConfig() should set the globalConfig object', function() {
+
+	Box.Application.setGlobalConfig({
+		foo: 'bar'
+	});
+
+	equal(Box.Application.getGlobalConfig('foo'), 'bar', 'config value is set');
+
+});
+
+test('setGlobalConfig() should throw an error after application initialization', function() {
+
+	Box.Application.init({
+		debug: true
+	});
+
+	raises(function() {
+		Box.Application.setGlobalConfig({
+			foo: 'bar'
+		});
+	});
+
+});
+
+test('setGlobalConfig() should have globalConfig overriden by application initialization', function() {
+
+	Box.Application.setGlobalConfig({
+		theAnswer: 12
+	});
+
+	Box.Application.init({
+		theAnswer: 42
+	});
+
+	equal(Box.Application.getGlobalConfig('theAnswer'), 42, 'config value is set by init');
+
+});
