@@ -45,12 +45,13 @@ Box.Application = (function() {
 
 	var MODULE_CLASS_SELECTOR = '.module';
 
-	var globalConfig = {}, // Global configuration
-		modules = {},      // Information about each registered module by moduleName
-		services = {},     // Information about each registered service by serviceName
-		behaviors = {},    // Information about each registered behavior by behaviorName
-		instances = {},    // Module instances keyed by DOM element id
-		exports = [],      // Method names that were added to application/context by services
+	var globalConfig = {},   // Global configuration
+		modules = {},        // Information about each registered module by moduleName
+		services = {},       // Information about each registered service by serviceName
+		behaviors = {},      // Information about each registered behavior by behaviorName
+		instances = {},      // Module instances keyed by DOM element id
+		exports = [],        // Method names that were added to application/context by services
+		initialized = false, // Flag whether the application has been initialized
 
 		application = new Box.EventTarget();	// base object for application
 
@@ -70,6 +71,7 @@ Box.Application = (function() {
 		services = {};
 		behaviors = {};
 		instances = {};
+		initialized = false;
 
 		for (var i = 0; i < exports.length; i++) {
 			delete application[exports[i]];
@@ -246,7 +248,7 @@ Box.Application = (function() {
 		while (!found && $element.length && !$element.hasClass('module')) {
 			$element = $element.parent();
 			found = $element.is('[data-type]');
-		}   
+		}
 
 		return found ? $element[0] : null;
 	}
@@ -361,6 +363,7 @@ Box.Application = (function() {
 			this.startAll(document.documentElement);
 
 			this.fire('init');
+			initialized = true;
 		},
 
 		/**
@@ -525,6 +528,11 @@ Box.Application = (function() {
 		 * @returns {void}
 		 */
 		addModule: function(moduleName, creator) {
+			if (typeof modules[moduleName] !== 'undefined') {
+				error('Module ' + moduleName + ' has already been added.');
+				return;
+			}
+
 			modules[moduleName] = {
 				creator: creator,
 				counter: 1 // increments for each new instance
@@ -583,6 +591,11 @@ Box.Application = (function() {
 		 * @returns {void}
 		 */
 		addService: function(serviceName, creator, options) {
+			if (typeof services[serviceName] !== 'undefined') {
+				error('Service ' + serviceName + ' has already been added.');
+				return;
+			}
+
 			options = options || {};
 
 			services[serviceName] = {
@@ -642,6 +655,11 @@ Box.Application = (function() {
 		 * @returns {void}
 		 */
 		addBehavior: function(behaviorName, creator) {
+			if (typeof behaviors[behaviorName] !== 'undefined') {
+				error('Behavior ' + behaviorName + ' has already been added.');
+				return;
+			}
+
 			behaviors[behaviorName] = {
 				creator: creator,
 				instance: null
@@ -708,6 +726,24 @@ Box.Application = (function() {
 				return globalConfig[name];
 			} else {
 				return null;
+			}
+		},
+
+		/**
+		 * Sets the global configuration data
+		 * @param {Object} config Global configuration object
+		 * @returns {void}
+		 */
+		setGlobalConfig: function(config) {
+			if (initialized) {
+				error('Cannot set global configuration after application initialization');
+				return;
+			}
+
+			for (var prop in config) {
+				if (config.hasOwnProperty(prop)) {
+					globalConfig[prop] = config[prop];
+				}
 			}
 		}
 
