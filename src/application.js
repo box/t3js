@@ -745,8 +745,20 @@ Box.Application = (function() {
 					globalConfig[prop] = config[prop];
 				}
 			}
-		}
+		},
 
+		//----------------------------------------------------------------------
+		// Error reporting
+		//----------------------------------------------------------------------
+
+		/**
+		 * Signals that an error has occurred. If in development mode, an error
+		 * is thrown. If in production mode, an event is fired.
+		 * @param {String} message The error message.
+		 * @param {Error} [exception] The exception object to use.
+		 * @returns {void}
+		 */
+		reportError: error
 	});
 
 }());
