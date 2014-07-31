@@ -220,8 +220,7 @@ Box.Application = (function() {
 				}
 				behaviorInstances.push(moduleBehaviorInstances[behaviorNames[i]]);
 			} else {
-				var exception = new Error('Behavior "' + behaviorNames[i] + '" not found');
-				error(exception);
+				error(new Error('Behavior "' + behaviorNames[i] + '" not found'));
 			}
 		}
 
@@ -652,8 +651,7 @@ Box.Application = (function() {
 		 */
 		addBehavior: function(behaviorName, creator) {
 			if (typeof behaviors[behaviorName] !== 'undefined') {
-				var exception = new Error('Behavior ' + behaviorName + ' has already been added.');
-				error(exception);
+				error(new Error('Behavior ' + behaviorName + ' has already been added.'));
 				return;
 			}
 
@@ -733,8 +731,7 @@ Box.Application = (function() {
 		 */
 		setGlobalConfig: function(config) {
 			if (initialized) {
-				var exception = new Error('Cannot set global configuration after application initialization');
-				error(exception);
+				error(new Error('Cannot set global configuration after application initialization'));
 				return;
 			}
 
