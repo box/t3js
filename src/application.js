@@ -398,8 +398,7 @@ Box.Application = (function() {
 				module;
 
 			if (!moduleData) {
-				var exception = new Error('Module type "' + moduleName + '" is not defined.');
-				error(exception);
+				error(new Error('Module type "' + moduleName + '" is not defined.'));
 				return;
 			}
 
@@ -458,8 +457,7 @@ Box.Application = (function() {
 			if (!instanceData) {
 
 				if (globalConfig.debug) {
-					var exception = new Error('Unable to stop module associated with element: ' + element.id);
-					error(exception);
+					error(new Error('Unable to stop module associated with element: ' + element.id));
 					return;
 				}
 
@@ -524,8 +522,7 @@ Box.Application = (function() {
 		 */
 		addModule: function(moduleName, creator) {
 			if (typeof modules[moduleName] !== 'undefined') {
-				var exception = new Error('Module ' + moduleName + ' has already been added.');
-				error(exception);
+				error(new Error('Module ' + moduleName + ' has already been added.'));
 				return;
 			}
 
@@ -588,11 +585,8 @@ Box.Application = (function() {
 		 */
 		addService: function(serviceName, creator, options) {
 
-			var exception = new Error();
-
 			if (typeof services[serviceName] !== 'undefined') {
-				exception.name = 'Service ' + serviceName + ' has already been added.';
-				error(exception);
+				error(new Error('Service ' + serviceName + ' has already been added.'));
 				return;
 			}
 
@@ -604,8 +598,10 @@ Box.Application = (function() {
 			};
 
 			if (options.exports) {
+				var i,
+					length = options.exports.length;
 
-				for (var i = 0; i < options.exports.length; i++) {
+				for (i = 0; i < length; i++) {
 
 					var methodName = options.exports[i];
 
@@ -618,16 +614,14 @@ Box.Application = (function() {
 					}(methodName));
 
 					if (methodName in this) {
-						exception.name = methodName + ' already exists on Application object';
-						error(exception);
+						error(new Error(methodName + ' already exists on Application object'));
 						return;
 					} else {
 						this[methodName] = handler;
 					}
 
 					if (methodName in Box.Context.prototype) {
-						exception.name = methodName + ' already exists on Context prototype';
-						error(exception);
+						error(new Error(methodName + ' already exists on Context prototype'));
 						return;
 					} else {
 						Box.Context.prototype[methodName] = handler;
