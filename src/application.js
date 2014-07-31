@@ -83,25 +83,16 @@ Box.Application = (function() {
 	/**
 	 * Signals that an error has occurred. If in development mode, an error
 	 * is thrown. If in production mode, an event is fired.
-	 * @param {String} message The error message.
 	 * @param {Error} [exception] The exception object to use.
 	 * @returns {void}
 	 * @private
 	 */
-	function error(message, exception) {
-
-		// prepend T3 details to message
-		if (exception) {
-			exception.name = message + ' - ' + exception.name;
-		} else {
-			exception = new Error(message);
-		}
+	function error(exception) {
 
 		if (globalConfig.debug) {
 			throw exception;
 		} else {
 			application.fire('error', {
-				message: message,
 				exception: exception
 			});
 		}
@@ -142,7 +133,8 @@ Box.Application = (function() {
 						try {
 							return method.apply(this, arguments);
 						} catch (ex) {
-							error(objectName + '.' + methodName + '()', ex);
+							ex.name = objectName + '.' + methodName + '() - ' + ex.name;
+							error(ex);
 						}
 					};
 
@@ -228,7 +220,8 @@ Box.Application = (function() {
 				}
 				behaviorInstances.push(moduleBehaviorInstances[behaviorNames[i]]);
 			} else {
-				error('Behavior "' + behaviorNames[i] + '" not found');
+				var exception = new Error('Behavior "' + behaviorNames[i] + '" not found');
+				error(exception);
 			}
 		}
 
@@ -405,7 +398,8 @@ Box.Application = (function() {
 				module;
 
 			if (!moduleData) {
-				error('Module type "' + moduleName + '" is not defined.');
+				var exception = new Error('Module type "' + moduleName + '" is not defined.');
+				error(exception);
 				return;
 			}
 
@@ -464,7 +458,8 @@ Box.Application = (function() {
 			if (!instanceData) {
 
 				if (globalConfig.debug) {
-					error('Unable to stop module associated with element: ' + element.id);
+					var exception = new Error('Unable to stop module associated with element: ' + element.id);
+					error(exception);
 					return;
 				}
 
@@ -529,7 +524,8 @@ Box.Application = (function() {
 		 */
 		addModule: function(moduleName, creator) {
 			if (typeof modules[moduleName] !== 'undefined') {
-				error('Module ' + moduleName + ' has already been added.');
+				var exception = new Error('Module ' + moduleName + ' has already been added.');
+				error(exception);
 				return;
 			}
 
@@ -591,8 +587,12 @@ Box.Application = (function() {
 		 * @returns {void}
 		 */
 		addService: function(serviceName, creator, options) {
+
+			var exception = new Error();
+
 			if (typeof services[serviceName] !== 'undefined') {
-				error('Service ' + serviceName + ' has already been added.');
+				exception.name = 'Service ' + serviceName + ' has already been added.';
+				error(exception);
 				return;
 			}
 
@@ -618,14 +618,16 @@ Box.Application = (function() {
 					}(methodName));
 
 					if (methodName in this) {
-						error(methodName + ' already exists on Application object');
+						exception.name = methodName + ' already exists on Application object';
+						error(exception);
 						return;
 					} else {
 						this[methodName] = handler;
 					}
 
 					if (methodName in Box.Context.prototype) {
-						error(methodName + ' already exists on Context prototype');
+						exception.name = methodName + ' already exists on Context prototype';
+						error(exception);
 						return;
 					} else {
 						Box.Context.prototype[methodName] = handler;
@@ -656,7 +658,8 @@ Box.Application = (function() {
 		 */
 		addBehavior: function(behaviorName, creator) {
 			if (typeof behaviors[behaviorName] !== 'undefined') {
-				error('Behavior ' + behaviorName + ' has already been added.');
+				var exception = new Error('Behavior ' + behaviorName + ' has already been added.');
+				error(exception);
 				return;
 			}
 
@@ -736,7 +739,8 @@ Box.Application = (function() {
 		 */
 		setGlobalConfig: function(config) {
 			if (initialized) {
-				error('Cannot set global configuration after application initialization');
+				var exception = new Error('Cannot set global configuration after application initialization');
+				error(exception);
 				return;
 			}
 
@@ -754,7 +758,6 @@ Box.Application = (function() {
 		/**
 		 * Signals that an error has occurred. If in development mode, an error
 		 * is thrown. If in production mode, an event is fired.
-		 * @param {String} message The error message.
 		 * @param {Error} [exception] The exception object to use.
 		 * @returns {void}
 		 */

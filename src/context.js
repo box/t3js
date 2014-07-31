@@ -69,12 +69,11 @@ Box.Context = (function() {
 		/**
 		 * Passthrough method that signals that an error has occurred. If in development mode, an error
 		 * is thrown. If in production mode, an event is fired.
-		 * @param {String} message The error message.
 		 * @param {Error} [exception] The exception object to use.
 		 * @returns {void}
 		 */
-		reportError: function(message, exception) {
-			this.application.reportError(message, exception);
+		reportError: function(exception) {
+			this.application.reportError(exception);
 		},
 
 		//-------------------------------------------------------------------------
