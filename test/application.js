@@ -610,17 +610,16 @@ test('An error in a module\'s init() should be re-thrown with a fixed error mess
 
 test('An error in a module\'s init() should fire an event when not in debug mode', function() {
 
+	var exception = new Error('test.init() - Something bad happened.');
+
 	Box.Application.addModule('test', this.stub().returns({
-		init: this.stub().throws('Something bad happened.')
+		init: this.stub().throws(exception)
 	}));
 
 	var mock = this.mock().withArgs(sinon.match({
 		type: 'error',
 		data: sinon.match({
-			message: 'test.init()',
-			exception: sinon.match({
-				name: 'test.init() - Something bad happened.'
-			})
+			exception: exception
 		})
 	}));
 
@@ -664,7 +663,7 @@ test('Error should be fired when a module specifies a behavior that does not exi
 	var mock = this.mock().atLeast(1).withArgs(sinon.match({
 		type: 'error',
 		data: sinon.match({
-			message: 'Behavior "test-behavior" not found'
+			exception: Error('Behavior "test-behavior" not found')
 		})
 	}));
 

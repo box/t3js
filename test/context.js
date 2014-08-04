@@ -86,3 +86,18 @@ test('getGlobalConfig() should pass through to application when called', functio
 	equal(context.getGlobalConfig('foo'), 'bar', 'correct config value returned');
 
 });
+
+test('reportError() should pass through to application when called', function() {
+
+	var exception = new Error('test error');
+	var application = {
+		reportError: function() {
+		}
+	};
+
+	this.mock(application).expects('reportError').withArgs(exception);
+	var context = new Box.Context(application, this.element);
+
+	context.reportError(exception);
+
+});

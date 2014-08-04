@@ -66,6 +66,16 @@ Box.Context = (function() {
 			return this.application.getGlobalConfig(name);
 		},
 
+		/**
+		 * Passthrough method that signals that an error has occurred. If in development mode, an error
+		 * is thrown. If in production mode, an event is fired.
+		 * @param {Error} [exception] The exception object to use.
+		 * @returns {void}
+		 */
+		reportError: function(exception) {
+			this.application.reportError(exception);
+		},
+
 		//-------------------------------------------------------------------------
 		// Service Shortcuts
 		//-------------------------------------------------------------------------
