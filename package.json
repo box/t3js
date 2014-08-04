@@ -1,7 +1,7 @@
 {
   "name": "T3",
   "description": "T3 Javascript Framework",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Box (https://www.box.com/)",
   "private": true,
   "devDependencies": {
