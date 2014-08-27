@@ -3,113 +3,123 @@
  * @author Box
  */
 
-module('Box.Context', {
+describe('Box.Context', function() {
 
-	setup: function() {
-		this.element = document.querySelector('#mod-test1');
-	}
+	var sandbox = sinon.sandbox.create();
+	var element = document.querySelector('#mod-test1');
 
-});
+	afterEach(function() {
+		sandbox.verifyAndRestore();
+	});
 
-test('broadcast() should pass through to application when called', function() {
+	describe('broadcast()', function() {
 
-	var message = 'foo';
-	var application = {
-		broadcast: function() {
-		}
-	};
+		it('should pass through to application when called', function() {
+			var context,
+				message = 'foo',
+				application = {
+					broadcast: function() {}
+				};
 
-	this.mock(application).expects('broadcast').withArgs(message);
-	var context = new Box.Context(application, this.element);
+			sandbox.mock(application).expects('broadcast').withArgs(message);
+			context = new Box.Context(application, element);
+			context.broadcast(message);
+		});
 
-	context.broadcast(message);
+		it('should pass through to application when called with arguments', function() {
+			var context,
+				message = 'foo',
+				data = {},
+				application = {
+					broadcast: function() {}
+				};
 
-});
+			sandbox.mock(application).expects('broadcast').withArgs(message, data);
+			context = new Box.Context(application, element);
+			context.broadcast(message, data);
+		});
 
-test('broadcast() should pass through to application when called with arguments', function() {
+	});
 
-	var message = 'foo',
-		data = {};
+	describe('getService()', function() {
 
-	var application = {
-		broadcast: function() {
-		}
-	};
+		it('should pass through to application when called with service name', function() {
+			var context,
+				serviceName = 'foo',
+				service = {},
+				application = {
+					getService: function() {}
+				};
 
-	this.mock(application).expects('broadcast').withArgs(message, data);
-	var context = new Box.Context(application, this.element);
+			sandbox.mock(application).expects('getService').withArgs(serviceName).returns(service);
+			context = new Box.Context(application, element);
+			assert.equal(context.getService(serviceName), service, 'getService() should return correct service');
+		});
 
-	context.broadcast(message, data);
+	});
 
-});
+	describe('getConfig()', function() {
 
-test('getService() should pass through to application when called with service name', function() {
+		it('should pass through module element and config name to application.getModuleConfig() when called', function() {
+			var context,
+				config = {},
+				application = {
+					getModuleConfig: function() {}
+				};
 
-	var serviceName = 'foo',
-		service = {};
+			sandbox.mock(application).expects('getModuleConfig').withArgs(element, 'foo').returns(config);
+			context = new Box.Context(application, element);
+			context.getConfig('foo');
+		});
+	});
 
-	var application = {
-		getService: function() {
-		}
-	};
+	describe('getGlobal()', function() {
 
-	this.mock(application).expects('getService').withArgs(serviceName).returns(service);
-	var context = new Box.Context(application, this.element);
+		it('should return the window-scope var when it exists', function () {
+			var application = {
+				getGlobal: function () {}
+			};
 
-	equal(context.getService(serviceName), service, 'getService() should return correct service');
+			sandbox.stub(application, 'getGlobal').withArgs('foo').returns('bar');
 
-});
+			var context = new Box.Context(application, element);
+			assert.strictEqual(context.getGlobal('foo'), 'bar', 'global var returned');
+		});
 
-test('getConfig() should pass through module element and config name to application.getModuleConfig() when called', function() {
+	});
 
-	var config = {},
-		application = {
-			getModuleConfig: function() {}
-		};
 
-	this.mock(application).expects('getModuleConfig').withArgs(this.element, 'foo').returns(config);
-	var context = new Box.Context(application, this.element);
+	describe('getGlobalConfig()', function() {
 
-	context.getConfig('foo');
+		it('should pass through to application when called', function() {
+			var context,
+				application = {
+					getGlobalConfig: function() {}
+				};
 
-});
+			sandbox.mock(application).expects('getGlobalConfig').withArgs('foo').returns('bar');
+			context = new Box.Context(application, element);
+			assert.equal(context.getGlobalConfig('foo'), 'bar', 'correct config value returned');
+		});
 
-test('getGlobal() should return the window-scope var when it exists', function() {
-	var application = {
-		getGlobal: function() {}
-	};
+	});
 
-	this.stub(application, 'getGlobal').withArgs('foo').returns('bar');
+	describe('reportError()', function() {
 
-	var context = new Box.Context(application, this.element);
-	strictEqual(context.getGlobal('foo'), 'bar', 'global var returned');
+		it('should pass through to application when called', function() {
+			var context,
+				application = {
+					reportError: function() {}
+				},
+				exception = new Error('test error');
 
-});
+			sandbox.mock(application).expects('reportError').withArgs(exception);
+			context = new Box.Context(application, element);
 
-test('getGlobalConfig() should pass through to application when called', function() {
+			context.reportError(exception);
+		});
 
-	var application = {
-		getGlobalConfig: function() {}
-	};
+	});
 
-	this.mock(application).expects('getGlobalConfig').withArgs('foo').returns('bar');
-	var context = new Box.Context(application, this.element);
-
-	equal(context.getGlobalConfig('foo'), 'bar', 'correct config value returned');
-
-});
-
-test('reportError() should pass through to application when called', function() {
-
-	var exception = new Error('test error');
-	var application = {
-		reportError: function() {
-		}
-	};
-
-	this.mock(application).expects('reportError').withArgs(exception);
-	var context = new Box.Context(application, this.element);
-
-	context.reportError(exception);
 
 });

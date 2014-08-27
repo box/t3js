@@ -5,11 +5,16 @@
   "author": "Box (https://www.box.com/)",
   "private": true,
   "devDependencies": {
+    "assertive-chai": "~1.0.0",
     "grunt": "~0.4.1",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-connect": "~0.5.0",
-    "grunt-contrib-qunit": "~0.3.0",
     "grunt-contrib-jshint": "~0.7.0",
-    "grunt-jsdoc": "~0.4.1"
+    "grunt-contrib-qunit": "~0.3.0",
+    "grunt-jsdoc": "~0.4.1",
+    "grunt-mocha-phantomjs": "~0.6.0",
+    "jquery": "^1.11.1",
+    "mocha": "~1.21.4",
+    "sinon": "^1.10.3"
   }
 }

@@ -21,7 +21,15 @@
 		"strictEqual": false,
 		"deepEqual": false,
 		"raises": false,
+		"mocha": false,
 		"sinon": false,
+		"assert": false,
+		"it": false,
+		"describe": false,
+		"before": false,
+		"beforeEach": false,
+		"after": false,
+		"afterEach": false,
 
 		"Box": false,
 		"$": false

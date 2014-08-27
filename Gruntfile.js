@@ -1,4 +1,6 @@
-/*global module*/
+/* global module */
+
+/* jshint camelcase: false */
 
 module.exports = function( grunt ) {
 
@@ -24,7 +26,7 @@ module.exports = function( grunt ) {
 				}
 			}
 		},
-		qunit: {
+		mocha_phantomjs: {
 			all: {
 				options: {
 					urls: [
@@ -74,12 +76,12 @@ module.exports = function( grunt ) {
 
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-connect');
-	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-mocha-phantomjs');
 	grunt.loadNpmTasks('grunt-jsdoc');
 
 
-	grunt.registerTask('test', ['connect', 'qunit']);
+	grunt.registerTask('test', ['connect', 'mocha_phantomjs']);
 	grunt.registerTask('jshintdev', ['jshint:src', 'jshint:test', 'jshint:grunt']);
 	grunt.registerTask('default', ['jshintdev', 'test']);
 	grunt.registerTask('build', ['jshintdev', 'test', 'concat', 'jshint:dist', 'jsdoc']);

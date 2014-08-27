@@ -5,774 +5,718 @@
 
 Box.Context = function() {};
 
-/* jshint unused: false */
-QUnit.testDone(function(details) {
-	Box.Application.destroy();
-});
+describe('Box.Application', function() {
 
-module('Box.Application.init');
+	'use strict';
 
-test('init passes <html> element to startAll', function() {
-	this.mock(Box.Application).expects('startAll').withArgs(document.documentElement);
-	Box.Application.init();
-});
+	var sandbox = sinon.sandbox.create();
 
-module('Box.Application.destroy');
+	var testModule,
+		testModule2,
+		nestedModule;
 
-test('destroy passes <html> element to stopAll', function() {
-	this.mock(Box.Application).expects('stopAll').withArgs(document.documentElement);
-	Box.Application.destroy();
-});
+	afterEach(function () {
+		sandbox.verifyAndRestore();
 
-module('Box.Application.isStarted', {
+		$('#mocha-fixture').empty();
 
-	setup: function() {
-		this.testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-		$('#qunit-fixture').append(this.testModule);
-	}
-
-});
-
-test('isStarted returns true when module is started', function() {
-
-	Box.Application.addModule('test', this.stub().returns({}));
-	Box.Application.start(this.testModule);
-
-	ok(Box.Application.isStarted(this.testModule), 'Module should be started');
-
-});
-
-test('isStarted returns false when module is stopped', function() {
-
-	Box.Application.addModule('test', this.stub().returns({}));
-	Box.Application.start(this.testModule);
-	Box.Application.stop(this.testModule);
-
-	ok(!Box.Application.isStarted(this.testModule), 'Module should not be started');
-
-});
-
-test('isStarted returns false when module was never started', function() {
-
-	Box.Application.addModule('test', this.stub().returns({}));
-
-	ok(!Box.Application.isStarted(this.testModule), 'Module should not be started');
-
-});
-
-
-module('Box.Application.start', {
-
-	setup: function() {
-		Box.Application.init();
-
-		// add after init() to ensure we won't have errors due to missing
-		// module definitions
-		this.testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-		this.testModule2 = $('<div class="module" data-module="test" />')[0];
-		$('#qunit-fixture').append(this.testModule, this.testModule2);
-	}
-
-});
-
-test('start creates a new module when called with an HTML element with data-module', function() {
-
-	Box.Application.addModule('test', this.mock().withArgs(sinon.match.any).returns({}));
-	Box.Application.start(this.testModule);
-
-	ok(Box.Application.isStarted(this.testModule), 'module started');
-
-});
-
-test('start should raise an error when no matching module has been registered', function() {
-
-	var mock = this.mock();
-
-	Box.Application.on('error', mock);
-
-	Box.Application.start(this.testModule);
-
-	Box.Application.off('error', mock);
-
-});
-
-test('start generates different IDs for modules when two modules of the same type are started', function() {
-
-	Box.Application.addModule('test', this.mock().twice().returns({}));
-	Box.Application.start(this.testModule);
-	Box.Application.start(this.testModule2);
-
-	equal(this.testModule.id, 'mod-test-1', 'First module ID should be set');
-	equal(this.testModule2.id, 'mod-test-2', 'Second module ID should be set');
-
-});
-
-test('start calls init() on a new module when called with an HTML element with data-module', function() {
-
-	Box.Application.addModule('test', this.mock().withArgs(sinon.match.any).returns({
-		init: this.mock()
-	}));
-	Box.Application.start(this.testModule);
-
-});
-
-test('start calls init() on module and behaviors in order they are defined when called', function() {
-
-	var moduleInitSpy = this.spy(),
-		behaviorInitSpy = this.spy(),
-		behavior2InitSpy = this.spy();
-
-	Box.Application.addModule('test', this.stub().returns({
-		behaviors: ['test-behavior', 'test-behavior2'],
-		init: moduleInitSpy
-	}));
-	Box.Application.addBehavior('test-behavior', this.stub().returns({
-		init: behaviorInitSpy
-	}));
-	Box.Application.addBehavior('test-behavior2', this.stub().returns({
-		init: behavior2InitSpy
-	}));
-	Box.Application.start(this.testModule);
-
-	ok(moduleInitSpy.calledBefore(behaviorInitSpy), 'module init called before first behavior init');
-	ok(behaviorInitSpy.calledBefore(behavior2InitSpy), 'first behavior init called before second behavior init');
-
-});
-
-
-module('Box.Application.stop', {
-
-	setup: function() {
-		Box.Application.init();
-
-		// add after init() to ensure we won't have errors due to missing
-		// module definitions
-		this.testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-		$('#qunit-fixture').append(this.testModule);
-	}
-
-});
-
-test('stop stops a module when called with an HTML element with data-module', function() {
-
-	Box.Application.addModule('test', this.mock().withArgs(sinon.match.any).returns({}));
-	Box.Application.start(this.testModule);
-	Box.Application.stop(this.testModule);
-
-	ok(!Box.Application.isStarted(this.testModule), 'Module should be stopped');
-
-});
-
-test('stop calls destroy() on a module when called with an HTML element with data-module', function() {
-
-	Box.Application.addModule('test', this.mock().withArgs(sinon.match.any).returns({
-		destroy: this.mock()
-	}));
-	Box.Application.start(this.testModule);
-	Box.Application.stop(this.testModule);
-
-});
-
-test('stop calls destroy() on module and behaviors in reverse order when called', function() {
-
-	var moduleDestroySpy = this.spy(),
-		behaviorDestroySpy = this.spy(),
-		behavior2DestroySpy = this.spy();
-
-	Box.Application.addModule('test', this.stub().returns({
-		behaviors: ['test-behavior', 'test-behavior2'],
-		destroy: moduleDestroySpy
-	}));
-	Box.Application.addBehavior('test-behavior', this.stub().returns({
-		destroy: behaviorDestroySpy
-	}));
-	Box.Application.addBehavior('test-behavior2', this.stub().returns({
-		destroy: behavior2DestroySpy
-	}));
-	Box.Application.start(this.testModule);
-	Box.Application.stop(this.testModule);
-
-	ok(behavior2DestroySpy.calledBefore(behaviorDestroySpy), 'second behavior destroy called before first behavior destroy');
-	ok(behaviorDestroySpy.calledBefore(moduleDestroySpy), 'first behavior destroy called before module destroy');
-
-});
-
-
-module('Box.Application.startAll', {
-
-	setup: function() {
-		Box.Application.init();
-
-		// add after init() to ensure we won't have errors due to missing
-		// module definitions
-		this.testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-		this.nestedModule = $('<div class="module" data-module="parent"><div class="module" data-module="child"></div></div>')[0];
-		$('#qunit-fixture').append(this.testModule, this.nestedModule);
-	}
-
-});
-
-test('startAll starts a child module when called with nested modules', function() {
-
-	Box.Application.addModule('parent', this.mock().never());
-	Box.Application.addModule('child', this.mock().withArgs(sinon.match.any).returns({}));
-	Box.Application.startAll(this.nestedModule);
-
-	ok(!Box.Application.isStarted(this.nestedModule), 'Parent module should not be started');
-	ok(Box.Application.isStarted(this.nestedModule.children[0]), 'Child module should be started');
-
-});
-
-
-module('Box.Application.stopAll', {
-
-	setup: function() {
-		Box.Application.init();
-
-		// add after init() to ensure we won't have errors due to missing
-		// module definitions
-		this.testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-		this.nestedModule = $('<div class="module" data-module="parent"><div class="module" data-module="child"></div></div>')[0];
-		$('#qunit-fixture').append(this.testModule, this.nestedModule);
-	}
-
-});
-
-test('stopAll stops nested module', function() {
-
-	Box.Application.addModule('child', this.stub().returns({}));
-
-	Box.Application.startAll(this.nestedModule);
-	Box.Application.stopAll(this.nestedModule);
-
-	ok(!Box.Application.isStarted(this.nestedModule.children[0]), 'child module stopped');
-
-});
-
-
-module('Event Handling', {
-
-	setup: function() {
-		Box.Application.init();
-
-		// add after init() to ensure we won't have errors due to missing
-		// module definitions
-		this.testModule = $('<div class="module" data-module="test"><span id="module-target" data-type="target"></span></div>')[0];
-		this.nestedModule = $('<div class="module" data-module="parent"><div class="module" data-module="child"></div></div>')[0];
-		$('#qunit-fixture').append(this.testModule, this.nestedModule);
-	}
-
-});
-
-test('onclick should be called when a click occurs inside of a started module', function() {
-
-	Box.Application.addModule('test', this.stub().returns({
-		onclick: this.mock()
-	}));
-
-	Box.Application.start(this.testModule);
-
-	$('#module-target').trigger({
-		type: 'click',
-		button: 1
+		// Always destroy application after a test - clears out registered components
+		Box.Application.destroy();
 	});
 
-});
+	describe('init()', function() {
 
-test('onclick should be called on behaviors in correct order when defined', function() {
+		it('should pass <html> element to startAll', function() {
+			sandbox.mock(Box.Application).expects('startAll').withArgs(document.documentElement);
+			Box.Application.init();
+		});
 
-	var moduleClickSpy = this.spy(),
-		behaviorClickSpy = this.spy(),
-		behavior2ClickSpy = this.spy();
-
-	Box.Application.addModule('test', this.stub().returns({
-		behaviors: ['test-behavior', 'test-behavior2'],
-		onclick: moduleClickSpy
-	}));
-
-	Box.Application.addBehavior('test-behavior', this.stub().returns({
-		onclick: behaviorClickSpy
-	}));
-	Box.Application.addBehavior('test-behavior2', this.stub().returns({
-		onclick: behavior2ClickSpy
-	}));
-
-	Box.Application.start(this.testModule);
-
-	$('#module-target').trigger({
-		type: 'click',
-		button: 1
 	});
 
-	ok(moduleClickSpy.calledBefore(behaviorClickSpy), 'module called before first behavior');
-	ok(behaviorClickSpy.calledBefore(behavior2ClickSpy), 'first behavior called before second behavior');
+	describe('destroy()', function() {
 
-});
+		it('should pass <html> element to stopAll', function() {
+			sandbox.mock(Box.Application).expects('stopAll').withArgs(document.documentElement);
+			Box.Application.destroy();
+		});
 
-test('onclick should be called with the nearest type element and type when a click occurs inside of a started module', function() {
-
-	Box.Application.addModule('test', this.stub().returns({
-		onclick: this.mock().withArgs(sinon.match.any, $('#module-target')[0], $('#module-target').data('type'))
-	}));
-
-	Box.Application.start(this.testModule);
-
-	$('#module-target').trigger({
-		type: 'click',
-		button: 1
 	});
 
-});
+	describe('isStarted()', function() {
 
-test('onclick should not be called when a click occurs inside of a stopped module', function() {
+		beforeEach(function() {
+			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
+			$('#mocha-fixture').append(testModule);
+		});
 
-	Box.Application.addModule('test', this.stub().returns({
-		onclick: this.mock().never()
-	}));
+		it('should return true when module is started', function() {
+			Box.Application.addModule('test', sandbox.stub().returns({}));
+			Box.Application.start(testModule);
+			assert.ok(Box.Application.isStarted(testModule), 'Module should be started');
+		});
 
-	Box.Application.start(this.testModule);
-	Box.Application.stop(this.testModule);
+		it('should return false when module is stopped', function() {
+			Box.Application.addModule('test', sandbox.stub().returns({}));
+			Box.Application.start(testModule);
+			Box.Application.stop(testModule);
+			assert.notOk(Box.Application.isStarted(testModule), 'Module should not be started');
+		});
 
-	$('#module-target').trigger({
-		type: 'click',
-		button: 1
+		it('should return false when module has not been started yet', function() {
+			Box.Application.addModule('test', sandbox.stub().returns({}));
+			assert.notOk(Box.Application.isStarted(testModule), 'Module should not be started');
+		});
+
 	});
 
-});
+	describe('start()', function() {
 
+		beforeEach(function() {
+			Box.Application.init();
+			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
+			testModule2 = $('<div class="module" data-module="test" />')[0];
+			$('#mocha-fixture').append(testModule, testModule2);
+		});
 
-module('Box.Application.broadcast', {
+		it('should create a new module when called with an HTML element with data-module', function() {
+			Box.Application.addModule('test', sandbox.mock().withArgs(sinon.match.any).returns({}));
+			Box.Application.start(testModule);
+			assert.ok(Box.Application.isStarted(testModule), 'module started');
+		});
 
-	setup: function() {
-		Box.Application.init();
+		it('should generate different IDs for modules when two modules of the same type are started', function() {
+			Box.Application.addModule('test', sandbox.mock().twice().returns({}));
+			Box.Application.start(testModule);
+			Box.Application.start(testModule2);
+			assert.equal(testModule.id, 'mod-test-1', 'First module ID should be set');
+			assert.equal(testModule2.id, 'mod-test-2', 'Second module ID should be set');
+		});
 
-		// add after init() to ensure we won't have errors due to missing
-		// module definitions
-		this.testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-		this.testModule2 = $('<div class="module" data-module="test2" />')[0];
-		$('#qunit-fixture').append(this.testModule, this.testModule2);
-	}
+		it('should call init() on a new module when called with an HTML element with data-module', function() {
+			Box.Application.addModule('test', sandbox.mock().withArgs(sinon.match.any).returns({
+				init: sandbox.mock()
+			}));
+			Box.Application.start(testModule);
+		});
 
-});
+		it('should call init() on module and behaviors in order they are defined when called', function() {
+			var moduleInitSpy = sandbox.spy(),
+				behaviorInitSpy = sandbox.spy(),
+				behavior2InitSpy = sandbox.spy();
 
-test('onmessage should be called on all modules listening for it when the message is broadcast', function() {
+			Box.Application.addModule('test', sandbox.stub().returns({
+				behaviors: ['test-behavior', 'test-behavior2'],
+				init: moduleInitSpy
+			}));
+			Box.Application.addBehavior('test-behavior', sandbox.stub().returns({
+				init: behaviorInitSpy
+			}));
+			Box.Application.addBehavior('test-behavior2', sandbox.stub().returns({
+				init: behavior2InitSpy
+			}));
+			Box.Application.start(testModule);
 
-	var messageData = {};
+			assert.ok(moduleInitSpy.calledBefore(behaviorInitSpy), 'module init called before first behavior init');
+			assert.ok(behaviorInitSpy.calledBefore(behavior2InitSpy), 'first behavior init called before second behavior init');
+		});
 
-	Box.Application.addModule('test', this.stub().returns({
-		messages: ['abc'],
-		onmessage: this.mock().withArgs('abc', messageData)
-	}));
-	Box.Application.addModule('test2', this.stub().returns({
-		messages: ['abc'],
-		onmessage: this.mock().withArgs('abc', messageData)
-	}));
-	Box.Application.start(this.testModule);
-	Box.Application.start(this.testModule2);
+		it('should emit an error event when not in debug mode', function() {
+			var exception = new Error('test.init() - Something bad happened.');
 
-	Box.Application.broadcast('abc', messageData);
+			Box.Application.addModule('test', sandbox.stub().returns({
+				init: sandbox.stub().throws(exception)
+			}));
 
-});
+			var mock = sandbox.mock().withArgs(sinon.match({
+				type: 'error',
+				data: sinon.match({
+					exception: exception
+				})
+			}));
 
-test('onmessage should be called on behaviors in correct order when defined', function() {
+			Box.Application.on('error', mock);
+			Box.Application.start(testModule);
+			Box.Application.off('error', mock);
+		});
 
-	var messageData = {},
-		moduleMessageSpy = this.spy(),
-		behaviorMessageSpy = this.spy(),
-		behavior2MessageSpy = this.spy();
+		it('should emit an error when a module specifies a behavior that does not exist', function() {
+			Box.Application.addModule('test', sandbox.stub().returns({
+				behaviors: ['test-behavior']
+			}));
 
-	Box.Application.addModule('test', this.stub().returns({
-		behaviors: ['test-behavior', 'test-behavior2'],
-		messages: ['abc'],
-		onmessage: moduleMessageSpy
-	}));
-	Box.Application.addBehavior('test-behavior', this.stub().returns({
-		messages: ['abc'],
-		onmessage: behaviorMessageSpy
-	}));
-	Box.Application.addBehavior('test-behavior2', this.stub().returns({
-		messages: ['abc'],
-		onmessage: behavior2MessageSpy
-	}));
+			// Using atLeast(1) since both bindEventListeners and the init loop call getBehaviors twice
+			var mock = sandbox.mock().atLeast(1).withArgs(sinon.match({
+				type: 'error',
+				data: sinon.match({
+					exception: new Error('Behavior "test-behavior" not found')
+				})
+			}));
 
-	Box.Application.start(this.testModule);
+			Box.Application.on('error', mock);
+			Box.Application.start(testModule);
+			Box.Application.off('error', mock);
+		});
 
-	Box.Application.broadcast('abc', messageData);
-
-	ok(moduleMessageSpy.calledWith('abc', messageData));
-	ok(behaviorMessageSpy.calledWith('abc', messageData));
-	ok(behavior2MessageSpy.calledWith('abc', messageData));
-	ok(moduleMessageSpy.calledBefore(behaviorMessageSpy), 'module called before first behavior');
-	ok(behaviorMessageSpy.calledBefore(behavior2MessageSpy), 'first behavior called before second behavior');
-
-});
-
-test('onmessage should not be called when the module is stopped and the message is broadcast', function() {
-
-	Box.Application.addModule('test', this.stub().returns({
-		messages: ['abc'],
-		onmessage: this.mock().never()
-	}));
-	Box.Application.start(this.testModule);
-	Box.Application.stop(this.testModule);
-
-	Box.Application.broadcast('abc');
-
-});
-
-
-module('Services');
-
-test('getService should call the creator function with application as an argument when called for an existing service', function() {
-
-	Box.Application.addService('test', this.mock().withExactArgs(Box.Application));
-	Box.Application.getService('test');
-
-});
-
-test('getService should return the object that is returned from the creator function when called for an existing service', function() {
-
-	var testService = {};
-
-	Box.Application.addService('test', this.stub().returns(testService));
-
-	equal(Box.Application.getService('test'), testService, 'constructed service returned');
-
-});
-
-test('getService should return the same object for each call when called for the same service multiple times', function() {
-
-	Box.Application.addService('test', this.mock().once().returns({}));
-
-	var first = Box.Application.getService('test');
-	var second = Box.Application.getService('test');
-	equal(first, second, 'same service returned');
-
-});
-
-test('getService should return null when called for a non-existing service', function() {
-
-	var service = Box.Application.getService('test');
-	equal(service, null, 'null returned');
-
-});
-
-test('getService should register methods on Application when passed multiple exports', function() {
-
-	Box.Application.addService('test', this.stub().returns({
-		foo: this.mock().returns(1),
-		bar: this.mock().returns(2)
-	}), {
-		exports: ['foo', 'bar']
 	});
 
-	equal(Box.Application.foo(), 1);
-	equal(Box.Application.bar(), 2);
+	describe('start() - debug mode', function() {
 
-});
+		beforeEach(function() {
+			Box.Application.init({ debug: true });
+			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
+			$('#mocha-fixture').append(testModule);
+		});
 
-test('getService should register methods on the context object when passed multiple exports', function() {
+		it('should rethrow an error in the module init() when in debug mode', function() {
+			Box.Application.addModule('test', sandbox.mock().withArgs(sinon.match.any).returns({
+				init: sandbox.stub().throws('Something bad happened.')
+			}));
 
-	this.testModule = $('<div class="module" data-module="test"><span id="module-target" data-type="target"></span></div>')[0];
-	$('#qunit-fixture').append(this.testModule);
+			assert.throws(function() {
+				Box.Application.start(testModule);
+			}, 'test.init() - Something bad happened.');
+		});
 
-	Box.Application.addService('test', this.stub().returns({
-		foo: this.mock().returns(1),
-		bar: this.mock().returns(2)
-	}), {
-		exports: ['foo', 'bar']
+		it('should raise an error when no matching module has been registered', function() {
+			assert.throws(function() {
+				Box.Application.start(testModule);
+			});
+		});
+
 	});
 
-	Box.Application.addModule('test', function(context) {
-		return {
-			init: function() {
-				equal(context.foo(), 1);
-				equal(context.bar(), 2);
-			}
-		};
+	describe('stop()', function() {
+
+		beforeEach(function() {
+			Box.Application.init();
+			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
+			$('#mocha-fixture').append(testModule);
+		});
+
+		it('stop stops a module when called with an HTML element with data-module', function() {
+			Box.Application.addModule('test', sandbox.mock().withArgs(sinon.match.any).returns({}));
+			Box.Application.start(testModule);
+			Box.Application.stop(testModule);
+			assert.notOk(Box.Application.isStarted(testModule), 'Module should be stopped');
+		});
+
+		it('stop calls destroy() on a module when called with an HTML element with data-module', function() {
+			Box.Application.addModule('test', sandbox.mock().withArgs(sinon.match.any).returns({
+				destroy: sandbox.mock()
+			}));
+			Box.Application.start(testModule);
+			Box.Application.stop(testModule);
+		});
+
+		it('stop calls destroy() on module and behaviors in reverse order when called', function() {
+			var moduleDestroySpy = sandbox.spy(),
+				behaviorDestroySpy = sandbox.spy(),
+				behavior2DestroySpy = sandbox.spy();
+
+			Box.Application.addModule('test', sandbox.stub().returns({
+				behaviors: ['test-behavior', 'test-behavior2'],
+				destroy: moduleDestroySpy
+			}));
+			Box.Application.addBehavior('test-behavior', sandbox.stub().returns({
+				destroy: behaviorDestroySpy
+			}));
+			Box.Application.addBehavior('test-behavior2', sandbox.stub().returns({
+				destroy: behavior2DestroySpy
+			}));
+			Box.Application.start(testModule);
+			Box.Application.stop(testModule);
+
+			assert.ok(behavior2DestroySpy.calledBefore(behaviorDestroySpy), 'second behavior destroy called before first behavior destroy');
+			assert.ok(behaviorDestroySpy.calledBefore(moduleDestroySpy), 'first behavior destroy called before module destroy');
+		});
+
 	});
 
-	Box.Application.start(this.testModule);
+	describe('startAll()', function() {
 
-});
+		beforeEach(function() {
+			Box.Application.init();
+			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
+			nestedModule = $('<div class="module" data-module="parent"><div class="module" data-module="child"></div></div>')[0];
+			$('#mocha-fixture').append(testModule, nestedModule);
+		});
 
-test('getService should throw an error when an extension already exists', function() {
+		it('startAll starts a child module when called with nested modules', function() {
+			Box.Application.addModule('parent', sandbox.mock().never());
+			Box.Application.addModule('child', sandbox.mock().withArgs(sinon.match.any).returns({}));
+			Box.Application.startAll(nestedModule);
 
-	Box.Application.init({
-		debug: true
-	});
-
-	Box.Application.addService('test', this.stub().returns({
-		foo: function() {}
-	}), {
-		exports: ['foo']
-	});
-
-	raises(function() {
-		Box.Application.addService('test2', this.stub().returns({
-			foo: function() {}
-		}), {
-			exports: ['foo']
+			assert.notOk(Box.Application.isStarted(nestedModule), 'Parent module should not be started');
+			assert.ok(Box.Application.isStarted(nestedModule.children[0]), 'Child module should be started');
 		});
 	});
 
-});
-
-test('addService should throw an error when the service name already exists', function() {
-
-	Box.Application.init({
-		debug: true
-	});
-
-	Box.Application.addService('test', this.stub().returns({}));
-
-	raises(function() {
-		Box.Application.addService('test', this.stub().returns({}));
-	});
-
-});
-
-
-module('Box.Application.getModuleConfig', {
-
-	setup: function() {
-		this.testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-		this.moduleWithConfig = $('<div class="module" data-module="test"><script type="text/x-config">{"name":"box"}</script></div>')[0];
-
-		$('#qunit-fixture').append(this.testModule, this.moduleWithConfig);
-	}
-
-});
-
-test('getModuleConfig should return null when the module has no configuration', function() {
-
-	Box.Application.addModule('test', this.mock().withArgs(sinon.match.any).returns({}));
-	Box.Application.start(this.testModule);
-
-	var config = Box.Application.getModuleConfig(this.testModule);
-	strictEqual(config,  null, 'Configuration should be null.');
-
-});
-
-test('getModuleConfig should return an object when the module has configuration', function() {
-
-	Box.Application.addModule('test', this.mock().withArgs(sinon.match.any).returns({}));
-	Box.Application.start(this.moduleWithConfig);
-
-	var config = Box.Application.getModuleConfig(this.moduleWithConfig);
-	deepEqual(config, {name:'box'}, 'Configuration key name should be "box".');
-
-});
-
-test('getModuleConfig should return config value when name specified', function() {
-
-	Box.Application.addModule('test', this.mock().withArgs(sinon.match.any).returns({}));
-	Box.Application.start(this.moduleWithConfig);
-
-	var config = Box.Application.getModuleConfig(this.moduleWithConfig, 'name');
-	equal(config, 'box', 'Configuration value should be returned');
-
-});
-
-test('getModuleConfig should return null when config key does not exist', function() {
-
-	Box.Application.addModule('test', this.mock().withArgs(sinon.match.any).returns({}));
-	Box.Application.start(this.moduleWithConfig);
-
-	var config = Box.Application.getModuleConfig(this.moduleWithConfig, 'abc');
-	strictEqual(config, null, 'null should be returned');
-
-});
-
-
-module('Module Error Handling', {
-
-	setup: function() {
-		this.testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-
-		$('#qunit-fixture').append(this.testModule);
-	}
-
-});
-
-test('An error in a module\'s init() should be re-thrown with a fixed error message when in debug mode', function() {
-
-	Box.Application.addModule('test', this.mock().withArgs(sinon.match.any).returns({
-		init: this.stub().throws('Something bad happened.')
-	}));
-
-	raises(function() {
-		Box.Application.init({ debug: true });
-	}, 'test.init() - Something bad happened.');
-
-});
-
-
-test('An error in a module\'s init() should fire an event when not in debug mode', function() {
-
-	var exception = new Error('test.init() - Something bad happened.');
-
-	Box.Application.addModule('test', this.stub().returns({
-		init: this.stub().throws(exception)
-	}));
-
-	var mock = this.mock().withArgs(sinon.match({
-		type: 'error',
-		data: sinon.match({
-			exception: exception
-		})
-	}));
-
-	Box.Application.on('error', mock);
-	Box.Application.init();
-	Box.Application.off('error', mock);
-
-});
-
-test('addModule should throw an error when the module name already exists', function() {
-
-	Box.Application.addModule('test', this.stub().returns({}));
-
-	Box.Application.init({
-		debug: true
-	});
-
-	raises(function() {
-		Box.Application.addModule('test', this.stub().returns({}));
-	});
-
-});
-
-
-module('Behaviors', {
-
-	setup: function() {
-		this.testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-		$('#qunit-fixture').append(this.testModule);
-	}
-
-});
-
-test('Error should be fired when a module specifies a behavior that does not exist', function() {
-
-	Box.Application.addModule('test', this.stub().returns({
-		behaviors: ['test-behavior']
-	}));
-
-	// Using atLeast(1) since both bindEventListeners and the init loop call getBehaviors twice
-	var mock = this.mock().atLeast(1).withArgs(sinon.match({
-		type: 'error',
-		data: sinon.match({
-			exception: Error('Behavior "test-behavior" not found')
-		})
-	}));
-
-	Box.Application.on('error', mock);
-
-	Box.Application.start(this.testModule);
-
-	Box.Application.off('error', mock);
-
-});
-
-
-module('addBehavior');
-
-test('addBehavior should throw an error when the behavior name already exists', function() {
-
-	Box.Application.init({
-		debug: true
-	});
-
-	Box.Application.addBehavior('test-behavior', this.stub().returns({}));
-
-	raises(function() {
-		Box.Application.addBehavior('test-behavior', this.stub().returns({}));
-	});
-
-});
-
-
-module('getGlobal');
-
-test('getGlobal() should return the window-scope var when it exists', function() {
-	window.foo = 'bar';
-
-	strictEqual(Box.Application.getGlobal('foo'), 'bar', 'global var returned');
-
-	delete window.foo;
-
-});
-
-test('getGlobal() should return the null when global var does not exist', function() {
-	strictEqual(Box.Application.getGlobal('nonexistent'), null, 'null returned');
-});
-
-module('getGlobalConfig', {
-
-	setup: function() {
-		Box.Application.init({
-			foo: 'bar'
+	describe('stopAll()', function() {
+
+		beforeEach(function() {
+			Box.Application.init();
+			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
+			nestedModule = $('<div class="module" data-module="parent"><div class="module" data-module="child"></div></div>')[0];
+			$('#mocha-fixture').append(testModule, nestedModule);
 		});
-	}
 
-});
+		it('stopAll stops nested module', function() {
+			Box.Application.addModule('child', sandbox.stub().returns({}));
 
-test('getGlobalConfig() should return the full config when called without parameters', function() {
+			Box.Application.startAll(nestedModule);
+			Box.Application.stopAll(nestedModule);
 
-	// won't be same object but will have same contents
-	deepEqual(Box.Application.getGlobalConfig(), { foo: 'bar' }, 'full config returned');
-
-});
-
-test('getGlobalConfig() should return value when it was set during initialization', function() {
-
-	equal(Box.Application.getGlobalConfig('foo'), 'bar', 'config value returned');
-
-});
-
-test('getGlobalConfig() should not return value when it was not set during initialization', function() {
-
-	strictEqual(Box.Application.getGlobalConfig('bar'), null, 'missing config value returns null');
-
-});
-
-module('setGlobalConfig');
-
-test('setGlobalConfig() should set the globalConfig object', function() {
-
-	Box.Application.setGlobalConfig({
-		foo: 'bar'
-	});
-
-	equal(Box.Application.getGlobalConfig('foo'), 'bar', 'config value is set');
-
-});
-
-test('setGlobalConfig() should throw an error after application initialization', function() {
-
-	Box.Application.init({
-		debug: true
-	});
-
-	raises(function() {
-		Box.Application.setGlobalConfig({
-			foo: 'bar'
+			assert.notOk(Box.Application.isStarted(nestedModule.children[0]), 'child module stopped');
 		});
+
+	});
+
+	describe('addService()', function() {
+
+		it('should throw an error when adding a service that already exists', function() {
+			Box.Application.addService('some-service', sandbox.stub().returns({}));
+
+			Box.Application.init({
+				debug: true
+			});
+
+			assert.throws(function() {
+				Box.Application.addService('some-service', sandbox.stub().returns({}));
+			});
+		});
+
+	});
+
+	describe('addModule()', function() {
+
+		beforeEach(function() {
+			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
+			$('#mocha-fixture').append(testModule);
+		});
+
+		it('should throw an error when adding a module that already exists', function() {
+			Box.Application.addModule('test', sandbox.stub().returns({}));
+
+			Box.Application.init({
+				debug: true
+			});
+
+			assert.throws(function() {
+				Box.Application.addModule('test', sandbox.stub().returns({}));
+			});
+		});
+
+	});
+
+	describe('addBehavior()', function() {
+
+		it('should throw an error when adding a behavior that already exists', function() {
+			Box.Application.addModule('test', sandbox.stub().returns({}));
+			Box.Application.addBehavior('some-behavior', sandbox.stub().returns({}));
+
+			Box.Application.init({
+				debug: true
+			});
+
+			assert.throws(function() {
+				Box.Application.addBehavior('some-behavior', sandbox.stub().returns({}));
+			});
+		});
+
+	});
+
+	describe('getService()', function() {
+
+		it('should call the creator function with application as an argument when called for an existing service', function() {
+			Box.Application.addService('test', sandbox.mock().withExactArgs(Box.Application));
+			Box.Application.getService('test');
+		});
+
+		it('should return the object that is returned from the creator function when called for an existing service', function() {
+			var testService = {};
+
+			Box.Application.addService('test', sandbox.stub().returns(testService));
+
+			assert.equal(Box.Application.getService('test'), testService, 'constructed service returned');
+		});
+
+		it('should return the same object for each call when called for the same service multiple times', function() {
+			Box.Application.addService('test', sandbox.mock().once().returns({}));
+
+			var first = Box.Application.getService('test');
+			var second = Box.Application.getService('test');
+			assert.equal(first, second, 'same service returned');
+		});
+
+		it('should return null when called for a non-existing service', function() {
+			var service = Box.Application.getService('test');
+			assert.equal(service, null, 'null returned');
+		});
+
+		it('should register methods on Application when passed multiple exports', function() {
+			Box.Application.addService('test', sandbox.stub().returns({
+				foo: sandbox.mock().returns(1),
+				bar: sandbox.mock().returns(2)
+			}), {
+				exports: ['foo', 'bar']
+			});
+
+			assert.equal(Box.Application.foo(), 1);
+			assert.equal(Box.Application.bar(), 2);
+		});
+
+		it('should register methods on the context object when passed multiple exports', function() {
+			testModule = $('<div class="module" data-module="test"><span id="module-target" data-type="target"></span></div>')[0];
+			$('#mocha-fixture').append(testModule);
+
+			Box.Application.addService('test', sandbox.stub().returns({
+				foo: sandbox.mock().returns(1),
+				bar: sandbox.mock().returns(2)
+			}), {
+				exports: ['foo', 'bar']
+			});
+
+			Box.Application.addModule('test', function(context) {
+				return {
+					init: function() {
+						assert.equal(context.foo(), 1);
+						assert.equal(context.bar(), 2);
+					}
+				};
+			});
+
+			Box.Application.start(testModule);
+		});
+
+		it('should throw an error when an extension already exists', function() {
+			Box.Application.init({
+				debug: true
+			});
+
+			Box.Application.addService('test', sandbox.stub().returns({
+				foo: function() {}
+			}), {
+				exports: ['foo']
+			});
+
+			assert.throws(function() {
+				Box.Application.addService('test2', sandbox.stub().returns({
+					foo: function() {}
+				}), {
+					exports: ['foo']
+				});
+			});
+		});
+
+		it('should throw an error when the service name already exists', function() {
+			Box.Application.init({
+				debug: true
+			});
+
+			Box.Application.addService('test', sandbox.stub().returns({}));
+
+			assert.throws(function() {
+				Box.Application.addService('test', sandbox.stub().returns({}));
+			});
+		});
+
+	});
+
+	describe('on[event]()', function() {
+
+		var nestedModule;
+
+		beforeEach(function() {
+			Box.Application.init();
+
+			// add after init() to ensure we won't have errors due to missing
+			// module definitions
+			testModule = $('<div class="module" data-module="test"><span id="module-target" data-type="target"></span></div>')[0];
+			nestedModule = $('<div class="module" data-module="parent"><div class="module" data-module="child"></div></div>')[0];
+			$('#mocha-fixture').append(testModule, nestedModule);
+		});
+
+		it('should be called when an event occurs inside of a started module', function() {
+			Box.Application.addModule('test', sandbox.stub().returns({
+				onclick: sandbox.mock()
+			}));
+
+			Box.Application.start(testModule);
+
+			$('#module-target').trigger({
+				type: 'click',
+				button: 1
+			});
+		});
+
+		it('should be called on behaviors in correct order when defined', function() {
+
+			var moduleClickSpy = sandbox.spy(),
+				behaviorClickSpy = sandbox.spy(),
+				behavior2ClickSpy = sandbox.spy();
+
+			Box.Application.addModule('test', sandbox.stub().returns({
+				behaviors: ['test-behavior', 'test-behavior2'],
+				onclick: moduleClickSpy
+			}));
+
+			Box.Application.addBehavior('test-behavior', sandbox.stub().returns({
+				onclick: behaviorClickSpy
+			}));
+			Box.Application.addBehavior('test-behavior2', sandbox.stub().returns({
+				onclick: behavior2ClickSpy
+			}));
+
+			Box.Application.start(testModule);
+
+			$('#module-target').trigger({
+				type: 'click',
+				button: 1
+			});
+
+			assert.ok(moduleClickSpy.calledBefore(behaviorClickSpy), 'module called before first behavior');
+			assert.ok(behaviorClickSpy.calledBefore(behavior2ClickSpy), 'first behavior called before second behavior');
+
+		});
+
+		it('should be called with the nearest type element and type when an event occurs inside of a started module', function() {
+
+			Box.Application.addModule('test', sandbox.stub().returns({
+				onclick: sandbox.mock().withArgs(sinon.match.any, $('#module-target')[0], $('#module-target').data('type'))
+			}));
+
+			Box.Application.start(testModule);
+
+			$('#module-target').trigger({
+				type: 'click',
+				button: 1
+			});
+
+		});
+
+		it('should not be called when an event occurs inside of a stopped module', function() {
+
+			Box.Application.addModule('test', sandbox.stub().returns({
+				onclick: sandbox.mock().never()
+			}));
+
+			Box.Application.start(testModule);
+			Box.Application.stop(testModule);
+
+			$('#module-target').trigger({
+				type: 'click',
+				button: 1
+			});
+
+		});
+
+	});
+
+
+	describe('broadcast()', function() {
+
+		beforeEach(function() {
+			Box.Application.init();
+
+			// add after init() to ensure we won't have errors due to missing
+			// module definitions
+			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
+			testModule2 = $('<div class="module" data-module="test2" />')[0];
+			$('#mocha-fixture').append(testModule, testModule2);
+		});
+
+		it('should call onmessage of modules listening for the specific message when called', function() {
+			var messageData = {};
+
+			Box.Application.addModule('test', sandbox.stub().returns({
+				messages: ['abc'],
+				onmessage: sandbox.mock().withArgs('abc', messageData)
+			}));
+			Box.Application.addModule('test2', sandbox.stub().returns({
+				messages: ['abc'],
+				onmessage: sandbox.mock().withArgs('abc', messageData)
+			}));
+			Box.Application.start(testModule);
+			Box.Application.start(testModule2);
+
+			Box.Application.broadcast('abc', messageData);
+		});
+
+		it('should call onmessage of behaviors listening in correct order when defined', function() {
+			var messageData = {},
+				moduleMessageSpy = sandbox.spy(),
+				behaviorMessageSpy = sandbox.spy(),
+				behavior2MessageSpy = sandbox.spy();
+
+			Box.Application.addModule('test', sandbox.stub().returns({
+				behaviors: ['test-behavior', 'test-behavior2'],
+				messages: ['abc'],
+				onmessage: moduleMessageSpy
+			}));
+			Box.Application.addBehavior('test-behavior', sandbox.stub().returns({
+				messages: ['abc'],
+				onmessage: behaviorMessageSpy
+			}));
+			Box.Application.addBehavior('test-behavior2', sandbox.stub().returns({
+				messages: ['abc'],
+				onmessage: behavior2MessageSpy
+			}));
+
+			Box.Application.start(testModule);
+
+			Box.Application.broadcast('abc', messageData);
+
+			assert.ok(moduleMessageSpy.calledWith('abc', messageData));
+			assert.ok(behaviorMessageSpy.calledWith('abc', messageData));
+			assert.ok(behavior2MessageSpy.calledWith('abc', messageData));
+			assert.ok(moduleMessageSpy.calledBefore(behaviorMessageSpy), 'module called before first behavior');
+			assert.ok(behaviorMessageSpy.calledBefore(behavior2MessageSpy), 'first behavior called before second behavior');
+		});
+
+
+		it('should not call onmessage of a module when the module is stopped and the message is broadcast', function() {
+			Box.Application.addModule('test', sandbox.stub().returns({
+				messages: ['abc'],
+				onmessage: sandbox.mock().never()
+			}));
+			Box.Application.start(testModule);
+			Box.Application.stop(testModule);
+
+			Box.Application.broadcast('abc');
+		});
+
+	});
+
+
+	describe('getModuleConfig()', function() {
+
+		var moduleWithConfig;
+
+		beforeEach(function() {
+			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
+			moduleWithConfig = $('<div class="module" data-module="test"><script type="text/x-config">{"name":"box"}</script></div>')[0];
+
+			$('#mocha-fixture').append(testModule, moduleWithConfig);
+		});
+
+		it('should return null when the module has no configuration', function() {
+			Box.Application.addModule('test', sandbox.mock().withArgs(sinon.match.any).returns({}));
+			Box.Application.start(testModule);
+
+			var config = Box.Application.getModuleConfig(testModule);
+			assert.strictEqual(config,  null, 'Configuration should be null.');
+		});
+
+		it('should return an object when the module has configuration', function() {
+			Box.Application.addModule('test', sandbox.mock().withArgs(sinon.match.any).returns({}));
+			Box.Application.start(moduleWithConfig);
+
+			var config = Box.Application.getModuleConfig(moduleWithConfig);
+			assert.deepEqual(config, {name:'box'}, 'Configuration key name should be "box".');
+		});
+
+		it('should return config value when name specified', function() {
+			Box.Application.addModule('test', sandbox.mock().withArgs(sinon.match.any).returns({}));
+			Box.Application.start(moduleWithConfig);
+
+			var config = Box.Application.getModuleConfig(moduleWithConfig, 'name');
+			assert.equal(config, 'box', 'Configuration value should be returned');
+		});
+
+		it('should return null when config key does not exist', function() {
+			Box.Application.addModule('test', sandbox.mock().withArgs(sinon.match.any).returns({}));
+			Box.Application.start(moduleWithConfig);
+
+			var config = Box.Application.getModuleConfig(moduleWithConfig, 'abc');
+			assert.strictEqual(config, null, 'null should be returned');
+		});
+
+	});
+
+	describe('getGlobal', function() {
+
+		it('should return the window-scope var when it exists', function() {
+			window.foo = 'bar';
+			assert.strictEqual(Box.Application.getGlobal('foo'), 'bar', 'global var returned');
+			delete window.foo;
+
+		});
+
+		it('should return the null when global var does not exist', function() {
+			assert.strictEqual(Box.Application.getGlobal('nonexistent'), null, 'null returned');
+		});
+
+	});
+
+
+	describe('getGlobalConfig()', function() {
+
+		beforeEach(function() {
+			Box.Application.init({
+				foo: 'bar'
+			});
+		});
+
+		it('should return the full config when called without parameters', function() {
+			// won't be same object but will have same contents
+			assert.deepEqual(Box.Application.getGlobalConfig(), { foo: 'bar' }, 'full config returned');
+		});
+
+		it('should return value when it was set during initialization', function() {
+			assert.equal(Box.Application.getGlobalConfig('foo'), 'bar', 'config value returned');
+		});
+
+		it('should not return value when it was not set during initialization', function() {
+			assert.strictEqual(Box.Application.getGlobalConfig('bar'), null, 'missing config value returns null');
+		});
+
+	});
+
+
+	describe('setGlobalConfig()', function() {
+
+		it('should set the globalConfig object', function() {
+			Box.Application.setGlobalConfig({
+				foo: 'bar'
+			});
+
+			assert.equal(Box.Application.getGlobalConfig('foo'), 'bar', 'config value is set');
+		});
+
+		it('should throw an error after application initialization', function() {
+			Box.Application.init({
+				debug: true
+			});
+
+			assert.throws(function() {
+				Box.Application.setGlobalConfig({
+					foo: 'bar'
+				});
+			});
+		});
+
+		it('should have globalConfig overriden by application initialization', function() {
+			Box.Application.setGlobalConfig({
+				theAnswer: 12
+			});
+
+			Box.Application.init({
+				theAnswer: 42
+			});
+
+			assert.equal(Box.Application.getGlobalConfig('theAnswer'), 42, 'config value is set by init');
+		});
+
 	});
 
 });
 
-test('setGlobalConfig() should have globalConfig overriden by application initialization', function() {
 
-	Box.Application.setGlobalConfig({
-		theAnswer: 12
-	});
 
-	Box.Application.init({
-		theAnswer: 42
-	});
 
-	equal(Box.Application.getGlobalConfig('theAnswer'), 42, 'config value is set by init');
 
-});
+
+/*
+
+
+*/
