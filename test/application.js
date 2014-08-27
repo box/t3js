@@ -693,6 +693,21 @@ test('addBehavior should throw an error when the behavior name already exists', 
 });
 
 
+module('getGlobal');
+
+test('getGlobal() should return the window-scope var when it exists', function() {
+	window.foo = 'bar';
+
+	strictEqual(Box.Application.getGlobal('foo'), 'bar', 'global var returned');
+
+	delete window.foo;
+
+});
+
+test('getGlobal() should return the null when global var does not exist', function() {
+	strictEqual(Box.Application.getGlobal('nonexistent'), null, 'null returned');
+});
+
 module('getGlobalConfig', {
 
 	setup: function() {

@@ -74,6 +74,18 @@ test('getConfig() should pass through module element and config name to applicat
 
 });
 
+test('getGlobal() should return the window-scope var when it exists', function() {
+	var application = {
+		getGlobal: function() {}
+	};
+
+	this.stub(application, 'getGlobal').withArgs('foo').returns('bar');
+
+	var context = new Box.Context(application, this.element);
+	strictEqual(context.getGlobal('foo'), 'bar', 'global var returned');
+
+});
+
 test('getGlobalConfig() should pass through to application when called', function() {
 
 	var application = {

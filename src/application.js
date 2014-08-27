@@ -536,7 +536,7 @@ Box.Application = (function() {
 		 * for this instance of the module.
 		 * @param {HTMLElement} element The HTML element associated with a module.
 		 * @param {string} [name] Specific config parameter
-		 * @returns {any} config value or the entire configuration JSON object
+		 * @returns {*} config value or the entire configuration JSON object
 		 *                if no name is specified (null if either not found)
 		 */
 		getModuleConfig: function(element, name) {
@@ -668,7 +668,7 @@ Box.Application = (function() {
 		/**
 		 * Broadcasts a message to all registered listeners
 		 * @param {string} name Name of the message
-		 * @param {any} [data] Custom parameters for the message
+		 * @param {*} [data] Custom parameters for the message
 		 * @returns {void}
 		 */
 		broadcast: function(name, data) {
@@ -709,9 +709,22 @@ Box.Application = (function() {
 		//----------------------------------------------------------------------
 
 		/**
+		 * Returns a global variable
+		 * @param {string} name Specific global var name
+		 * @returns {*} returns the window-scope variable matching the name, null otherwise
+		 */
+		getGlobal: function(name) {
+			if (name in window) {
+				return window[name];
+			} else {
+				return null;
+			}
+		},
+
+		/**
 		 * Returns global configuration data
 		 * @param {string} [name] Specific config parameter
-		 * @returns {any} config value or the entire configuration JSON object
+		 * @returns {*} config value or the entire configuration JSON object
 		 *                if no name is specified (null if neither not found)
 		 */
 		getGlobalConfig: function(name) {

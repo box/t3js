@@ -29,7 +29,7 @@ Box.Context = (function() {
 		/**
 		 * Passthrough method to application that broadcasts messages.
 		 * @param {string} name Name of the message event
-		 * @param {any} [data] Custom parameters for the message
+		 * @param {*} [data] Custom parameters for the message
 		 * @returns {void}
 		 */
 		broadcast: function(name, data) {
@@ -49,7 +49,7 @@ Box.Context = (function() {
 		 * Returns any configuration information that was output into the page
 		 * for this instance of the module.
 		 * @param {string} [name] Specific config parameter
-		 * @returns {any} config value or the entire configuration JSON object
+		 * @returns {*} config value or the entire configuration JSON object
 		 *                if no name is specified (null if either not found)
 		 */
 		getConfig: function(name) {
@@ -57,9 +57,18 @@ Box.Context = (function() {
 		},
 
 		/**
+		 * Returns a global variable
+		 * @param {string} name Specific global var name
+		 * @returns {*} returns the window-scope variable matching the name, null otherwise
+		 */
+		getGlobal: function(name) {
+			return this.application.getGlobal(name);
+		},
+
+		/**
 		 * Returns global configuration data
 		 * @param {string} [name] Specific config parameter
-		 * @returns {any} config value or the entire configuration JSON object
+		 * @returns {*} config value or the entire configuration JSON object
 		 *                if no name is specified (null if either not found)
 		 */
 		getGlobalConfig: function(name) {
