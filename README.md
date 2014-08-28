@@ -1,5 +1,7 @@
-[T3](https://confluence.inside-box.net/display/ETO/T3+JavaScript+Framework) Javascript Framework
+[T3 Javascript Framework](https://confluence.inside-box.net/display/ETO/T3+JavaScript+Framework)
 ================================================================================================
+
+[See Documentation](https://gitenterprise.inside-box.net/pages/Box/T3/)
 
 Building T3
 -----------
