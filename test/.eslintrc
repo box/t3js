@@ -1,0 +1,35 @@
+{
+	"env": {
+		"mocha": true
+	},
+	"globals": {
+		"window": false,
+		"document": false,
+		"Box": false,
+		"$": false,
+		"mocha": false,
+		"chai": false,
+		"sinon": false,
+		"assert": false
+	},
+	"rules": {
+		"brace-style": 2,
+		"func-style": [2, "declaration"],
+		"no-global-strict": 2,
+		"guard-for-in": 2,
+		"no-floating-decimal": 2,
+		"no-underscore-dangle": 0,
+		"no-nested-ternary": 2,
+		"quotes": [2, "single"],
+		"radix": 2,
+		"wrap-iife": 2,
+		"space-after-keywords": 2,
+		"valid-jsdoc": [2, {
+			"prefer": {
+				"return": "returns"
+			}
+		}],
+		// We allow unused args
+		"no-unused-vars": [2, {"args": "none"}]
+	}
+}

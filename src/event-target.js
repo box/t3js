@@ -14,7 +14,7 @@ Box.EventTarget = (function() {
 	 * executing handlers for events when they occur.
 	 * @constructor
 	 */
-	var EventTarget = function() {
+	function EventTarget() {
 
 		/**
 		 * Map of events to handlers. The keys in the object are the event names.
@@ -23,7 +23,7 @@ Box.EventTarget = (function() {
 		 * @private
 		 */
 		this._handlers = {};
-	};
+	}
 
 	EventTarget.prototype = {
 
@@ -32,8 +32,8 @@ Box.EventTarget = (function() {
 
 		/**
 		 * Adds a new event handler for a particular type of event.
-		 * @param type {string} The name of the event to listen for.
-		 * @param handler {Function} The function to call when the event occurs.
+		 * @param {string} type The name of the event to listen for.
+		 * @param {Function} handler The function to call when the event occurs.
 		 * @returns {void}
 		 */
 		on: function(type, handler) {
@@ -46,8 +46,8 @@ Box.EventTarget = (function() {
 
 		/**
 		 * Fires an event with the given name and data.
-		 * @param type {string} The type of event to fire.
-		 * @param [data] {Object} An object with properties that should end up on
+		 * @param {string} type The type of event to fire.
+		 * @param {Object} [data] An object with properties that should end up on
 		 *                        the event object for the given event.
 		 * @returns {void}
 		 */
@@ -76,8 +76,8 @@ Box.EventTarget = (function() {
 
 		/**
 		 * Removes an event handler from a given event.
-		 * @param type {string} The name of the event to remove from.
-		 * @param handler {Function} The function to remove as a handler.
+		 * @param {string} type The name of the event to remove from.
+		 * @param {Function} handler The function to remove as a handler.
 		 * @returns {void}
 		 */
 		off: function(type, handler) {
@@ -98,5 +98,6 @@ Box.EventTarget = (function() {
 	};
 
 	return EventTarget;
+
 
 }());

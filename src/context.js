@@ -15,10 +15,10 @@ Box.Context = (function() {
 	 * @param {HTMLElement} element Module's DOM element
 	 * @constructor
 	 */
-	var Context = function(application, element) {
+	function Context(application, element) {
 		this.application = application;
 		this.element = element;
-	};
+	}
 
 	//-------------------------------------------------------------------------
 	// Passthrough Methods
@@ -101,4 +101,4 @@ Box.Context = (function() {
 
 	return Context;
 
-})();
+}());

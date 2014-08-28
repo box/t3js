@@ -1,6 +1,6 @@
 /* global module */
 
-/* jshint camelcase: false */
+/* eslint camelcase: 0 */
 
 module.exports = function( grunt ) {
 
@@ -37,30 +37,17 @@ module.exports = function( grunt ) {
 				}
 			}
 		},
-		jshint: {
-			src: {
-				src: ['src/**/*.js'],
-				options: {
-					jshintrc: 'src/.jshintrc'
-				}
-			},
-			test: {
-				src: ['test/**/*.js'],
-				options: {
-					jshintrc: 'test/.jshintrc'
-				}
-			},
-			grunt: {
-				src: ['Gruntfile.js'],
-				options: {
-					jshintrc: '.jshintrc'
-				}
-			},
-			dist: {
-				src: ['<%= distName %>'],
-				options: {
-					jshintrc: 'src/.jshintrc'
-				}
+		eslint: {
+			dist: [
+				'<%= distName %>'
+			],
+			dev: [
+				'src/**/*.js',
+				'test/**/*.js',
+				'Gruntfile.js'
+			],
+			options: {
+				format: 'stylish'
 			}
 		},
 		jsdoc : {
@@ -76,13 +63,13 @@ module.exports = function( grunt ) {
 
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-connect');
-	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-eslint');
 	grunt.loadNpmTasks('grunt-mocha-phantomjs');
 	grunt.loadNpmTasks('grunt-jsdoc');
 
 
+	grunt.registerTask('lint', ['eslint:dev']);
 	grunt.registerTask('test', ['connect', 'mocha_phantomjs']);
-	grunt.registerTask('jshintdev', ['jshint:src', 'jshint:test', 'jshint:grunt']);
-	grunt.registerTask('default', ['jshintdev', 'test']);
-	grunt.registerTask('build', ['jshintdev', 'test', 'concat', 'jshint:dist', 'jsdoc']);
+	grunt.registerTask('default', ['eslint:dev', 'test']);
+	grunt.registerTask('build', ['eslint:dev', 'test', 'concat', 'eslint:dist', 'jsdoc']);
 };

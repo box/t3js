@@ -1,4 +1,4 @@
-/* jshint ignore:start */
+/* eslint-disable */
 // @WARNING: This library is not semantically versioned! At this time, it is compatible with node v0.11.10
 //
 // http://wiki.commonjs.org/wiki/Unit_Testing/1.0
@@ -436,4 +436,3 @@
 	}
 
 })(this);
-/* jshint ignore:end */

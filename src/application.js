@@ -109,17 +109,17 @@ Box.Application = (function() {
 	 * @returns {void}
 	 * @private
 	 */
-	function captureObjectErrors(object, objectName){
+	function captureObjectErrors(object, objectName) {
 
 		var propertyName,
 			propertyValue;
 
-		for (propertyName in object){
+		/* eslint-disable guard-for-in, no-loop-func */
+		for (propertyName in object) {
 			propertyValue = object[propertyName];
 
 			// only do this for methods, be sure to check before making changes!
-			if (typeof propertyValue === 'function'){
-
+			if (typeof propertyValue === 'function') {
 				/*
 				 * This creates a new function that wraps the original function
 				 * in a try-catch. The outer function executes immediately with
@@ -127,9 +127,8 @@ Box.Application = (function() {
 				 * us to create a function with specific information even though
 				 * it's inside of a loop.
 				 */
-				// jshint loopfunc: true
-				object[propertyName] = (function(methodName, method){
-					return function(){
+				object[propertyName] = (function(methodName, method) {
+					return function() {
 						try {
 							return method.apply(this, arguments);
 						} catch (ex) {
@@ -141,6 +140,7 @@ Box.Application = (function() {
 				}(propertyName, propertyValue));
 			}
 		}
+		/* eslint-enable guard-for-in, no-loop-func */
 	}
 
 	/**
@@ -250,11 +250,12 @@ Box.Application = (function() {
 	 * @param {HTMLElement} element DOM element to bind the event to
 	 * @param {string} type Event type (click, mouseover, ...)
 	 * @param {Function[]} handlers Array of event callbacks to be called in that order
-	 * @returns {void}
+	 * @returns {Function} The event handler
 	 * @private
 	 */
 	function bindEventType(element, type, handlers) {
-		var eventHandler = function(event) {
+
+		function eventHandler(event) {
 
 			var targetElement = getNearestTypeElement(event.target),
 				elementType = targetElement ? targetElement.getAttribute('data-type') : '';
@@ -264,7 +265,7 @@ Box.Application = (function() {
 			}
 
 			return true;
-		};
+		}
 
 		$(element).on(type, eventHandler);
 
@@ -283,7 +284,7 @@ Box.Application = (function() {
 			type,
 			eventHandlerName,
 			eventHandlerFunctions,
-			behaviors = getBehaviors(instanceData);
+			moduleBehaviors = getBehaviors(instanceData);
 
 		for (i = 0; i < eventTypes.length; i++) {
 			eventHandlerFunctions = [];
@@ -297,9 +298,9 @@ Box.Application = (function() {
 			}
 
 			// And then all of its behaviors in the order they were declared
-			for (j = 0; j < behaviors.length; j++) {
-				if (behaviors[j][eventHandlerName]) {
-					eventHandlerFunctions.push($.proxy(behaviors[j][eventHandlerName], behaviors[j]));
+			for (j = 0; j < moduleBehaviors.length; j++) {
+				if (moduleBehaviors[j][eventHandlerName]) {
+					eventHandlerFunctions.push($.proxy(moduleBehaviors[j][eventHandlerName], moduleBehaviors[j]));
 				}
 			}
 
@@ -317,7 +318,9 @@ Box.Application = (function() {
 	 */
 	function unbindEventListeners(instanceData) {
 		for (var type in instanceData.eventHandlers) {
-			$(instanceData.element).off(type, instanceData.eventHandlers[type]);
+			if (instanceData.eventHandlers.hasOwnProperty(type)) {
+				$(instanceData.element).off(type, instanceData.eventHandlers[type]);
+			}
 		}
 
 		instanceData.eventHandlers = {};
@@ -449,9 +452,7 @@ Box.Application = (function() {
 		 * @returns {void}
 		 */
 		stop: function(element) {
-			var instanceData = getInstanceDataByElement(element),
-				moduleName,
-				moduleData;
+			var instanceData = getInstanceDataByElement(element);
 
 			if (!instanceData) {
 
@@ -461,9 +462,6 @@ Box.Application = (function() {
 				}
 
 			} else {
-
-				moduleName = instanceData.moduleName;
-				moduleData = modules[moduleName];
 
 				unbindEventListeners(instanceData);
 
@@ -578,7 +576,7 @@ Box.Application = (function() {
 		 * Registers a new service
 		 * @param {string} serviceName Unique service identifier
 		 * @param {Function} creator Factory function used to generate the service
-		 * @param {Object} [options]
+		 * @param {Object} [options] Additional options
 		 * @param {string[]} [options.exports] Method names to expose on context and application
 		 * @returns {void}
 		 */
@@ -604,13 +602,14 @@ Box.Application = (function() {
 
 					var methodName = options.exports[i];
 
-					// jshint loopfunc: true
+					/* eslint-disable no-loop-func */
 					var handler = (function(methodName) {
 						return function() {
 							var service = getService(serviceName);
 							return service[methodName].apply(service, arguments);
 						};
 					}(methodName));
+					/* eslint-enable no-loop-func */
 
 					if (methodName in this) {
 						error(new Error(methodName + ' already exists on Application object'));
@@ -680,27 +679,31 @@ Box.Application = (function() {
 				messageHandlers;
 
 			for (id in instances) {
-				messageHandlers = [];
-				instanceData = instances[id];
 
-				// Module message handler is called first
-				if ($.inArray(name, instanceData.instance.messages || []) !== -1) {
-					messageHandlers.push($.proxy(instanceData.instance.onmessage, instanceData.instance));
-				}
+				if (instances.hasOwnProperty(id)) {
+					messageHandlers = [];
+					instanceData = instances[id];
 
-				// And then any message handlers defined in module's behaviors
-				behaviors = getBehaviors(instanceData);
-				for (i = 0; i < behaviors.length; i++) {
-					behaviorInstance = behaviors[i];
+					// Module message handler is called first
+					if ($.inArray(name, instanceData.instance.messages || []) !== -1) {
+						messageHandlers.push($.proxy(instanceData.instance.onmessage, instanceData.instance));
+					}
 
-					if ($.inArray(name, behaviorInstance.messages || []) !== -1) {
-						messageHandlers.push($.proxy(behaviorInstance.onmessage, behaviorInstance));
+					// And then any message handlers defined in module's behaviors
+					behaviors = getBehaviors(instanceData);
+					for (i = 0; i < behaviors.length; i++) {
+						behaviorInstance = behaviors[i];
+
+						if ($.inArray(name, behaviorInstance.messages || []) !== -1) {
+							messageHandlers.push($.proxy(behaviorInstance.onmessage, behaviorInstance));
+						}
+					}
+
+					for (i = 0; i < messageHandlers.length; i++) {
+						messageHandlers[i](name, data);
 					}
 				}
 
-				for (i = 0; i < messageHandlers.length; i++) {
-					messageHandlers[i](name, data);
-				}
 			}
 		},
 

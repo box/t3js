@@ -85,11 +85,13 @@ describe('Box.EventTarget', function() {
 		});
 
 		it('should be called even after another event handler for the same type removes itself', function() {
-			var handler1 = function () {
-					// this handler removes itself
-					this.off('myevent', handler1);
-				},
+			var handler1,
 				handler2 = sandbox.spy();
+
+			handler1 = function() {
+				// this handler removes itself
+				this.off('myevent', handler1);
+			};
 
 			eventTarget.on('myevent', handler1);
 			eventTarget.on('myevent', handler2);
