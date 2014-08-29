@@ -231,6 +231,8 @@ Retrieves an instance of a registered service.
 ### Returns
 T3 Service or null.
 
+<hr class="separator">
+
 <div class="anchor" id="getGlobal"></div>
 ## getGlobal
 ### Description
