@@ -3,7 +3,7 @@
     <div id="side-nav-application">
         <h4><a class="{% if page.url contains '/docs/api/application' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/application/">Application</a></h4>
         {% if page.url contains '/docs/api/application' %}
-            {% include documentation-ul.html directory='application' items='init destroy addService addModule addBehavior getService getGlobalConfig getModuleConfig start startAll stop stopAll isStarted broadcast on off fire' %}
+            {% include documentation-ul.html directory='application' items='init destroy addService addModule addBehavior getService getGlobal getGlobalConfig getModuleConfig start startAll stop stopAll isStarted broadcast reportError on off fire' %}
         {% endif %}
     </div>
     <div id="side-nav-event-target">
@@ -15,7 +15,7 @@
     <div id="side-nav-context">
         <h4><a class="{% if page.url contains '/docs/api/context' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/context/">Context</a></h4>
         {% if page.url contains '/docs/api/context' %}
-            {% include documentation-ul.html directory='context' items='getElement getConfig broadcast getService getGlobalConfig' %}
+            {% include documentation-ul.html directory='context' items='getElement getConfig broadcast getService getGlobal getGlobalConfig' %}
         {% endif %}
     </div>
     <div id="side-nav-services">

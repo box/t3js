@@ -177,6 +177,41 @@ Application.addModule('abc', function(context) {
 
 <hr class="separator">
 
+<div class="anchor" id="getGlobal"></div>
+## getGlobal
+### Description
+Returns a global variable. This function exists to make accessing globals more explicit.
+
+### Usage
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="required">name</td>
+			<td>string</td>
+			<td>Name of global.</td>
+		</tr>
+	</tbody>
+</table>
+
+### Returns
+The global variable if it exists or null.
+
+
+### Example
+{% highlight javascript %}
+var navigator = context.getGlobal('navigator');
+console.log(navigator.userAgent);
+{% endhighlight %}
+
+<hr class="separator">
+
 <div class="anchor" id="getGlobalConfig"></div>
 ## getGlobalConfig
 

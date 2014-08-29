@@ -21,7 +21,7 @@ Initializes the behavior. This method is fired automatically when <a href="{{ si
 
 ### Example
 {% highlight html %}
-<div id="mod-test-module" class="module" data-module="test-module">
+<div id="mod-item-list" class="module" data-module="item-list">
 	...
 </div>
 {% endhighlight %}
@@ -44,7 +44,7 @@ Application.addModule('item-list', function(context) {
 	};
 });
 
-var moduleEl = document.getElementById('mod-test-module');
+var moduleEl = document.getElementById('mod-item-list');
 
 // Will fire menu.init()
 Application.start(moduleEl);
@@ -60,7 +60,7 @@ Destroys the behavior. This method is fired automatically when <a href="{{ site.
 
 ### Example
 {% highlight html %}
-<div id="mod-test-module" class="module" data-module="test-module">
+<div id="mod-item-list" class="module" data-module="test-item-list">
 	...
 </div>
 {% endhighlight %}
@@ -82,7 +82,7 @@ Application.addModule('item-list', function(context) {
 	};
 });
 
-var moduleEl = document.getElementById('mod-test-module');
+var moduleEl = document.getElementById('mod-item-list');
 Application.start(moduleEl);
 
 // Calls menu.destroy();

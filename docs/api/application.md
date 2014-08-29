@@ -231,10 +231,37 @@ Retrieves an instance of a registered service.
 ### Returns
 T3 Service or null.
 
+<div class="anchor" id="getGlobal"></div>
+## getGlobal
+### Description
+Returns a global variable. This function exists to make accessing globals more explicit.
+
+### Usage
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="required">name</td>
+			<td>string</td>
+			<td>Name of global.</td>
+		</tr>
+	</tbody>
+</table>
+
+### Returns
+The global variable if it exists or null.
+
+
 ### Example
 {% highlight javascript %}
-var service = Application.getService('some-service');
-service.foo();
+var navigator = Application.getGlobal('navigator');
+console.log(navigator.userAgent);
 {% endhighlight %}
 
 
@@ -586,6 +613,35 @@ Application.broadcast('statechanged', {
 	foo: 'search',
 	bar: 'home'
 });
+{% endhighlight %}
+
+<hr class="separator">
+
+## reportError
+### Description
+Signals that an error has occurred. If in debug mode, an error is thrown. Otherwise, an event is fired.
+
+### Usage
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="required">exception</td>
+			<td>Error</td>
+			<td>An error object</td>
+		</tr>
+	</tbody>
+</table>
+
+### Example
+{% highlight javascript %}
+Application.reportError(new Error('Invalid User ID'));
 {% endhighlight %}
 
 <hr class="separator">
