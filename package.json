@@ -1,7 +1,7 @@
 {
   "name": "T3",
   "description": "T3 Javascript Framework",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "author": "Box (https://www.box.com/)",
   "private": true,
   "devDependencies": {
@@ -14,8 +14,8 @@
     "grunt-eslint": "~1.0.0",
     "grunt-jsdoc": "~0.4.1",
     "grunt-mocha-phantomjs": "~0.6.0",
-    "jquery": "^1.11.1",
+    "jquery": "~1.11.1",
     "mocha": "~1.21.4",
-    "sinon": "^1.10.3"
+    "sinon": "~1.10.3"
   }
 }
