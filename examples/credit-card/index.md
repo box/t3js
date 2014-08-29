@@ -245,10 +245,10 @@ Box.Application.init();
 
 
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script type="text/javascript" src="{{ site.baseurl }}/js/archive/t3-0.1.1.js"></script>
-<script type="text/javascript" src="{{ site.baseurl }}/examples/credit-card/js/modules/cc-validation-form.js"></script>
-<script type="text/javascript" src="{{ site.baseurl }}/examples/credit-card/js/services/credit-card.js"></script>
+<script src="bower_components/jquery-1.11.1.min/index.js"></script>
+<script src="{{ site.baseurl }}/js/archive/t3-0.3.0.js"></script>
+<script src="{{ site.baseurl }}/examples/credit-card/js/modules/cc-validation-form.js"></script>
+<script src="{{ site.baseurl }}/examples/credit-card/js/services/credit-card.js"></script>
 <script>
 Box.Application.init();
 </script>

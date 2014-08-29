@@ -76,9 +76,9 @@ todolink: /examples/todo/live/
 				</form>
 			</li>
 		</ul>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="bower_components/jquery-1.11.1.min/index.js"></script>
 		<script src="bower_components/todomvc-common/base.js"></script>
-		<script src="{{ site.baseurl }}/js/archive/t3-0.1.1.js"></script>
+		<script src="{{ site.baseurl }}/js/archive/t3-0.3.0.js"></script>
 		<script src="js/app.js"></script>
 		<script src="js/services/todos-db.js"></script>
 		<script src="js/services/router.js"></script>
