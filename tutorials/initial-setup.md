@@ -4,8 +4,8 @@ title: T3 JavaScript Framework - Tutorials
 permalink: /tutorials/initial-setup/
 prev: overview
 prev_title: 'Overview'
-next: architecture
-next_title: Architecture
+next: create-the-modules
+next_title: Create the Modules
 ---
 
 # Initial Setup
