@@ -59,9 +59,10 @@ The final step to get the modules on the page is to include them in a script tag
 
 ## Bring the Modules to Life
 
-Next you'll integrate the modules into the application, this is accomplished by doing two things: adding the `.module` class to the HTML element you want to be the *root element* of the module and adding a `data-module` attribute with the name of the module. When the application is initialized, T3 will look for all of the DOM nodes with these attributes. The module specified in `data-module` attribute will be automatically created and initialized to represent that element.
+Next you'll integrate the modules into the application, this is accomplished by doing two things:
 
-Add the `meme-generator` module to the `.meme-container` HTML element and the `meme-menu` module to the `.meme-menu` HTML element. The result looks like this:
+1. Add the `.module` class to the HTML element you want to be the *root element* of the module and adding a `data-module` attribute with the name of the module. When the application is initialized, T3 will look for all of the DOM nodes with these attributes. The module specified in `data-module` attribute will be automatically created and initialized to represent that element.
+2. Add the `meme-generator` module to the `.meme-container` HTML element and the `meme-menu` module to the `.meme-menu` HTML element. The result looks like this:
 
 {% highlight html %}
 <div class="meme-container module" data-module="meme-generator">
