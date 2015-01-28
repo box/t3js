@@ -58,7 +58,7 @@ Box.Application = (function() {
 	// Supported events for modules
 	var eventTypes = ['click', 'mouseover', 'mouseout', 'mousedown', 'mouseup',
 			'mouseenter', 'mouseleave', 'keydown', 'keyup', 'submit', 'change',
-			'contextmenu', 'dblclick'];
+			'contextmenu', 'dblclick', 'input'];
 
 	/**
 	 * Reset all state to its default values
