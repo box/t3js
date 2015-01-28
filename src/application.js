@@ -43,7 +43,7 @@ Box.Application = (function() {
 	// Private
 	//--------------------------------------------------------------------------
 
-	var MODULE_CLASS_SELECTOR = '.module';
+	var MODULE_SELECTOR = '[data-module]';
 
 	var globalConfig = {},   // Global configuration
 		modules = {},        // Information about each registered module by moduleName
@@ -488,7 +488,7 @@ Box.Application = (function() {
 			var me = this,
 				$root = $(root);
 
-			$root.find(MODULE_CLASS_SELECTOR).each(function(idx, element) {
+			$root.find(MODULE_SELECTOR).each(function(idx, element) {
 				me.start(element);
 			});
 		},
@@ -502,7 +502,7 @@ Box.Application = (function() {
 			var me = this,
 				$root = $(root);
 
-			$root.find(MODULE_CLASS_SELECTOR).each(function(idx, element) {
+			$root.find(MODULE_SELECTOR).each(function(idx, element) {
 				me.stop(element);
 			});
 		},
