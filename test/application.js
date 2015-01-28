@@ -45,7 +45,7 @@ describe('Box.Application', function() {
 	describe('isStarted()', function() {
 
 		beforeEach(function() {
-			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
+			testModule = $('<div data-module="test"><span id="module-target"></span></div>')[0];
 			$('#mocha-fixture').append(testModule);
 		});
 
@@ -73,8 +73,8 @@ describe('Box.Application', function() {
 
 		beforeEach(function() {
 			Box.Application.init();
-			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-			testModule2 = $('<div class="module" data-module="test" />')[0];
+			testModule = $('<div data-module="test"><span id="module-target"></span></div>')[0];
+			testModule2 = $('<div data-module="test" />')[0];
 			$('#mocha-fixture').append(testModule, testModule2);
 		});
 
@@ -163,7 +163,7 @@ describe('Box.Application', function() {
 
 		beforeEach(function() {
 			Box.Application.init({ debug: true });
-			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
+			testModule = $('<div data-module="test"><span id="module-target"></span></div>')[0];
 			$('#mocha-fixture').append(testModule);
 		});
 
@@ -180,7 +180,7 @@ describe('Box.Application', function() {
 		it('should raise an error when no matching module has been registered', function() {
 			assert.throws(function() {
 				Box.Application.start(testModule);
-			});
+			}, /Module type "test" is not defined/);
 		});
 
 	});
@@ -189,7 +189,7 @@ describe('Box.Application', function() {
 
 		beforeEach(function() {
 			Box.Application.init();
-			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
+			testModule = $('<div data-module="test"><span id="module-target"></span></div>')[0];
 			$('#mocha-fixture').append(testModule);
 		});
 
@@ -236,8 +236,8 @@ describe('Box.Application', function() {
 
 		beforeEach(function() {
 			Box.Application.init();
-			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-			nestedModule = $('<div class="module" data-module="parent"><div class="module" data-module="child"></div></div>')[0];
+			testModule = $('<div data-module="test"><span id="module-target"></span></div>')[0];
+			nestedModule = $('<div data-module="parent"><div data-module="child"></div></div>')[0];
 			$('#mocha-fixture').append(testModule, nestedModule);
 		});
 
@@ -255,8 +255,8 @@ describe('Box.Application', function() {
 
 		beforeEach(function() {
 			Box.Application.init();
-			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-			nestedModule = $('<div class="module" data-module="parent"><div class="module" data-module="child"></div></div>')[0];
+			testModule = $('<div data-module="test"><span id="module-target"></span></div>')[0];
+			nestedModule = $('<div data-module="parent"><div data-module="child"></div></div>')[0];
 			$('#mocha-fixture').append(testModule, nestedModule);
 		});
 
@@ -290,7 +290,7 @@ describe('Box.Application', function() {
 	describe('addModule()', function() {
 
 		beforeEach(function() {
-			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
+			testModule = $('<div data-module="test"><span id="module-target"></span></div>')[0];
 			$('#mocha-fixture').append(testModule);
 		});
 
@@ -366,7 +366,7 @@ describe('Box.Application', function() {
 		});
 
 		it('should register methods on the context object when passed multiple exports', function() {
-			testModule = $('<div class="module" data-module="test"><span id="module-target" data-type="target"></span></div>')[0];
+			testModule = $('<div data-module="test"><span id="module-target" data-type="target"></span></div>')[0];
 			$('#mocha-fixture').append(testModule);
 
 			Box.Application.addService('test', sandbox.stub().returns({
@@ -431,8 +431,8 @@ describe('Box.Application', function() {
 
 			// add after init() to ensure we won't have errors due to missing
 			// module definitions
-			testModule = $('<div class="module" data-module="test"><span id="module-target" data-type="target"></span></div>')[0];
-			nestedModule = $('<div class="module" data-module="parent"><div class="module" data-module="child"></div></div>')[0];
+			testModule = $('<div data-module="test"><span id="module-target" data-type="target"></span></div>')[0];
+			nestedModule = $('<div data-module="parent"><div data-module="child"></div></div>')[0];
 			$('#mocha-fixture').append(testModule, nestedModule);
 		});
 
@@ -520,8 +520,8 @@ describe('Box.Application', function() {
 
 			// add after init() to ensure we won't have errors due to missing
 			// module definitions
-			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-			testModule2 = $('<div class="module" data-module="test2" />')[0];
+			testModule = $('<div data-module="test"><span id="module-target"></span></div>')[0];
+			testModule2 = $('<div data-module="test2" />')[0];
 			$('#mocha-fixture').append(testModule, testModule2);
 		});
 
@@ -593,8 +593,8 @@ describe('Box.Application', function() {
 		var moduleWithConfig;
 
 		beforeEach(function() {
-			testModule = $('<div class="module" data-module="test"><span id="module-target"></span></div>')[0];
-			moduleWithConfig = $('<div class="module" data-module="test"><script type="text/x-config">{"name":"box"}</script></div>')[0];
+			testModule = $('<div data-module="test"><span id="module-target"></span></div>')[0];
+			moduleWithConfig = $('<div data-module="test"><script type="text/x-config">{"name":"box"}</script></div>')[0];
 
 			$('#mocha-fixture').append(testModule, moduleWithConfig);
 		});
