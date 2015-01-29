@@ -3,11 +3,11 @@
  * @author Box
  */
 
-Box.Context = function() {};
-
 describe('Box.Application', function() {
 
 	'use strict';
+
+	Box.Context = function() {}; // Stub out context for testing
 
 	var sandbox = sinon.sandbox.create();
 
@@ -424,8 +424,6 @@ describe('Box.Application', function() {
 
 	describe('on[event]()', function() {
 
-		var nestedModule;
-
 		beforeEach(function() {
 			Box.Application.init();
 
@@ -604,7 +602,7 @@ describe('Box.Application', function() {
 			Box.Application.start(testModule);
 
 			var config = Box.Application.getModuleConfig(testModule);
-			assert.strictEqual(config,  null, 'Configuration should be null.');
+			assert.strictEqual(config, null, 'Configuration should be null.');
 		});
 
 		it('should return an object when the module has configuration', function() {
@@ -612,7 +610,7 @@ describe('Box.Application', function() {
 			Box.Application.start(moduleWithConfig);
 
 			var config = Box.Application.getModuleConfig(moduleWithConfig);
-			assert.deepEqual(config, {name:'box'}, 'Configuration key name should be "box".');
+			assert.deepEqual(config, { name: 'box' }, 'Configuration key name should be "box".');
 		});
 
 		it('should return config value when name specified', function() {

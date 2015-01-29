@@ -50,8 +50,8 @@ module.exports = function( grunt ) {
 				format: 'stylish'
 			}
 		},
-		jsdoc : {
-			dist : {
+		jsdoc: {
+			dist: {
 				src: ['src/**/*.js'],
 				options: {
 					destination: 'doc'

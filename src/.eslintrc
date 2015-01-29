@@ -8,7 +8,7 @@
 	"rules": {
 		"brace-style": 2,
 		"func-style": [2, "declaration"],
-		"no-global-strict": 2,
+		"strict": [2, "function"],
 		"guard-for-in": 2,
 		"no-floating-decimal": 2,
 		"no-underscore-dangle": 0,

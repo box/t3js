@@ -435,11 +435,11 @@ Box.Application = (function() {
 
 				callModuleMethod(instanceData.instance, 'init');
 
-				var behaviors = getBehaviors(instanceData),
+				var moduleBehaviors = getBehaviors(instanceData),
 					behaviorInstance;
 
-				for (var i = 0, len = behaviors.length; i < len; i++) {
-					behaviorInstance = behaviors[i];
+				for (var i = 0, len = moduleBehaviors.length; i < len; i++) {
+					behaviorInstance = moduleBehaviors[i];
 					callModuleMethod(behaviorInstance, 'init');
 				}
 
@@ -466,10 +466,10 @@ Box.Application = (function() {
 				unbindEventListeners(instanceData);
 
 				// Call these in reverse order
-				var behaviors = getBehaviors(instanceData);
+				var moduleBehaviors = getBehaviors(instanceData);
 				var behaviorInstance;
-				for (var i = behaviors.length - 1; i >= 0; i--) {
-					behaviorInstance = behaviors[i];
+				for (var i = moduleBehaviors.length - 1; i >= 0; i--) {
+					behaviorInstance = moduleBehaviors[i];
 					callModuleMethod(behaviorInstance, 'destroy');
 				}
 
@@ -600,7 +600,7 @@ Box.Application = (function() {
 
 				for (i = 0; i < length; i++) {
 
-					var methodName = options.exports[i];
+					var exportedMethodName = options.exports[i];
 
 					/* eslint-disable no-loop-func */
 					var handler = (function(methodName) {
@@ -608,24 +608,24 @@ Box.Application = (function() {
 							var service = getService(serviceName);
 							return service[methodName].apply(service, arguments);
 						};
-					}(methodName));
+					}(exportedMethodName));
 					/* eslint-enable no-loop-func */
 
-					if (methodName in this) {
-						error(new Error(methodName + ' already exists on Application object'));
+					if (exportedMethodName in this) {
+						error(new Error(exportedMethodName + ' already exists on Application object'));
 						return;
 					} else {
-						this[methodName] = handler;
+						this[exportedMethodName] = handler;
 					}
 
-					if (methodName in Box.Context.prototype) {
-						error(new Error(methodName + ' already exists on Context prototype'));
+					if (exportedMethodName in Box.Context.prototype) {
+						error(new Error(exportedMethodName + ' already exists on Context prototype'));
 						return;
 					} else {
-						Box.Context.prototype[methodName] = handler;
+						Box.Context.prototype[exportedMethodName] = handler;
 					}
 
-					exports.push(methodName);
+					exports.push(exportedMethodName);
 				}
 			}
 		},
@@ -675,7 +675,7 @@ Box.Application = (function() {
 				id,
 				instanceData,
 				behaviorInstance,
-				behaviors,
+				moduleBehaviors,
 				messageHandlers;
 
 			for (id in instances) {
@@ -690,9 +690,9 @@ Box.Application = (function() {
 					}
 
 					// And then any message handlers defined in module's behaviors
-					behaviors = getBehaviors(instanceData);
-					for (i = 0; i < behaviors.length; i++) {
-						behaviorInstance = behaviors[i];
+					moduleBehaviors = getBehaviors(instanceData);
+					for (i = 0; i < moduleBehaviors.length; i++) {
+						behaviorInstance = moduleBehaviors[i];
 
 						if ($.inArray(name, behaviorInstance.messages || []) !== -1) {
 							messageHandlers.push($.proxy(behaviorInstance.onmessage, behaviorInstance));
