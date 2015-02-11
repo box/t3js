@@ -9,6 +9,8 @@ if (!window.Box) {
 
 (function() {
 
+	'use strict';
+
 	/**
 	 * When testing actual Application, it should be included after to overwrite this stub.
 	 */
