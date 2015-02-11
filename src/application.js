@@ -237,7 +237,7 @@ Box.Application = (function() {
 		var $element = $(element),
 			found = $element.is('[data-type]');
 
-		while (!found && $element.length && !$element.hasClass('module')) {
+		while (!found && $element.length && !$element.is(MODULE_SELECTOR)) {
 			$element = $element.parent();
 			found = $element.is('[data-type]');
 		}

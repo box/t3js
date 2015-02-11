@@ -492,6 +492,24 @@ describe('Box.Application', function() {
 
 		});
 
+		it('should not be passed element when nearest data-type element is outside module scope', function() {
+
+			var moduleWithDataTypeOutside = $('<div data-type="something"><div data-module="child"><button id="inner-btn">button</button></div></div>')[0];
+			$('#mocha-fixture').append(moduleWithDataTypeOutside);
+
+			Box.Application.addModule('child', sandbox.stub().returns({
+				onclick: sandbox.mock().withArgs(sinon.match.any, null, '')
+			}));
+
+			Box.Application.start($('[data-module="child"]'));
+
+			$('#inner-btn').trigger({
+				type: 'click',
+				button: 1
+			});
+
+		});
+
 		it('should not be called when an event occurs inside of a stopped module', function() {
 
 			Box.Application.addModule('test', sandbox.stub().returns({
@@ -507,6 +525,7 @@ describe('Box.Application', function() {
 			});
 
 		});
+
 
 	});
 
