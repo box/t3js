@@ -1,9 +1,9 @@
 /**
  * @fileoverview Todo List
- * @author jtan
+ * @author Box
  */
 
-/**
+/*
  * Manages the todo list which includes adding/removing/checking items
  */
 Application.addModule('list', function(context) {

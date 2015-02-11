@@ -1,11 +1,11 @@
 /**
- * @fileoverview
- * @author jtan
+ * @fileoverview The TODO item behavior
+ * @author Box
  */
 
 /*global Box*/
 
-/**
+/*
  * Handles behavior of todo items
  */
 Application.addBehavior('todo', function(context) {

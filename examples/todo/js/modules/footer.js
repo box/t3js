@@ -1,9 +1,9 @@
 /**
  * @fileoverview Footer Module
- * @author jtan
+ * @author Box
  */
 
-/**
+/*
  * Manages the footer module, including todo counts and filters
  */
 Application.addModule('footer', function(context) {

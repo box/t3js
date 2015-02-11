@@ -1,9 +1,9 @@
 /**
  * @fileoverview Header Module
- * @author jtan
+ * @author Box
  */
 
-/**
+/*
  * Handles creation of new todo items
  */
 Application.addModule('header', function(context) {

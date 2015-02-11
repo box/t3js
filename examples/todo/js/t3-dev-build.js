@@ -1,4 +1,4 @@
-/*! T3 v0.2.1 */
+/*! T3 v0.3.0 */
 /**
  * The one global object for Box JavaScript.
  * @namespace
@@ -14,7 +14,7 @@ Box.EventTarget = (function() {
 	 * executing handlers for events when they occur.
 	 * @constructor
 	 */
-	var EventTarget = function() {
+	function EventTarget() {
 
 		/**
 		 * Map of events to handlers. The keys in the object are the event names.
@@ -23,7 +23,7 @@ Box.EventTarget = (function() {
 		 * @private
 		 */
 		this._handlers = {};
-	};
+	}
 
 	EventTarget.prototype = {
 
@@ -32,8 +32,8 @@ Box.EventTarget = (function() {
 
 		/**
 		 * Adds a new event handler for a particular type of event.
-		 * @param type {string} The name of the event to listen for.
-		 * @param handler {Function} The function to call when the event occurs.
+		 * @param {string} type The name of the event to listen for.
+		 * @param {Function} handler The function to call when the event occurs.
 		 * @returns {void}
 		 */
 		on: function(type, handler) {
@@ -46,8 +46,8 @@ Box.EventTarget = (function() {
 
 		/**
 		 * Fires an event with the given name and data.
-		 * @param type {string} The type of event to fire.
-		 * @param [data] {Object} An object with properties that should end up on
+		 * @param {string} type The type of event to fire.
+		 * @param {Object} [data] An object with properties that should end up on
 		 *                        the event object for the given event.
 		 * @returns {void}
 		 */
@@ -76,8 +76,8 @@ Box.EventTarget = (function() {
 
 		/**
 		 * Removes an event handler from a given event.
-		 * @param type {string} The name of the event to remove from.
-		 * @param handler {Function} The function to remove as a handler.
+		 * @param {string} type The name of the event to remove from.
+		 * @param {Function} handler The function to remove as a handler.
 		 * @returns {void}
 		 */
 		off: function(type, handler) {
@@ -99,6 +99,7 @@ Box.EventTarget = (function() {
 
 	return EventTarget;
 
+
 }());
 
 Box.Context = (function() {
@@ -112,10 +113,10 @@ Box.Context = (function() {
 	 * @param {HTMLElement} element Module's DOM element
 	 * @constructor
 	 */
-	var Context = function(application, element) {
+	function Context(application, element) {
 		this.application = application;
 		this.element = element;
-	};
+	}
 
 	//-------------------------------------------------------------------------
 	// Passthrough Methods
@@ -126,7 +127,7 @@ Box.Context = (function() {
 		/**
 		 * Passthrough method to application that broadcasts messages.
 		 * @param {string} name Name of the message event
-		 * @param {any} [data] Custom parameters for the message
+		 * @param {*} [data] Custom parameters for the message
 		 * @returns {void}
 		 */
 		broadcast: function(name, data) {
@@ -146,7 +147,7 @@ Box.Context = (function() {
 		 * Returns any configuration information that was output into the page
 		 * for this instance of the module.
 		 * @param {string} [name] Specific config parameter
-		 * @returns {any} config value or the entire configuration JSON object
+		 * @returns {*} config value or the entire configuration JSON object
 		 *                if no name is specified (null if either not found)
 		 */
 		getConfig: function(name) {
@@ -154,9 +155,18 @@ Box.Context = (function() {
 		},
 
 		/**
+		 * Returns a global variable
+		 * @param {string} name Specific global var name
+		 * @returns {*} returns the window-scope variable matching the name, null otherwise
+		 */
+		getGlobal: function(name) {
+			return this.application.getGlobal(name);
+		},
+
+		/**
 		 * Returns global configuration data
 		 * @param {string} [name] Specific config parameter
-		 * @returns {any} config value or the entire configuration JSON object
+		 * @returns {*} config value or the entire configuration JSON object
 		 *                if no name is specified (null if either not found)
 		 */
 		getGlobalConfig: function(name) {
@@ -189,7 +199,7 @@ Box.Context = (function() {
 
 	return Context;
 
-})();
+}());
 
 /**
  * The core application object where components are registered and managed
@@ -230,7 +240,7 @@ Box.Application = (function() {
 	// Private
 	//--------------------------------------------------------------------------
 
-	var MODULE_CLASS_SELECTOR = '.module';
+	var MODULE_SELECTOR = '[data-module]';
 
 	var globalConfig = {},   // Global configuration
 		modules = {},        // Information about each registered module by moduleName
@@ -244,8 +254,8 @@ Box.Application = (function() {
 
 	// Supported events for modules
 	var eventTypes = ['click', 'mouseover', 'mouseout', 'mousedown', 'mouseup',
-			'mouseenter', 'mouseleave', 'keydown', 'keyup', 'submit', 'change',
-			'contextmenu', 'dblclick'];
+		'mouseenter', 'mouseleave', 'keydown', 'keyup', 'submit', 'change',
+		'contextmenu', 'dblclick', 'input'];
 
 	/**
 	 * Reset all state to its default values
@@ -296,17 +306,17 @@ Box.Application = (function() {
 	 * @returns {void}
 	 * @private
 	 */
-	function captureObjectErrors(object, objectName){
+	function captureObjectErrors(object, objectName) {
 
 		var propertyName,
 			propertyValue;
 
-		for (propertyName in object){
+		/* eslint-disable guard-for-in, no-loop-func */
+		for (propertyName in object) {
 			propertyValue = object[propertyName];
 
 			// only do this for methods, be sure to check before making changes!
-			if (typeof propertyValue === 'function'){
-
+			if (typeof propertyValue === 'function') {
 				/*
 				 * This creates a new function that wraps the original function
 				 * in a try-catch. The outer function executes immediately with
@@ -314,9 +324,8 @@ Box.Application = (function() {
 				 * us to create a function with specific information even though
 				 * it's inside of a loop.
 				 */
-				// jshint loopfunc: true
-				object[propertyName] = (function(methodName, method){
-					return function(){
+				object[propertyName] = (function(methodName, method) {
+					return function() {
 						try {
 							return method.apply(this, arguments);
 						} catch (ex) {
@@ -328,6 +337,7 @@ Box.Application = (function() {
 				}(propertyName, propertyValue));
 			}
 		}
+		/* eslint-enable guard-for-in, no-loop-func */
 	}
 
 	/**
@@ -424,7 +434,7 @@ Box.Application = (function() {
 		var $element = $(element),
 			found = $element.is('[data-type]');
 
-		while (!found && $element.length && !$element.hasClass('module')) {
+		while (!found && $element.length && !$element.is(MODULE_SELECTOR)) {
 			$element = $element.parent();
 			found = $element.is('[data-type]');
 		}
@@ -437,11 +447,12 @@ Box.Application = (function() {
 	 * @param {HTMLElement} element DOM element to bind the event to
 	 * @param {string} type Event type (click, mouseover, ...)
 	 * @param {Function[]} handlers Array of event callbacks to be called in that order
-	 * @returns {void}
+	 * @returns {Function} The event handler
 	 * @private
 	 */
 	function bindEventType(element, type, handlers) {
-		var eventHandler = function(event) {
+
+		function eventHandler(event) {
 
 			var targetElement = getNearestTypeElement(event.target),
 				elementType = targetElement ? targetElement.getAttribute('data-type') : '';
@@ -451,7 +462,7 @@ Box.Application = (function() {
 			}
 
 			return true;
-		};
+		}
 
 		$(element).on(type, eventHandler);
 
@@ -470,7 +481,7 @@ Box.Application = (function() {
 			type,
 			eventHandlerName,
 			eventHandlerFunctions,
-			behaviors = getBehaviors(instanceData);
+			moduleBehaviors = getBehaviors(instanceData);
 
 		for (i = 0; i < eventTypes.length; i++) {
 			eventHandlerFunctions = [];
@@ -484,9 +495,9 @@ Box.Application = (function() {
 			}
 
 			// And then all of its behaviors in the order they were declared
-			for (j = 0; j < behaviors.length; j++) {
-				if (behaviors[j][eventHandlerName]) {
-					eventHandlerFunctions.push($.proxy(behaviors[j][eventHandlerName], behaviors[j]));
+			for (j = 0; j < moduleBehaviors.length; j++) {
+				if (moduleBehaviors[j][eventHandlerName]) {
+					eventHandlerFunctions.push($.proxy(moduleBehaviors[j][eventHandlerName], moduleBehaviors[j]));
 				}
 			}
 
@@ -504,7 +515,9 @@ Box.Application = (function() {
 	 */
 	function unbindEventListeners(instanceData) {
 		for (var type in instanceData.eventHandlers) {
-			$(instanceData.element).off(type, instanceData.eventHandlers[type]);
+			if (instanceData.eventHandlers.hasOwnProperty(type)) {
+				$(instanceData.element).off(type, instanceData.eventHandlers[type]);
+			}
 		}
 
 		instanceData.eventHandlers = {};
@@ -619,11 +632,11 @@ Box.Application = (function() {
 
 				callModuleMethod(instanceData.instance, 'init');
 
-				var behaviors = getBehaviors(instanceData),
+				var moduleBehaviors = getBehaviors(instanceData),
 					behaviorInstance;
 
-				for (var i = 0, len = behaviors.length; i < len; i++) {
-					behaviorInstance = behaviors[i];
+				for (var i = 0, len = moduleBehaviors.length; i < len; i++) {
+					behaviorInstance = moduleBehaviors[i];
 					callModuleMethod(behaviorInstance, 'init');
 				}
 
@@ -636,9 +649,7 @@ Box.Application = (function() {
 		 * @returns {void}
 		 */
 		stop: function(element) {
-			var instanceData = getInstanceDataByElement(element),
-				moduleName,
-				moduleData;
+			var instanceData = getInstanceDataByElement(element);
 
 			if (!instanceData) {
 
@@ -649,16 +660,13 @@ Box.Application = (function() {
 
 			} else {
 
-				moduleName = instanceData.moduleName;
-				moduleData = modules[moduleName];
-
 				unbindEventListeners(instanceData);
 
 				// Call these in reverse order
-				var behaviors = getBehaviors(instanceData);
+				var moduleBehaviors = getBehaviors(instanceData);
 				var behaviorInstance;
-				for (var i = behaviors.length - 1; i >= 0; i--) {
-					behaviorInstance = behaviors[i];
+				for (var i = moduleBehaviors.length - 1; i >= 0; i--) {
+					behaviorInstance = moduleBehaviors[i];
 					callModuleMethod(behaviorInstance, 'destroy');
 				}
 
@@ -677,7 +685,7 @@ Box.Application = (function() {
 			var me = this,
 				$root = $(root);
 
-			$root.find(MODULE_CLASS_SELECTOR).each(function(idx, element) {
+			$root.find(MODULE_SELECTOR).each(function(idx, element) {
 				me.start(element);
 			});
 		},
@@ -691,7 +699,7 @@ Box.Application = (function() {
 			var me = this,
 				$root = $(root);
 
-			$root.find(MODULE_CLASS_SELECTOR).each(function(idx, element) {
+			$root.find(MODULE_SELECTOR).each(function(idx, element) {
 				me.stop(element);
 			});
 		},
@@ -723,7 +731,7 @@ Box.Application = (function() {
 		 * for this instance of the module.
 		 * @param {HTMLElement} element The HTML element associated with a module.
 		 * @param {string} [name] Specific config parameter
-		 * @returns {any} config value or the entire configuration JSON object
+		 * @returns {*} config value or the entire configuration JSON object
 		 *                if no name is specified (null if either not found)
 		 */
 		getModuleConfig: function(element, name) {
@@ -765,7 +773,7 @@ Box.Application = (function() {
 		 * Registers a new service
 		 * @param {string} serviceName Unique service identifier
 		 * @param {Function} creator Factory function used to generate the service
-		 * @param {Object} [options]
+		 * @param {Object} [options] Additional options
 		 * @param {string[]} [options.exports] Method names to expose on context and application
 		 * @returns {void}
 		 */
@@ -789,31 +797,32 @@ Box.Application = (function() {
 
 				for (i = 0; i < length; i++) {
 
-					var methodName = options.exports[i];
+					var exportedMethodName = options.exports[i];
 
-					// jshint loopfunc: true
+					/* eslint-disable no-loop-func */
 					var handler = (function(methodName) {
 						return function() {
 							var service = getService(serviceName);
 							return service[methodName].apply(service, arguments);
 						};
-					}(methodName));
+					}(exportedMethodName));
+					/* eslint-enable no-loop-func */
 
-					if (methodName in this) {
-						error(new Error(methodName + ' already exists on Application object'));
+					if (exportedMethodName in this) {
+						error(new Error(exportedMethodName + ' already exists on Application object'));
 						return;
 					} else {
-						this[methodName] = handler;
+						this[exportedMethodName] = handler;
 					}
 
-					if (methodName in Box.Context.prototype) {
-						error(new Error(methodName + ' already exists on Context prototype'));
+					if (exportedMethodName in Box.Context.prototype) {
+						error(new Error(exportedMethodName + ' already exists on Context prototype'));
 						return;
 					} else {
-						Box.Context.prototype[methodName] = handler;
+						Box.Context.prototype[exportedMethodName] = handler;
 					}
 
-					exports.push(methodName);
+					exports.push(exportedMethodName);
 				}
 			}
 		},
@@ -855,7 +864,7 @@ Box.Application = (function() {
 		/**
 		 * Broadcasts a message to all registered listeners
 		 * @param {string} name Name of the message
-		 * @param {any} [data] Custom parameters for the message
+		 * @param {*} [data] Custom parameters for the message
 		 * @returns {void}
 		 */
 		broadcast: function(name, data) {
@@ -863,31 +872,35 @@ Box.Application = (function() {
 				id,
 				instanceData,
 				behaviorInstance,
-				behaviors,
+				moduleBehaviors,
 				messageHandlers;
 
 			for (id in instances) {
-				messageHandlers = [];
-				instanceData = instances[id];
 
-				// Module message handler is called first
-				if ($.inArray(name, instanceData.instance.messages || []) !== -1) {
-					messageHandlers.push($.proxy(instanceData.instance.onmessage, instanceData.instance));
-				}
+				if (instances.hasOwnProperty(id)) {
+					messageHandlers = [];
+					instanceData = instances[id];
 
-				// And then any message handlers defined in module's behaviors
-				behaviors = getBehaviors(instanceData);
-				for (i = 0; i < behaviors.length; i++) {
-					behaviorInstance = behaviors[i];
+					// Module message handler is called first
+					if ($.inArray(name, instanceData.instance.messages || []) !== -1) {
+						messageHandlers.push($.proxy(instanceData.instance.onmessage, instanceData.instance));
+					}
 
-					if ($.inArray(name, behaviorInstance.messages || []) !== -1) {
-						messageHandlers.push($.proxy(behaviorInstance.onmessage, behaviorInstance));
+					// And then any message handlers defined in module's behaviors
+					moduleBehaviors = getBehaviors(instanceData);
+					for (i = 0; i < moduleBehaviors.length; i++) {
+						behaviorInstance = moduleBehaviors[i];
+
+						if ($.inArray(name, behaviorInstance.messages || []) !== -1) {
+							messageHandlers.push($.proxy(behaviorInstance.onmessage, behaviorInstance));
+						}
+					}
+
+					for (i = 0; i < messageHandlers.length; i++) {
+						messageHandlers[i](name, data);
 					}
 				}
 
-				for (i = 0; i < messageHandlers.length; i++) {
-					messageHandlers[i](name, data);
-				}
 			}
 		},
 
@@ -896,9 +909,22 @@ Box.Application = (function() {
 		//----------------------------------------------------------------------
 
 		/**
+		 * Returns a global variable
+		 * @param {string} name Specific global var name
+		 * @returns {*} returns the window-scope variable matching the name, null otherwise
+		 */
+		getGlobal: function(name) {
+			if (name in window) {
+				return window[name];
+			} else {
+				return null;
+			}
+		},
+
+		/**
 		 * Returns global configuration data
 		 * @param {string} [name] Specific config parameter
-		 * @returns {any} config value or the entire configuration JSON object
+		 * @returns {*} config value or the entire configuration JSON object
 		 *                if no name is specified (null if neither not found)
 		 */
 		getGlobalConfig: function(name) {

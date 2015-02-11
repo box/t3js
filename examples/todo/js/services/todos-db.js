@@ -1,6 +1,6 @@
 /**
  * @fileoverview A todo object manager with built-in functionality
- * @author jtan
+ * @author Box
  */
 
 /**
@@ -11,10 +11,10 @@
  * @property {boolean} completed Is the task complete?
  */
 
-/**
+/*
  * A todo object manager with built-in functionality
  */
-Application.addService('todos-db', function(application) {
+Application.addService('todos-db', function() {
 
 	'use strict';
 
