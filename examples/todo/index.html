@@ -7,14 +7,14 @@
 	<link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-<section id="todoapp" class="module" data-module="page">
-	<header id="header" class="module" data-module="header">
+<section id="todoapp" data-module="page">
+	<header id="header" data-module="header">
 		<h1>todos</h1>
 		<form data-type="new-todo-form">
 			<input id="new-todo" data-type="new-todo-input" name="new-todo" placeholder="What needs to be done?" autofocus autocomplete="off">
 		</form>
 	</header>
-	<section id="main" class="module" data-module="list">
+	<section id="main" data-module="list">
 		<input id="toggle-all" data-type="select-all-checkbox" type="checkbox">
 		<label for="toggle-all">Mark all as complete</label>
 		<ul id="todo-list">
@@ -30,7 +30,7 @@
 			</li>
 		</ul>
 	</section>
-	<footer id="footer" class="module" data-module="footer">
+	<footer id="footer" data-module="footer">
 		<span id="todo-count"><strong class="items-left-counter">0</strong> <span class="items-left-text">items left</span></span>
 		<ul id="filters">
 			<li>

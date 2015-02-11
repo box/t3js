@@ -1,16 +1,16 @@
 /**
  * @fileoverview A page routing service
- * @author mduvall
+ * @author Box
  */
 
-/**
+/*
  * A router for our objects
  */
 Application.addService('router', function(application) {
 
 	'use strict';
 
-	var history = window.history;
+	var history = application.getGlobal('history');
 	var pageRoutes;
 
 	var regexRoutes = [],
@@ -144,7 +144,7 @@ Application.addService('router', function(application) {
 				application.route({}, '', url);
 			};
 
-			history.pushState({}, '', window.location.pathname);
+			history.pushState({}, '', application.getGlobal('location').pathname);
 		},
 
 		/**

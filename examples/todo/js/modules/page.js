@@ -1,9 +1,9 @@
 /**
  * @fileoverview Page Module
- * @author jtan
+ * @author Box
  */
 
-/**
+/*
  * This module only handles routing on the page (via anchor links)
  */
 Application.addModule('page', function(context) {
@@ -27,7 +27,7 @@ Application.addModule('page', function(context) {
 		 * @returns {void}
 		 */
 		init: function() {
-			var baseUrl = window.location.pathname;
+			var baseUrl = context.getGlobal('location').pathname;
 
 			routerService = context.getService('router');
 			routerService.init([
