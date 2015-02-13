@@ -21,7 +21,7 @@ Initializes the behavior. This method is fired automatically when <a href="{{ si
 
 ### Example
 {% highlight html %}
-<div id="mod-item-list" class="module" data-module="item-list">
+<div id="mod-item-list" data-module="item-list">
 	...
 </div>
 {% endhighlight %}
@@ -60,7 +60,7 @@ Destroys the behavior. This method is fired automatically when <a href="{{ site.
 
 ### Example
 {% highlight html %}
-<div id="mod-item-list" class="module" data-module="test-item-list">
+<div id="mod-item-list" data-module="test-item-list">
 	...
 </div>
 {% endhighlight %}

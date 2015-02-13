@@ -20,7 +20,7 @@ Initializes the module. This method is fired automatically by <a href="{{ site.b
 
 ### Example
 {% highlight html %}
-<div id="mod-test-module" class="module" data-module="test-module">
+<div id="mod-test-module" data-module="test-module">
 	...
 </div>
 {% endhighlight %}
@@ -49,7 +49,7 @@ Destroys the module. This method is fired automatically by <a href="{{ site.base
 
 ### Example
 {% highlight html %}
-<div id="mod-test-module" class="module" data-module="test-module">
+<div id="mod-test-module" data-module="test-module">
 	...
 </div>
 {% endhighlight %}
@@ -131,7 +131,7 @@ This message handler function should be placed above event handlers.
 
 ### Example
 {% highlight html %}
-<div id="mod-test-module" class="module" data-module="test-module">
+<div id="mod-test-module" data-module="test-module">
 	...
 </div>
 {% endhighlight %}
@@ -217,7 +217,7 @@ the event object around.
 
 ### Example
 {% highlight html %}
-<div id="mod-test-module" class="module" data-module="test-module">
+<div id="mod-test-module" data-module="test-module">
 	<button data-type="okay-btn">Okay</button>
 	<button data-type="cancel-btn">Cancel</button>
 </div>

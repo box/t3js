@@ -339,7 +339,7 @@ See <a href="../context/#getConfig">Context.getConfig</a>.
 
 ### Example
 {% highlight html %}
-<div id="mod-test-module" class="module" data-module="test-module">
+<div id="mod-test-module" data-module="test-module">
 	<script type="text/x-config">{"foo": "bar"}</script>
 	...
 </div>
@@ -388,7 +388,7 @@ Begins the lifecycle of a module (registers and binds listeners).
 
 ### Example
 {% highlight html %}
-<div id="mod-test-module" class="module" data-module="test-module">
+<div id="mod-test-module" data-module="test-module">
 	...
 </div>
 {% endhighlight %}
@@ -427,10 +427,10 @@ Starts all modules contained within an element.
 ### Example
 {% highlight html %}
 <div id="content">
-	<div id="mod-test-module" class="module" data-module="test-module">
+	<div id="mod-test-module" data-module="test-module">
 		...
 	</div>
-	<div id="mod-another-module" class="module" data-module="another-module">
+	<div id="mod-another-module" data-module="another-module">
 		...
 	</div>
 </div>
@@ -469,7 +469,7 @@ Ends the lifecycle of a module (unregisters and unbinds listeners).
 
 ### Example
 {% highlight html %}
-<div id="mod-test-module" class="module" data-module="test-module">
+<div id="mod-test-module" data-module="test-module">
 	...
 </div>
 {% endhighlight %}
@@ -508,10 +508,10 @@ Stops all modules contained within an element.
 ### Example
 {% highlight html %}
 <div id="content">
-	<div id="mod-test-module" class="module" data-module="test-module">
+	<div id="mod-test-module" data-module="test-module">
 		...
 	</div>
-	<div id="mod-another-module" class="module" data-module="another-module">
+	<div id="mod-another-module" data-module="another-module">
 		...
 	</div>
 </div>
@@ -554,7 +554,7 @@ Returns true if module is started. False, otherwise.
 
 ### Example
 {% highlight html %}
-<div id="mod-test-module" class="module" data-module="test-module">
+<div id="mod-test-module" data-module="test-module">
 	...
 </div>
 {% endhighlight %}
@@ -601,7 +601,7 @@ Broadcasts a message to all registered listeners
 
 ### Example
 {% highlight html %}
-<div id="mod-test-module" class="module" data-module="test-module">
+<div id="mod-test-module" data-module="test-module">
 	...
 </div>
 {% endhighlight %}

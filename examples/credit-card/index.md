@@ -10,7 +10,7 @@ This is an example of how to build a simple module and service to handle credit 
 
 <link rel="stylesheet" href="{{ site.baseurl }}/examples/credit-card/css/credit-card.css" />
 
-<div class="module credit-card-container" data-module="cc-validation-form">
+<div class=" credit-card-container" data-module="cc-validation-form">
 	<form>
 		<label>
 			CC Number:
@@ -37,7 +37,7 @@ Sample Credit Cards:
 
 # HTML
 {% highlight html %}
-<div class="module credit-card-container" data-module="cc-validation-form">
+<div class=" credit-card-container" data-module="cc-validation-form">
 	<form>
 		<label>
 			CC Number:
@@ -246,7 +246,7 @@ Box.Application.init();
 
 
 <script src="bower_components/jquery-1.11.1.min/index.js"></script>
-<script src="{{ site.baseurl }}/js/archive/t3-0.3.0.js"></script>
+<script src="{{ site.baseurl }}/js/archive/t3-1.0.0.js"></script>
 <script src="{{ site.baseurl }}/examples/credit-card/js/modules/cc-validation-form.js"></script>
 <script src="{{ site.baseurl }}/examples/credit-card/js/services/credit-card.js"></script>
 <script>

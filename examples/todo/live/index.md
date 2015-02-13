@@ -13,14 +13,14 @@ todolink: /examples/todo/live/
 		<link rel="stylesheet" href="css/app.css">
 	</head>
 	<body>
-		<section id="todoapp" class="module" data-module="page">
-			<header id="header" class="module" data-module="header">
+		<section id="todoapp" data-module="page">
+			<header id="header" data-module="header">
 				<h1>todos</h1>
 				<form data-type="new-todo-form">
 					<input id="new-todo" data-type="new-todo-input" name="new-todo" placeholder="What needs to be done?" autofocus  autocomplete="off">
 				</form>
 			</header>
-			<section id="main" class="module" data-module="list">
+			<section id="main" data-module="list">
 				<input id="toggle-all" data-type="select-all-checkbox" type="checkbox">
 				<label for="toggle-all">Mark all as complete</label>
 				<ul id="todo-list">
@@ -36,7 +36,7 @@ todolink: /examples/todo/live/
 					</li>
 				</ul>
 			</section>
-			<footer id="footer" class="module" data-module="footer">
+			<footer id="footer" data-module="footer">
 				<span id="todo-count"><strong class="items-left-counter">0</strong> <span class="items-left-text">items left</span></span>
 				<ul id="filters">
 					<li>
@@ -78,7 +78,7 @@ todolink: /examples/todo/live/
 		</ul>
 		<script src="bower_components/jquery-1.11.1.min/index.js"></script>
 		<script src="bower_components/todomvc-common/base.js"></script>
-		<script src="{{ site.baseurl }}/js/archive/t3-0.3.0.js"></script>
+		<script src="{{ site.baseurl }}/js/archive/t3-1.0.0.js"></script>
 		<script src="js/app.js"></script>
 		<script src="js/services/todos-db.js"></script>
 		<script src="js/services/router.js"></script>

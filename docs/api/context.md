@@ -61,7 +61,7 @@ This method is a proxy to <a href="../application/#getModuleConfig">Application.
 
 ### Example
 {% highlight html %}
-<div id="mod-test-module" class="module" data-module="test-module">
+<div id="mod-test-module" data-module="test-module">
 	<script type="text/x-config">{"foo": "bar"}</script>
 	...
 </div>
@@ -115,7 +115,7 @@ Broadcasts a message to all registered listeners. A proxy to <a href="../applica
 
 ### Example
 {% highlight html %}
-<div id="mod-search-bar" class="module" data-module="search-bar">
+<div id="mod-search-bar" data-module="search-bar">
 	...
 </div>
 {% endhighlight %}

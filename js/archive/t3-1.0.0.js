@@ -1,4 +1,4 @@
-/*! T3 v0.3.0 */
+/*! T3 v1.0.0 */
 /**
  * The one global object for Box JavaScript.
  * @namespace
@@ -240,7 +240,7 @@ Box.Application = (function() {
 	// Private
 	//--------------------------------------------------------------------------
 
-	var MODULE_CLASS_SELECTOR = '.module';
+	var MODULE_SELECTOR = '[data-module]';
 
 	var globalConfig = {},   // Global configuration
 		modules = {},        // Information about each registered module by moduleName
@@ -254,8 +254,8 @@ Box.Application = (function() {
 
 	// Supported events for modules
 	var eventTypes = ['click', 'mouseover', 'mouseout', 'mousedown', 'mouseup',
-		'mouseenter', 'mouseleave', 'keydown', 'keyup', 'submit', 'change',
-		'contextmenu', 'dblclick'];
+			'mouseenter', 'mouseleave', 'keydown', 'keyup', 'submit', 'change',
+			'contextmenu', 'dblclick', 'input'];
 
 	/**
 	 * Reset all state to its default values
@@ -434,7 +434,7 @@ Box.Application = (function() {
 		var $element = $(element),
 			found = $element.is('[data-type]');
 
-		while (!found && $element.length && !$element.hasClass('module')) {
+		while (!found && $element.length && !$element.is(MODULE_SELECTOR)) {
 			$element = $element.parent();
 			found = $element.is('[data-type]');
 		}
@@ -632,11 +632,11 @@ Box.Application = (function() {
 
 				callModuleMethod(instanceData.instance, 'init');
 
-				var behaviors = getBehaviors(instanceData),
+				var moduleBehaviors = getBehaviors(instanceData),
 					behaviorInstance;
 
-				for (var i = 0, len = behaviors.length; i < len; i++) {
-					behaviorInstance = behaviors[i];
+				for (var i = 0, len = moduleBehaviors.length; i < len; i++) {
+					behaviorInstance = moduleBehaviors[i];
 					callModuleMethod(behaviorInstance, 'init');
 				}
 
@@ -663,10 +663,10 @@ Box.Application = (function() {
 				unbindEventListeners(instanceData);
 
 				// Call these in reverse order
-				var behaviors = getBehaviors(instanceData);
+				var moduleBehaviors = getBehaviors(instanceData);
 				var behaviorInstance;
-				for (var i = behaviors.length - 1; i >= 0; i--) {
-					behaviorInstance = behaviors[i];
+				for (var i = moduleBehaviors.length - 1; i >= 0; i--) {
+					behaviorInstance = moduleBehaviors[i];
 					callModuleMethod(behaviorInstance, 'destroy');
 				}
 
@@ -685,7 +685,7 @@ Box.Application = (function() {
 			var me = this,
 				$root = $(root);
 
-			$root.find(MODULE_CLASS_SELECTOR).each(function(idx, element) {
+			$root.find(MODULE_SELECTOR).each(function(idx, element) {
 				me.start(element);
 			});
 		},
@@ -699,7 +699,7 @@ Box.Application = (function() {
 			var me = this,
 				$root = $(root);
 
-			$root.find(MODULE_CLASS_SELECTOR).each(function(idx, element) {
+			$root.find(MODULE_SELECTOR).each(function(idx, element) {
 				me.stop(element);
 			});
 		},
@@ -797,7 +797,7 @@ Box.Application = (function() {
 
 				for (i = 0; i < length; i++) {
 
-					var methodName = options.exports[i];
+					var exportedMethodName = options.exports[i];
 
 					/* eslint-disable no-loop-func */
 					var handler = (function(methodName) {
@@ -805,24 +805,24 @@ Box.Application = (function() {
 							var service = getService(serviceName);
 							return service[methodName].apply(service, arguments);
 						};
-					}(methodName));
+					}(exportedMethodName));
 					/* eslint-enable no-loop-func */
 
-					if (methodName in this) {
-						error(new Error(methodName + ' already exists on Application object'));
+					if (exportedMethodName in this) {
+						error(new Error(exportedMethodName + ' already exists on Application object'));
 						return;
 					} else {
-						this[methodName] = handler;
+						this[exportedMethodName] = handler;
 					}
 
-					if (methodName in Box.Context.prototype) {
-						error(new Error(methodName + ' already exists on Context prototype'));
+					if (exportedMethodName in Box.Context.prototype) {
+						error(new Error(exportedMethodName + ' already exists on Context prototype'));
 						return;
 					} else {
-						Box.Context.prototype[methodName] = handler;
+						Box.Context.prototype[exportedMethodName] = handler;
 					}
 
-					exports.push(methodName);
+					exports.push(exportedMethodName);
 				}
 			}
 		},
@@ -872,7 +872,7 @@ Box.Application = (function() {
 				id,
 				instanceData,
 				behaviorInstance,
-				behaviors,
+				moduleBehaviors,
 				messageHandlers;
 
 			for (id in instances) {
@@ -887,9 +887,9 @@ Box.Application = (function() {
 					}
 
 					// And then any message handlers defined in module's behaviors
-					behaviors = getBehaviors(instanceData);
-					for (i = 0; i < behaviors.length; i++) {
-						behaviorInstance = behaviors[i];
+					moduleBehaviors = getBehaviors(instanceData);
+					for (i = 0; i < moduleBehaviors.length; i++) {
+						behaviorInstance = moduleBehaviors[i];
 
 						if ($.inArray(name, behaviorInstance.messages || []) !== -1) {
 							messageHandlers.push($.proxy(behaviorInstance.onmessage, behaviorInstance));
