@@ -129,10 +129,12 @@ Box.Application = (function() {
 				 */
 				object[propertyName] = (function(methodName, method) {
 					return function() {
+						var errorPrefix = objectName + '.' + methodName + '() - ';
 						try {
 							return method.apply(this, arguments);
 						} catch (ex) {
-							ex.name = objectName + '.' + methodName + '() - ' + ex.name;
+							ex.name = errorPrefix + ex.name;
+							ex.message = errorPrefix + ex.message;
 							error(ex);
 						}
 					};

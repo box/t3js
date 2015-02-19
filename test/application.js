@@ -121,16 +121,18 @@ describe('Box.Application', function() {
 		});
 
 		it('should emit an error event when not in debug mode', function() {
-			var exception = new Error('test.init() - Something bad happened.');
+			var exception = new Error('Something bad happened.');
 
 			Box.Application.addModule('test', sandbox.stub().returns({
 				init: sandbox.stub().throws(exception)
 			}));
-
 			var mock = sandbox.mock().withArgs(sinon.match({
 				type: 'error',
 				data: sinon.match({
-					exception: exception
+					exception: sinon.match({
+						name: 'test.init() - Error',
+						message: 'test.init() - Something bad happened.'
+					})
 				})
 			}));
 
