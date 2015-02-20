@@ -287,74 +287,6 @@ describe('Box.Application', function() {
 			});
 		});
 
-	});
-
-	describe('addModule()', function() {
-
-		beforeEach(function() {
-			testModule = $('<div data-module="test"><span id="module-target"></span></div>')[0];
-			$('#mocha-fixture').append(testModule);
-		});
-
-		it('should throw an error when adding a module that already exists', function() {
-			Box.Application.addModule('test', sandbox.stub().returns({}));
-
-			Box.Application.init({
-				debug: true
-			});
-
-			assert.throws(function() {
-				Box.Application.addModule('test', sandbox.stub().returns({}));
-			});
-		});
-
-	});
-
-	describe('addBehavior()', function() {
-
-		it('should throw an error when adding a behavior that already exists', function() {
-			Box.Application.addModule('test', sandbox.stub().returns({}));
-			Box.Application.addBehavior('some-behavior', sandbox.stub().returns({}));
-
-			Box.Application.init({
-				debug: true
-			});
-
-			assert.throws(function() {
-				Box.Application.addBehavior('some-behavior', sandbox.stub().returns({}));
-			});
-		});
-
-	});
-
-	describe('getService()', function() {
-
-		it('should call the creator function with application as an argument when called for an existing service', function() {
-			Box.Application.addService('test', sandbox.mock().withExactArgs(Box.Application));
-			Box.Application.getService('test');
-		});
-
-		it('should return the object that is returned from the creator function when called for an existing service', function() {
-			var testService = {};
-
-			Box.Application.addService('test', sandbox.stub().returns(testService));
-
-			assert.equal(Box.Application.getService('test'), testService, 'constructed service returned');
-		});
-
-		it('should return the same object for each call when called for the same service multiple times', function() {
-			Box.Application.addService('test', sandbox.mock().once().returns({}));
-
-			var first = Box.Application.getService('test');
-			var second = Box.Application.getService('test');
-			assert.equal(first, second, 'same service returned');
-		});
-
-		it('should return null when called for a non-existing service', function() {
-			var service = Box.Application.getService('test');
-			assert.equal(service, null, 'null returned');
-		});
-
 		it('should register methods on Application when passed multiple exports', function() {
 			Box.Application.addService('test', sandbox.stub().returns({
 				foo: sandbox.mock().returns(1),
@@ -420,6 +352,98 @@ describe('Box.Application', function() {
 			assert.throws(function() {
 				Box.Application.addService('test', sandbox.stub().returns({}));
 			});
+		});
+
+	});
+
+	describe('addModule()', function() {
+
+		beforeEach(function() {
+			testModule = $('<div data-module="test"><span id="module-target"></span></div>')[0];
+			$('#mocha-fixture').append(testModule);
+		});
+
+		it('should throw an error when adding a module that already exists', function() {
+			Box.Application.addModule('test', sandbox.stub().returns({}));
+
+			Box.Application.init({
+				debug: true
+			});
+
+			assert.throws(function() {
+				Box.Application.addModule('test', sandbox.stub().returns({}));
+			});
+		});
+
+	});
+
+	describe('addBehavior()', function() {
+
+		it('should throw an error when adding a behavior that already exists', function() {
+			Box.Application.addModule('test', sandbox.stub().returns({}));
+			Box.Application.addBehavior('some-behavior', sandbox.stub().returns({}));
+
+			Box.Application.init({
+				debug: true
+			});
+
+			assert.throws(function() {
+				Box.Application.addBehavior('some-behavior', sandbox.stub().returns({}));
+			});
+		});
+
+	});
+
+	describe('getService()', function() {
+
+		it('should call the creator function with application as an argument when called for an existing service', function() {
+			Box.Application.addService('test', sandbox.mock().withExactArgs(Box.Application));
+			Box.Application.getService('test');
+		});
+
+		it('should call the creator function with application as an argument when called for two services', function() {
+			Box.Application.addService('test', sandbox.mock().withExactArgs(Box.Application));
+			Box.Application.getService('test');
+			Box.Application.addService('test2', sandbox.mock().withExactArgs(Box.Application));
+			Box.Application.getService('test2');
+		});
+
+		it('should return the object that is returned from the creator function when called for an existing service', function() {
+			var testService = {};
+
+			Box.Application.addService('test', sandbox.stub().returns(testService));
+
+			assert.equal(Box.Application.getService('test'), testService, 'constructed service returned');
+		});
+
+		it('should return the same object for each call when called for the same service multiple times', function() {
+			Box.Application.addService('test', sandbox.mock().once().returns({}));
+
+			var first = Box.Application.getService('test');
+			var second = Box.Application.getService('test');
+			assert.equal(first, second, 'same service returned');
+		});
+
+		it('should return null when called for a non-existing service', function() {
+			var service = Box.Application.getService('test');
+			assert.equal(service, null, 'null returned');
+		});
+
+		it('should throw an error when a circular dependency exists between services', function() {
+			Box.Application.init({
+				debug: true
+			});
+
+			Box.Application.addService('test', function(application) {
+				return application.getService('test2');
+			});
+			Box.Application.addService('test2', function(application) {
+				return application.getService('test');
+			});
+
+			assert.throws(function() {
+				Box.Application.getService('test');
+			}, /Circular service dependency: test -> test2 -> test/);
 		});
 
 	});
