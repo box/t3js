@@ -47,6 +47,7 @@ Box.Application = (function() {
 
 	var globalConfig = {},   // Global configuration
 		modules = {},        // Information about each registered module by moduleName
+		serviceStack = [],   // Track circular dependencies while loading services
 		services = {},       // Information about each registered service by serviceName
 		behaviors = {},      // Information about each registered behavior by behaviorName
 		instances = {},      // Module instances keyed by DOM element id
@@ -78,6 +79,28 @@ Box.Application = (function() {
 			delete Box.Context.prototype[exports[i]];
 		}
 		exports = [];
+	}
+
+
+	/**
+	 * Indicates if a given service is being instantiated. This is used to check
+	 * for circular dependencies in service instantiation. If two services
+	 * reference each other, it causes a stack overflow and is really hard to
+	 * track down, so we provide an extra check to make finding this issue
+	 * easier.
+	 * @param {string} serviceName The name of the service to check.
+	 * @returns {boolean} True if the service is already being instantiated,
+	 *		false if not.
+	 * @private
+	 */
+	function isServiceBeingInstantiated(serviceName) {
+		for (var i = 0, len = serviceStack.length; i < len; i++) {
+			if (serviceStack[i] === serviceName) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -182,12 +205,26 @@ Box.Application = (function() {
 	 * @private
 	 */
 	function getService(serviceName) {
+
 		var serviceData = services[serviceName];
 
 		if (serviceData) {
+
+			// check for circular dependencies
+			if (isServiceBeingInstantiated(serviceName)) {
+				error(new ReferenceError('Circular service dependency: ' + serviceStack.join(' -> ') + ' -> ' + serviceName));
+				return null;
+			}
+
+			// flag that this service is being initialized just in case there's a circular dependency issue
+			serviceStack.push(serviceName);
+
 			if (!serviceData.instance) {
 				serviceData.instance = serviceData.creator(application);
 			}
+
+			// no error was thrown for circular dependencies, so we're done
+			serviceStack.pop();
 
 			return serviceData.instance;
 		}
