@@ -56,10 +56,10 @@ Box.Application = (function() {
 
 		application = new Box.EventTarget();	// base object for application
 
-	// Supported events for modules
+	// Supported events for modules. Only events that bubble properly can be used in T3.
 	var eventTypes = ['click', 'mouseover', 'mouseout', 'mousedown', 'mouseup',
 			'mouseenter', 'mouseleave', 'keydown', 'keyup', 'submit', 'change',
-			'contextmenu', 'dblclick', 'input'];
+			'contextmenu', 'dblclick', 'input', 'focusin', 'focusout'];
 
 	/**
 	 * Reset all state to its default values
