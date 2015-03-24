@@ -1,19 +1,30 @@
 {
-  "name": "T3",
+  "name": "t3",
   "description": "T3 Javascript Framework",
   "version": "1.0.2",
   "author": "Box (https://www.box.com/)",
+  "scripts": {
+    "test": "node Makefile.js test",
+    "lint": "node Makefile.js lint",
+    "dist": "node Makefile.js dist",
+    "patch": "node Makefile.js patch",
+    "minor": "node Makefile.js minor",
+    "major": "node Makefile.js major"
+  },
   "private": true,
   "devDependencies": {
-    "assertive-chai": "~1.0.0",
-    "grunt": "^0.4.5",
-    "grunt-contrib-concat": "^0.5.0",
-    "grunt-contrib-connect": "^0.9.0",
-    "grunt-eslint": "^6.0.0",
-    "grunt-jsdoc": "^0.5.8",
-    "grunt-mocha-phantomjs": "~0.6.0",
+    "assertive-chai": "^1.0.2",
     "jquery": "^1.11.1",
-    "mocha": "^2.1.0",
-    "sinon": "^1.12.2"
+    "karma": "^0.12.31",
+    "karma-coverage": "^0.2.7",
+    "karma-mocha": "^0.1.10",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-threshold-reporter": "^0.1.15",
+    "mocha": "^2.2.1",
+    "phantomjs": "^1.9.16",
+    "shelljs": "^0.4.0",
+    "shelljs-nodecli": "^0.1.1",
+    "sinon": "^1.14.1",
+    "uglify-js": "^2.4.17"
   }
 }

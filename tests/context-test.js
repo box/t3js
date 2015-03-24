@@ -8,7 +8,7 @@ describe('Box.Context', function() {
 	'use strict';
 
 	var sandbox = sinon.sandbox.create();
-	var element = document.querySelector('#mod-test1');
+	var element = document.body;
 
 	afterEach(function() {
 		sandbox.verifyAndRestore();
