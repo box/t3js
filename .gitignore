@@ -1,8 +1,9 @@
 _site
 node_modules
-dist
 doc
 *.swp
 *.iml
 .idea
 .DS_Store
+npm-debug.log
+dist/t3-*.js

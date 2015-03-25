@@ -7,13 +7,22 @@ describe('Box.Application', function() {
 
 	'use strict';
 
-	Box.Context = function() {}; // Stub out context for testing
-
 	var sandbox = sinon.sandbox.create();
 
 	var testModule,
 		testModule2,
 		nestedModule;
+
+	before(function() {
+		var fixture = document.createElement('div');
+		fixture.id = 'mocha-fixture';
+		document.body.appendChild(fixture);
+	});
+
+	beforeEach(function() {
+		// stub out Context so it doesn't interfere with the test
+		sandbox.stub(Box, 'Context');
+	});
 
 	afterEach(function () {
 		sandbox.verifyAndRestore();
@@ -22,6 +31,10 @@ describe('Box.Application', function() {
 
 		// Always destroy application after a test - clears out registered components
 		Box.Application.destroy();
+	});
+
+	after(function() {
+		$('#mocha-fixture').remove();
 	});
 
 	describe('init()', function() {

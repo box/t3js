@@ -12,22 +12,16 @@ Clone the repo:
 git clone https://gitenterprise.inside-box.net/Box/T3.git
 ```
 
-Install the [grunt-cli](http://gruntjs.com/getting-started#installing-the-cli) globally:
-
-```bash
-sudo npm install -g grunt-cli
-```
-
 Install dependencies:
 
 ```bash
 cd T3 && npm install
 ```
 
-Build concatenated file (dist/t3-\<version\>.js) and docs (doc/index.html):
+Build concatenated file (dist/t3-\<version\>.js):
 
 ```bash
-grunt build
+npm run dist
 ```
 
 Developing
@@ -36,6 +30,6 @@ Developing
 Lint and run unit tests:
 
 ```bash
-grunt
+npm test
 ```
 
