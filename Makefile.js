@@ -144,6 +144,14 @@ target.test = function() {
 	}
 };
 
+target['test-watch'] = function() {
+	echo('Watching files to run browser tests. Press Ctrl+C to exit.');
+	var code = exec('node ./node_modules/karma/bin/karma start config/karma-conf.js --single-run=false --autoWatch').code;
+	if (code !== 0) {
+		exit(code);
+	}
+};
+
 target.docs = function() {
 	echo('Generating documentation');
 	exec(JSDOC + '-d jsdoc ' + JS_DIRS.join(' '));
