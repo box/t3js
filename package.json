@@ -5,6 +5,7 @@
   "author": "Box (https://www.box.com/)",
   "scripts": {
     "test": "node Makefile.js test",
+    "test-watch": "node Makefile.js test-watch",
     "lint": "node Makefile.js lint",
     "dist": "node Makefile.js dist",
     "patch": "node Makefile.js patch",

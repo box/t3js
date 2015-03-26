@@ -536,11 +536,15 @@ describe('Box.Application', function() {
 			var moduleWithDataTypeOutside = $('<div data-type="something"><div data-module="child"><button id="inner-btn">button</button></div></div>')[0];
 			$('#mocha-fixture').append(moduleWithDataTypeOutside);
 
+			Box.Application.setGlobalConfig({
+				debug: true
+			});
+
 			Box.Application.addModule('child', sandbox.stub().returns({
 				onclick: sandbox.mock().withArgs(sinon.match.any, null, '')
 			}));
 
-			Box.Application.start($('[data-module="child"]'));
+			Box.Application.start(moduleWithDataTypeOutside.firstChild);
 
 			$('#inner-btn').trigger({
 				type: 'click',
@@ -694,8 +698,9 @@ describe('Box.Application', function() {
 		it('should return the window-scope var when it exists', function() {
 			window.foo = 'bar';
 			assert.strictEqual(Box.Application.getGlobal('foo'), 'bar', 'global var returned');
-			delete window.foo;
 
+			// @NOTE(nzakas): IE8 doesn't like delete here
+			window.foo = null;
 		});
 
 		it('should return the null when global var does not exist', function() {
