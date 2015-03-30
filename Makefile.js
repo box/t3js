@@ -127,16 +127,24 @@ function getVersionTags() {
 function release(type) {
 	target.test();
 
+	// Step 1: Create the new version
+    var newVersion = exec("npm version " + type).output.trim();
+
+    // Step 2: Generate files
 	target.dist();
 	target.changelog();
 
+	// Step 3: Add files to current commit
 	execOrExit('git add -A');
 	execOrExit('git commit --amend --no-edit');
 
-	execOrExit('npm version ' + type);
+	// Step 4: reset the git tag to the latest commit
+	execOrExit('git tag -f ' + newVersion);
 
-	// ...and publish
+	// Step 5: publish to git
 	execOrExit('git push origin master --tags');
+
+	// Step 6: profit
 }
 
 
