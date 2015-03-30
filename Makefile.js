@@ -13,7 +13,9 @@
 require('shelljs/make');
 
 var util = require('util'),
-	nodeCLI = require('shelljs-nodecli');
+	nodeCLI = require('shelljs-nodecli'),
+	semver = require('semver'),
+	dateformat = require('dateformat');
 
 //------------------------------------------------------------------------------
 // Data
@@ -102,6 +104,22 @@ function getSourceDirectories() {
 }
 
 /**
+ * Gets the git tags that represent versions.
+ * @returns {string[]} An array of tags in the git repo.
+ * @private
+ */
+function getVersionTags() {
+    var tags = exec("git tag", { silent: true }).output.trim().split(/\n/g);
+
+    return tags.reduce(function(list, tag) {
+        if (semver.valid(tag)) {
+            list.push(tag);
+        }
+        return list;
+    }, []).sort(semver.compare);
+}
+
+/**
  * Creates a release version tag and pushes to origin.
  * @param {string} type The type of release to do (patch, minor, major)
  * @returns {void}
@@ -110,6 +128,7 @@ function release(type) {
 	target.test();
 
 	target.dist();
+	target.changelog();
 
 	execOrExit('git add -A');
 	execOrExit('git commit --amend --no-edit');
@@ -190,6 +209,36 @@ target.dist = function() {
 	cp(distFilename, distFilename.replace('.js', '-' + pkg.version + '.js'));
 	cp(minDistFilename, minDistFilename.replace('.min.js', '-' + pkg.version + '.min.js'));
 };
+
+target.changelog = function() {
+
+    // get most recent two tags
+    var tags = getVersionTags(),
+        rangeTags = tags.slice(tags.length - 2),
+        now = new Date(),
+        timestamp = dateformat(now, 'mmmm d, yyyy');
+
+    // output header
+    (rangeTags[1] + ' - ' + timestamp + '\n').to('CHANGELOG.tmp');
+
+    // get log statements
+    var logs = exec('git log --pretty=format:"* %s (%an)" ' + rangeTags.join('..'), {silent: true}).output.split(/\n/g);
+    logs = logs.filter(function(line) {
+        return line.indexOf('Merge pull request') === -1 && line.indexOf('Merge branch') === -1;
+    });
+    logs.push(''); // to create empty lines
+    logs.unshift('');
+
+    // output log statements
+    logs.join('\n').toEnd('CHANGELOG.tmp');
+
+    // switch-o change-o
+    cat('CHANGELOG.tmp', 'CHANGELOG.md').to('CHANGELOG.md.tmp');
+    rm('CHANGELOG.tmp');
+    rm('CHANGELOG.md');
+    mv('CHANGELOG.md.tmp', 'CHANGELOG.md');
+};
+
 
 target.patch = function() {
 	release('patch');

@@ -15,6 +15,7 @@
   "private": true,
   "devDependencies": {
     "assertive-chai": "^1.0.2",
+    "dateformat": "^1.0.11",
     "jquery": "^1.11.1",
     "karma": "^0.12.31",
     "karma-coverage": "^0.2.7",
@@ -23,6 +24,7 @@
     "karma-threshold-reporter": "^0.1.15",
     "mocha": "^2.2.1",
     "phantomjs": "^1.9.16",
+    "semver": "^4.3.3",
     "shelljs": "^0.4.0",
     "shelljs-nodecli": "^0.1.1",
     "sinon": "^1.14.1",
