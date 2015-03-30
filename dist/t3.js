@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-/*! t3 v 1.0.2*/
+/*! t3 v 1.1.0*/
 /**
  * @fileoverview Base namespaces for Box JavaScript.
  * @author Box
@@ -298,6 +298,55 @@ Box.Application = (function() {
 			'contextmenu', 'dblclick', 'input', 'focusin', 'focusout'];
 
 	/**
+	 * Simple implementation of ES6 Object.assign() with just two parameters.
+	 * @param {Object} receiver The object to receive properties
+	 * @param {Object} supplier The object whose properties should be copied.
+	 * @returns {Object} The receiver object.
+	 * @private
+	 */
+	function assign(receiver, supplier) {
+
+		for (var prop in supplier) {
+			if (supplier.hasOwnProperty(prop)) {
+				receiver[prop] = supplier[prop];
+			}
+		}
+
+		return receiver;
+	}
+
+	/**
+	 * Creates a new version of a function whose this-value is bound to a specific
+	 * object.
+	 * @param {Function} method The function to bind.
+	 * @param {Object} thisValue The this-value to set for the function.
+	 * @returns {Function} A bound version of the function.
+	 * @private
+	 */
+	function bind(method, thisValue) {
+		return function() {
+			return method.apply(thisValue, arguments);
+		};
+	}
+
+	/**
+	 * Simple implementation of Array.prototype.indexOf().
+	 * @param {*[]} items An array of items to search.
+	 * @param {*} item The item to search for in the array.
+	 * @returns {int} The index of the item in the array if found, -1 if not found.
+	 * @private
+	 */
+	function indexOf(items, item) {
+		for (var i = 0, len = items.length; i < len; i++) {
+			if (items[i] === item) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	/**
 	 * Reset all state to its default values
 	 * @returns {void}
 	 * @private
@@ -411,12 +460,32 @@ Box.Application = (function() {
 	 * @private
 	 */
 	function getModuleName(element) {
-		var moduleDeclaration = $(element).data('module');
+		var moduleAttribute = element.getAttribute('data-module');
 
-		if (moduleDeclaration) {
-			return moduleDeclaration.split(' ')[0];
+		if (moduleAttribute) {
+			return moduleAttribute.split(' ')[0];
 		}
 		return '';
+	}
+
+	/**
+	 * Determines if a given element represents a module.
+	 * @param {HTMLElement} element The element to check.
+	 * @returns {boolean} True if the element represents a module, false if not.
+	 * @private
+	 */
+	function isModuleElement(element) {
+		return element && element.hasAttribute('data-module');
+	}
+
+	/**
+	 * Determines if a given element represents a T3 type.
+	 * @param {HTMLElement} element The element to check.
+	 * @returns {boolean} True if the element represents a T3 type, false if not.
+	 * @private
+	 */
+	function isTypeElement(element) {
+		return element && element.hasAttribute('data-type');
 	}
 
 	/**
@@ -509,15 +578,14 @@ Box.Application = (function() {
 	 * @returns {HTMLElement} The matching element or null if not found.
 	 */
 	function getNearestTypeElement(element) {
-		var $element = $(element),
-			found = $element.is('[data-type]');
+		var found = isTypeElement(element);
 
-		while (!found && $element.length && !$element.is(MODULE_SELECTOR)) {
-			$element = $element.parent();
-			found = $element.is('[data-type]');
+		while (!found && !isModuleElement(element)) {
+			element = element.parentNode;
+			found = isTypeElement(element);
 		}
 
-		return found ? $element[0] : null;
+		return found ? element : null;
 	}
 
 	/**
@@ -542,6 +610,7 @@ Box.Application = (function() {
 			return true;
 		}
 
+		// @NOTE(nzakas): Using jQuery for event normalization
 		$(element).on(type, eventHandler);
 
 		return eventHandler;
@@ -569,13 +638,13 @@ Box.Application = (function() {
 
 			// Module's event handler gets called first
 			if (instanceData.instance[eventHandlerName]) {
-				eventHandlerFunctions.push($.proxy(instanceData.instance[eventHandlerName], instanceData.instance));
+				eventHandlerFunctions.push(bind(instanceData.instance[eventHandlerName], instanceData.instance));
 			}
 
 			// And then all of its behaviors in the order they were declared
 			for (j = 0; j < moduleBehaviors.length; j++) {
 				if (moduleBehaviors[j][eventHandlerName]) {
-					eventHandlerFunctions.push($.proxy(moduleBehaviors[j][eventHandlerName], moduleBehaviors[j]));
+					eventHandlerFunctions.push(bind(moduleBehaviors[j][eventHandlerName], moduleBehaviors[j]));
 				}
 			}
 
@@ -594,6 +663,7 @@ Box.Application = (function() {
 	function unbindEventListeners(instanceData) {
 		for (var type in instanceData.eventHandlers) {
 			if (instanceData.eventHandlers.hasOwnProperty(type)) {
+				// @NOTE(nzakas): Using jQuery for event normalization
 				$(instanceData.element).off(type, instanceData.eventHandlers[type]);
 			}
 		}
@@ -616,7 +686,7 @@ Box.Application = (function() {
 	//--------------------------------------------------------------------------
 
 	/** @lends Box.Application */
-	return $.extend(application, {
+	return assign(application, {
 
 		//----------------------------------------------------------------------
 		// Application Lifecycle
@@ -628,7 +698,7 @@ Box.Application = (function() {
 		 * @returns {void}
 		 */
 		init: function(params) {
-			$.extend(globalConfig, params || {});
+			assign(globalConfig, params || {});
 
 			this.startAll(document.documentElement);
 
@@ -760,12 +830,11 @@ Box.Application = (function() {
 		 * @returns {void}
 		 */
 		startAll: function(root) {
-			var me = this,
-				$root = $(root);
+			var moduleElements = root.querySelectorAll(MODULE_SELECTOR);
 
-			$root.find(MODULE_SELECTOR).each(function(idx, element) {
-				me.start(element);
-			});
+			for (var i = 0, len = moduleElements.length; i < len; i++) {
+				this.start(moduleElements[i]);
+			}
 		},
 
 		/**
@@ -774,12 +843,11 @@ Box.Application = (function() {
 		 * @returns {void}
 		 */
 		stopAll: function(root) {
-			var me = this,
-				$root = $(root);
+			var moduleElements = root.querySelectorAll(MODULE_SELECTOR);
 
-			$root.find(MODULE_SELECTOR).each(function(idx, element) {
-				me.stop(element);
-			});
+			for (var i = 0, len = moduleElements.length; i < len; i++) {
+				this.stop(moduleElements[i]);
+			}
 		},
 
 		//----------------------------------------------------------------------
@@ -821,11 +889,11 @@ Box.Application = (function() {
 
 				if (!instanceData.config) {
 					// <script type="text/x-config"> is used to store JSON data
-					configElement = $(element).find('script[type="text/x-config"]')[0];
+					configElement = element.querySelector('script[type="text/x-config"]');
 
 					// <script> tag supports .text property
 					if (configElement) {
-						instanceData.config = $.parseJSON(configElement.text);
+						instanceData.config = JSON.parse(configElement.text);
 					}
 				}
 
@@ -960,8 +1028,8 @@ Box.Application = (function() {
 					instanceData = instances[id];
 
 					// Module message handler is called first
-					if ($.inArray(name, instanceData.instance.messages || []) !== -1) {
-						messageHandlers.push($.proxy(instanceData.instance.onmessage, instanceData.instance));
+					if (indexOf(instanceData.instance.messages || [], name) !== -1) {
+						messageHandlers.push(bind(instanceData.instance.onmessage, instanceData.instance));
 					}
 
 					// And then any message handlers defined in module's behaviors
@@ -969,8 +1037,8 @@ Box.Application = (function() {
 					for (i = 0; i < moduleBehaviors.length; i++) {
 						behaviorInstance = moduleBehaviors[i];
 
-						if ($.inArray(name, behaviorInstance.messages || []) !== -1) {
-							messageHandlers.push($.proxy(behaviorInstance.onmessage, behaviorInstance));
+						if (indexOf(behaviorInstance.messages || [], name) !== -1) {
+							messageHandlers.push(bind(behaviorInstance.onmessage, behaviorInstance));
 						}
 					}
 
