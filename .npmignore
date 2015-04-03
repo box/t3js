@@ -3,3 +3,5 @@ examples
 lib
 tests
 Makefile.js
+.eslintrc
+.npmignore
