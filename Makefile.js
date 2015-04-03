@@ -32,6 +32,9 @@ var NODE = 'node ',	// intentional extra space
 	MOCHA = NODE_MODULES + 'mocha/bin/_mocha ',
 	JSDOC = NODE + NODE_MODULES + 'jsdoc/jsdoc.js ',
 
+	// Since our npm package name is actually 't3js'
+	DIST_NAME = 't3',
+
 	// Directories
 	JS_DIRS = getSourceDirectories(),
 	SRC_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/context.js', 'lib/application.js'],
@@ -187,7 +190,7 @@ target.docs = function() {
 
 target.dist = function() {
 	var pkg = require('./package.json'),
-		distFilename = DIST_DIR + pkg.name + '.js',
+		distFilename = DIST_DIR + DIST_NAME + '.js',
 		minDistFilename = distFilename.replace(/\.js$/, '.min.js');
 
 	if (test('-d', DIST_DIR)) {
@@ -203,7 +206,7 @@ target.dist = function() {
 	nodeExec('uglifyjs', distFilename, '-o', minDistFilename);
 
 	// Add copyrights and version info
-	var versionComment = '/*! ' + pkg.name + ' v ' + pkg.version + '*/\n',
+	var versionComment = '/*! ' + DIST_NAME + ' v ' + pkg.version + '*/\n',
 		copyrightComment = cat('./config/copyright.txt');
 
 	(copyrightComment + versionComment + cat(distFilename)).to(distFilename);
