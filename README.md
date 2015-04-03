@@ -44,16 +44,16 @@ The last published release:
 
 ```
 <!-- Recommended: Use a specific version of T3 -->
-<script src="https://cdn.rawgit.com/box/t3/v1.0.3/dist/t3.js"></script>
+<script src="https://cdn.rawgit.com/box/t3js/v1.1.0/dist/t3.js"></script>
 
 <!-- Recommended: Use a specific minified version of T3 -->
-<script src="https://cdn.rawgit.com/box/t3/v1.0.3/dist/t3.min.js"></script>
+<script src="https://cdn.rawgit.com/box/t3js/v1.1.0/dist/t3.min.js"></script>
 
 <!-- Dev-only: latest published release -->
-<script src="https://cdn.rawgit.com/box/t3/master/dist/t3.js"></script>
+<script src="https://cdn.rawgit.com/box/t3js/master/dist/t3.js"></script>
 
 <!-- Dev-only: latest published release minified -->
-<script src="https://cdn.rawgit.com/box/t3/master/dist/t3.min.js"></script>
+<script src="https://cdn.rawgit.com/box/t3js/master/dist/t3.min.js"></script>
 ```
 
 **Note:** We highly recommend using a specific version of T3. Linking directly to the master branch means getting updates without notice.
