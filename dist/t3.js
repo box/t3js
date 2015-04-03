@@ -126,7 +126,6 @@ Box.EventTarget = (function() {
 
 	return EventTarget;
 
-
 }());
 
 /**
