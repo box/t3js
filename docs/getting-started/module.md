@@ -1,8 +1,8 @@
 ---
 layout: documentation
 title: Modules
-next_section: module
-permalink: /docs/quickstart/application
+prev_section: application
+next_section: service
 ---
 
 One you have `Box.Application` on the page, you can start adding modules. A T3 module represents a specific area of a web page and is in charge of responding to events that occur in that area. You can think of a module as a mini application in that it has its own lifecycle and has responsibilities that it must perform in order for its area of the page to be functional. For this reason, modules are said to contain *application logic*, which is to say that they interact with the user and vice-versa.
@@ -152,7 +152,7 @@ In this code, the `onclick` handler is used to listen for clicks on the button. 
 
 ### Module Lifecycle
 
-Another important concept to understand is that modules have their own lifecycles. Modules can be started or stopped at any point in time. There are two methods related to the lifecycle `init()` and `destroy()`. When a module is started, its `init()` method is called if present;  when the module is stopped, its `destroy()` method is called if present. Neither method is required, but they are recommended for most modules to ensure proper initialization and cleanup.
+Another important concept to understand is that modules have their own lifecycles. Modules can be started or stopped at any point in time. There are two methods related to the lifecycle: `init()` and `destroy()`. When a module is started, its `init()` method is called if present;  when the module is stopped, its `destroy()` method is called if present. Neither method is required, but they are recommended for most modules to ensure proper initialization and cleanup.
 
 In the case of the credit card form validator, consider that `moduleEl` may need to be used in more than one method. It might make sense to make `moduleEl` a variable in the creator function so it's available to all module methods, such as:
 

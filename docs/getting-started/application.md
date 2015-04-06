@@ -1,8 +1,8 @@
 ---
 layout: documentation
 title: Application
+prev_section: installation
 next_section: module
-permalink: /docs/quickstart/application
 ---
 
 The most important object in T3 is `Box.Application`. This object is responsible for managing all components on the page: modules, services, and behaviors. It keeps track of the components as well as managing their lifecycle.
