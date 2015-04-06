@@ -1,9 +1,7 @@
 ---
 layout: documentation
 title: Installation
-prev_section: home
-next_section: installation
-permalink: /docs/installation/
+next_section: application
 ---
 
 ## Prerequisites
