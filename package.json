@@ -16,6 +16,7 @@
   "devDependencies": {
     "assertive-chai": "^1.0.2",
     "dateformat": "^1.0.11",
+    "eslint": "^0.18.0",
     "jquery": "^1.11.1",
     "karma": "^0.12.31",
     "karma-coverage": "^0.2.7",
