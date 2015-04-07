@@ -118,7 +118,7 @@ Box.Application.addModule('module-name', function(context) {
 
     return {
         showUserMenu: function(){},
-        showPIMMenu: function(){},
+        showInfoDialog: function(){},
         showUpgradeMenu: function(){},
         performSearch: function(query){}
     };
@@ -130,7 +130,9 @@ Once you have this basic interface defined, you can go on to wire things up with
 
 ### Module Lifecycle
 
-When `Box.Application.addModule()` is called, the module declaration is registered with the framework. The module doesn't actually start at that point in time. In fact, there is no guarantee as to when the module will be started (or if it ever will). When it's time for the module to start, the framework looks for a method called `init()` to execute (this method is optional). If your module needs to do anything when it's started, then `init()` is the method to do so within.
+When `Box.Application.addModule()` is called, the module declaration is registered with the framework. The module doesn't actually start at that point in time. In fact, from the module's point of view, there is no guarantee as to when the module will be started (or if it ever will). The application itself decides when any given module is started, which may be on page load or at a later time if the module is being dynamically loaded. Module lifecycles are purposely decoupled from the page lifecycle to allow for more flexibility.
+
+When it's time for the module to start, the framework looks for a method called `init()` to execute (this method is optional). If your module needs to do anything when it's started, then `init()` is the method to do so within.
 
 Similarly, a module doesn't know when it will be shut down and it may be shut down at any time. When a module is to be shut down, the framework looks for a method called `destroy()` to execute (also optional). Anything that is setup in the `init()` method should be cleaned up in the `destroy()` method.
 
@@ -233,7 +235,9 @@ Box.Application.addModule('module-name', function(context) {
 });
 ```
 
-The `onclick()` method is automatically called when a click happens inside of the module's element. The event object is a DOM-normalized object so that it is the same in all browsers, including Internet Explorer 8. The second argument is the nearest element with a `data-type` attribute specified and the third argument is the value of `data-type` on that element. You can pull any additional information off of the event object as necessary to take the correct course of action. In this example, the code is using `elementType` to determine what to do next. This is the most common use case.
+The `onclick()` method is automatically called when a click happens inside of the module's element. The event object is a DOM-normalized object so that it is the same in all browsers, including Internet Explorer 8. The second argument is the nearest ancestor element with a `data-type` attribute specified and the third argument is the value of `data-type` on that element. When an event occurs, checks to see if it has a `data-type` attribute, and if not, it checks its parent, and continues until it either finds an element with a `data-type` attribute or it reaches the module element.
+
+You can pull any additional information off of the `event` object as necessary to take the correct course of action. In the previous example, the code is using `elementType` to determine what to do next. This is the most common use case.
 
 Note that not all events are supported. Specifically, we support most events that bubble and do not support any events that don't bubble. The most notable events that don't bubble and are therefore not support are `focus` and `blur`.
 
