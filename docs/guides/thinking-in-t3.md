@@ -21,8 +21,8 @@ When building T3, we kept in mind several best practices to help guide our decis
 
 1. Explicit is better than implicit.
 1. Loose coupling is important.
-1. Global variables should be avoided so as not to pollute the global scope.
-1. Errors should be obvious and have useful messages.
+1. Global variables should be avoided.
+1. Errors should be obvious and have useful messages during development.
 
 A lot of the T3 features are best understood by keeping these best practices in mind.
 
@@ -36,6 +36,7 @@ T3 enforces loose-coupling in a number of ways:
 1. Modules cannot access behaviors directly.
 1. Behaviors cannot access other behaviors directly.
 1. Behaviors cannot access modules directly.
+1. No T3 components should access `Box.Application` directly.
 
 Only services can be accessed directly by modules and behaviors, meaning that the interface of services is important and should be changed only when necessary. Otherwise, modules and behaviors are kept strictly separate such that it's easy to add or remove them at any point in time without breaking your application.
 
