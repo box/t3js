@@ -6,7 +6,8 @@ doc
 .idea
 .DS_Store
 npm-debug.log
-dist/t3-*.js
+dist/t3-[0-9]*.js
+dist/t3-testing-[0-9]*.js
 
 # Karama generated test coverage
 coverage-client

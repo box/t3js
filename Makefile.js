@@ -34,12 +34,14 @@ var NODE = 'node ',	// intentional extra space
 
 	// Since our npm package name is actually 't3js'
 	DIST_NAME = 't3',
+	DIST_TESTING_BUNDLE_NAME = 't3-testing',
 
 	// Directories
 	JS_DIRS = getSourceDirectories(),
-	SRC_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/context.js', 'lib/application.js'],
 
 	// Files
+	SRC_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/context.js', 'lib/application.js'],
+	TESTING_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/application-stub.js', 'lib/test-service-provider.js'],
 	JS_FILES = find(JS_DIRS).filter(fileType('js')).join(' '),
 	TEST_FILES = find('tests/').filter(fileType('js')).join(' ');
 
@@ -191,7 +193,8 @@ target.docs = function() {
 target.dist = function() {
 	var pkg = require('./package.json'),
 		distFilename = DIST_DIR + DIST_NAME + '.js',
-		minDistFilename = distFilename.replace(/\.js$/, '.min.js');
+		minDistFilename = distFilename.replace(/\.js$/, '.min.js'),
+		distTestingFilename = DIST_DIR + DIST_TESTING_BUNDLE_NAME + '.js';
 
 	if (test('-d', DIST_DIR)) {
 		rm('-r', DIST_DIR + '*');
@@ -201,6 +204,7 @@ target.dist = function() {
 
 	// concatenate files together
 	cat(SRC_FILES).to(distFilename);
+	cat(TESTING_FILES).to(distTestingFilename);
 
 	// create minified version
 	nodeExec('uglifyjs', distFilename, '-o', minDistFilename);
@@ -211,14 +215,17 @@ target.dist = function() {
 
 	(copyrightComment + versionComment + cat(distFilename)).to(distFilename);
 	(copyrightComment + versionComment + cat(minDistFilename)).to(minDistFilename);
+	(copyrightComment + versionComment + cat(distTestingFilename)).to(distTestingFilename);
 
 	// ensure there's a newline at the end of each file
 	(cat(distFilename) + '\n').to(distFilename);
 	(cat(minDistFilename) + '\n').to(minDistFilename);
+	(cat(distTestingFilename) + '\n').to(distTestingFilename);
 
 	// create filenames with version in them
 	cp(distFilename, distFilename.replace('.js', '-' + pkg.version + '.js'));
 	cp(minDistFilename, minDistFilename.replace('.min.js', '-' + pkg.version + '.min.js'));
+	cp(distTestingFilename, distTestingFilename.replace('.js', '-' + pkg.version + '.js'));
 };
 
 target.changelog = function() {
