@@ -48,25 +48,31 @@ Of course, you can also copy the files out of the npm package into another folde
 You can also include T3 directly from a CDN by using [RawGit](http://rawgit.com). You can include a specific version of T3 by including the version number in the URL. For example. to use version 1.0.2, you can use the following:
 
 ```html
+<!-- be sure to include jQuery first -->
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+
 <!-- Use the unminified version of T3 -->
-<script src="https://cdn.rawgit.com/box/t3js/v1.0.2/dist/t3.js"></script>
+<script src="//cdn.rawgit.com/box/t3js/v1.0.2/dist/t3.js"></script>
 
 <!-- Or -->
 
 <!-- Use the minified version of T3 -->
-<script src="https://cdn.rawgit.com/box/t3js/v1.0.2/dist/t3.min.js"></script>
+<script src="//cdn.rawgit.com/box/t3js/v1.0.2/dist/t3.min.js"></script>
 ```
 
 For development purposes, you can also link directly to the latest published version. This is not recommended in production because the contents of this file changes each time a new release is pushed:
 
 ```html
+<!-- be sure to include jQuery first -->
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+
 <!-- Dev-only: latest published release -->
-<script src="https://cdn.rawgit.com/box/t3js/master/dist/t3.js"></script>
+<script src="//cdn.rawgit.com/box/t3js/master/dist/t3.js"></script>
 
 <!-- Or -->
 
 <!-- Dev-only: latest published release minified -->
-<script src="https://cdn.rawgit.com/box/t3js/master/dist/t3.min.js"></script>
+<script src="//cdn.rawgit.com/box/t3js/master/dist/t3.min.js"></script>
 ```
 
 **Note:** We highly recommend using a specific version of T3. Linking directly to the master branch means getting updates without notice.
