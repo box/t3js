@@ -11,7 +11,7 @@ productionsize: 11.8 KB
 <div class="row">
 	<div class="medium-10 medium-offset-1 columns text-center margin-top-100">
 	    <h2 class="grad-text">Download T3</h2>
-	    <p>Take a look at the source on <a href="https://github.com/box/t3js">Github</a>, or download to dive right in.</p>
+	    <p>Take a look at the source on <a href="https://github.com/box/t3js">GitHub</a>, or download to dive right in.</p>
 	</div>
 </div>
 <div class="row">
