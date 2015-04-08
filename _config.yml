@@ -1,5 +1,5 @@
 name: T3 Javascript Framework
 markdown: redcarpet
 pygments: true
-baseurl: /pages/Box/T3
+baseurl: /
 relative_permalinks: false
