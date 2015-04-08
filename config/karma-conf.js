@@ -72,7 +72,7 @@ module.exports = function(config) {
 		// output HTML report of code coverage
 		coverageReporter: {
 			type: 'html',
-			dir: '../coverage-client'
+			dir: 'coverage-client'
 		},
 
 		// set coverage limits
