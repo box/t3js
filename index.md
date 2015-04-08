@@ -37,7 +37,7 @@ overviewpage: true
     <div class="row">
         <div class="medium-6 columns">
             <h1>Design Overview</h1>
-            <p class="font-force-gray margin-top-25">T3 is different than most JavaScript frameworks. It's meant to be a small piece of an overall architecture that allows you to build scalable client-side code. A T3 application is managed by the <code>Application</code> object, whose primary job is to manage modules, services, and behaviors. It's the combination of these three types of objects that allow you to build a scalable JavaScript front-end.</p>
+            <p class="margin-top-25">T3 is different than most JavaScript frameworks. It's meant to be a small piece of an overall architecture that allows you to build scalable client-side code. A T3 application is managed by the <code>Application</code> object, whose primary job is to manage modules, services, and behaviors. It's the combination of these three types of objects that allow you to build a scalable JavaScript front-end.</p>
             <p>T3's design enforces best practices such as loose coupling by limiting how certain components can communicate with each other. Modules cannot interact directly with other modules but may communicate with them through an event bus. Modules may use services directly, but may only reference behaviors in a declarative way. These restrictions ensure that the various pieces remain loosely-coupled to make dependency management easy and maintenance self-contained.</p>
             <p>The loosely-coupled nature of T3 components means that creating tests is easy. Dependencies are injected into each component, making it trivial to substitute a mock object in place of real ones.</p>
         </div>
