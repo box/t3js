@@ -1,5 +1,5 @@
 name: T3 Javascript Framework
 markdown: redcarpet
 pygments: true
-baseurl: /
+baseurl: ""
 relative_permalinks: false
