@@ -1,0 +1,37 @@
+- title: Getting Started
+  path: /getting-started
+  items:
+  - id: installation
+    title: Installation
+  - id: application
+    title: Creating an Application
+  - id: module
+    title: Creating a Module
+  - id: service
+    title: Creating a Service
+
+- title: Guides
+  path: /guides
+  items:
+  - id: thinking-in-t3
+    title: Thinking in T3
+  - id: modules
+    title: Understanding Modules
+  - id: working-with-globals
+    title: Working with Globals
+
+- title: API
+  path: /api
+  items:
+  - id: application
+    title: Application
+  - id: modules
+    title: Modules
+  - id: services
+    title: Services
+  - id: behaviors
+    title: Behaviors
+  - id: event-target
+    title: Event Target
+  - id: context
+    title: Context

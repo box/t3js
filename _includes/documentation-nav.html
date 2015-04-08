@@ -1,46 +1,21 @@
 <div class="nav">
-  <aside>
-    <div id="side-nav-application">
-        <h4><a class="{% if page.url contains '/docs/api/application' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/application/">Application</a></h4>
-        {% if page.url contains '/docs/api/application' %}
-            {% include documentation-ul.html directory='application' items='init destroy addService addModule addBehavior getService getGlobal getGlobalConfig getModuleConfig start startAll stop stopAll isStarted broadcast reportError on off fire' %}
-        {% endif %}
-    </div>
-    <div id="side-nav-event-target">
-        <h4><a class="{% if page.url contains '/docs/api/event-target' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/event-target/">Event Target</a></h4>
-        {% if page.url contains '/docs/api/event-target' %}
-            {% include documentation-ul.html directory='event-target' items='on off fire' %}
-        {% endif %}
-    </div>
-    <div id="side-nav-context">
-        <h4><a class="{% if page.url contains '/docs/api/context' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/context/">Context</a></h4>
-        {% if page.url contains '/docs/api/context' %}
-            {% include documentation-ul.html directory='context' items='getElement getConfig broadcast getService getGlobal getGlobalConfig' %}
-        {% endif %}
-    </div>
-    <div id="side-nav-services">
-        <h4><a class="{% if page.url contains '/docs/api/services' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/services/">Services</a></h4>
-        {% if page.url contains '/docs/api/services' %}
+    <aside>
+    {% comment %}
+    The data for building this navigation list is in:
+    _data/docs_nav.yml
+    {% endcomment %}
+    {% for section in site.data.docs_nav %}
+    <div>
+        <h4>{{ section.title }}</h4>
         <ul>
-            <li><a class="sidebar-nav" data-item="Classification" href="{{ site.baseurl }}/docs/api/services/#Classification">Classification</a></li>
-            <li class="sub">{% include documentation-ul.html directory='services' items='Utility Widget' %}</li>
-            <li><a class="sidebar-nav" data-item="Patterns" href="{{ site.baseurl }}/docs/api/services/#Patterns">Patterns</a></li>
-            <li class="sub">{% include documentation-ul.html directory='services' items='Singleton Factory' %}</li>
+        {% for item in section.items %}
+            {% capture item_url %}/docs{{section.path}}/{{ item.id }}{% endcapture %}
+
+            <li><a class="sidebar-nav" href="{{ site.baseurl }}{{ item_url }}">{{ item.title }}</a></li>
+        {% endfor %}
         </ul>
-        
-        {% endif %}
     </div>
-    <div id="side-nav-modules">
-        <h4><a class="{% if page.url contains '/docs/api/modules' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/modules/">Modules</a></h4>
-        {% if page.url contains '/docs/api/modules' %}
-            {% include documentation-ul.html directory='modules' items='init destroy messages event-handlers' %}
-        {% endif %}
-    </div>
-    <div id="side-nav-behaviors">
-        <h4><a class="{% if page.url contains '/docs/api/behaviors' %}current{% endif %}" href="{{ site.baseurl }}/docs/api/behaviors/">Behaviors</a></h4>
-        {% if page.url contains '/docs/api/behaviors' %}
-            {% include documentation-ul.html directory='behaviors' items='init destroy messages event-handlers' %}
-        {% endif %}
-    </div>
-  </aside>
+    {% endfor %}
+
+    </aside>
 </div>
