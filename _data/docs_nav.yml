@@ -17,6 +17,10 @@
     title: Thinking in T3
   - id: modules
     title: Understanding Modules
+  - id: services
+    title: Understanding Services
+  - id: behaviors
+    title: Understanding Behaviors
   - id: working-with-globals
     title: Working with Globals
 
