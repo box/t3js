@@ -55,6 +55,7 @@ Box.Application.addService('service-name', function(application) {
     };
 
 });
+```
 
 The name of the service passed into `Box.Application.addService()` should match the name of the file without the `.js` extension. The second argument is a creator function that is called when the service is requested for the first time. Once the service has been created, it is cached by Box.Application so that every reference to the service uses the same object. The creator function receives `application` as an argument, which is a reference to `Box.Application` that is suitable for the service to use.
 
