@@ -18,10 +18,8 @@ You can always download the latest version of T3 from our [GitHub repository](ht
 
 * `t3.js` - the last published version of T3 with all comments and whitespace.
 * `t3.min.js` - the last published version of T3, minified.
-* `t3-0.0.0.js` - the same as `t3.js`, except it has the current version in the filename.
-* `t3-0.0.0.min.js` - the same as `t3.min.js`, except it has the current version in the filename.
 
-For development, we recommend downloading `t3.js` while for production `t3.min.js` is more appropriate to reduce the file size. The filenames with version numbers are exactly the same and are provided for those who prefer this format of filename.
+For development, we recommend downloading `t3.js` while for production `t3.min.js` is more appropriate to reduce the file size.
 
 ## Downloading T3 with npm
 
