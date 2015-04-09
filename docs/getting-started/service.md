@@ -4,6 +4,8 @@ title: Services
 prev_section: module
 ---
 
+# Creating a Service
+
 When your module needs to do something that isn't directly related to user interaction, you should consider creating a service. A service is any reusable utility and may not necessarily be unique to your application or web page. You can think of a service as a library of functionality that may be used in multiple places.
 
 ## JavaScript for Services

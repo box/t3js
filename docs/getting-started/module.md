@@ -5,6 +5,8 @@ prev_section: application
 next_section: service
 ---
 
+# Creating a Module
+
 One you have `Box.Application` on the page, you can start adding modules. A T3 module represents a specific area of a web page and is in charge of responding to events that occur in that area. You can think of a module as a mini application in that it has its own lifecycle and has responsibilities that it must perform in order for its area of the page to be functional. For this reason, modules are said to contain *application logic*, which is to say that they interact with the user and vice-versa.
 
 Modules are intentionally limited in what they are able to do to ensure they remain simple and clean. Additionally, modules have a lifecycle associated with them, so they can be started and stopped at any point in time. Modules never start themselves and do not execute any code until they are started. The majority of an application's code is written as modules.

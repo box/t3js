@@ -4,6 +4,10 @@ title: Installation
 next_section: application
 ---
 
+# Installation
+
+You can install T3 on your web page or application in a few different ways.
+
 ## Prerequisites
 
 T3 requires [jQuery](http://jquery.com/) v1.8.0 or higher. Please be sure to include jQuery on your page before including T3. ([Instructions for downloading jQuery](http://jquery.com/download/)).

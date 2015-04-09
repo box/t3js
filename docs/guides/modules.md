@@ -3,6 +3,8 @@ layout: documentation
 title: Modules
 ---
 
+# Understanding Modules
+
 Modules represent an area on a web page, and as such, contain what is considered application logic. Application logic is functionality that the user interacts with in some way (usually by clicking). Modules are intentionally limited in what they are able to do to ensure they remain simple and clean. Additionally, modules have a lifecycle associated with them, so they can be started and stopped at any point in time. Modules never start themselves and do not execute any code until they are started. The majority of application code is written as modules.
 
 ## HTML for Modules

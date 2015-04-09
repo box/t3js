@@ -3,6 +3,8 @@ layout: documentation
 title: Thinking in T3
 ---
 
+# Thinking in T3
+
 To get the most out of T3, it helps to understand some of the thinking behind it and the patterns of usage. At it's core, T3 simply helps to organize your code into different, loosely-coupled components. To review, there are three types of components:
 
 1. **Modules** - represent an area of a web page

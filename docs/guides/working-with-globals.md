@@ -3,6 +3,8 @@ layout: documentation
 title: Working with Globals
 ---
 
+# Working with Globals
+
 In most web applications, you're going to be mixing and matching various JavaScript libraries. As such, you can expect to be dealing with some form of global objects in addition to T3 components. This could take the form of third-party libraries that you want to use inside of T3 components, or even non-T3 components that need to access T3 components.
 
 At Box, we've had to deal with both of these situations, and so we made T3 in such a way that it's easy to work with global objects.

@@ -5,6 +5,8 @@ prev_section: installation
 next_section: module
 ---
 
+# Creating an Application
+
 The most important object in T3 is `Box.Application`. This object is responsible for managing all components on the page: modules, services, and behaviors. It keeps track of the components as well as managing their lifecycle.
 
 ## Initialization
