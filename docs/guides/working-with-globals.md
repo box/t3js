@@ -71,3 +71,5 @@ $(function() {
 ```
 
 This code retrieves the `myservice` service from a jQuery callback. Since the `Box.Application` object is both global and exposes `getService()`, you have an easy way to access any T3 service from any other code.
+
+**Important:** While you can call `Box.Application.getService()` from anywhere, you should be careful to call it after `Box.Application.init()`, as some services may rely on the initialized state of the application to function properly. Retrieving a service before the application is started can cause unexpected errors.
