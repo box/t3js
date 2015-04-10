@@ -23,6 +23,8 @@
     title: Understanding Behaviors
   - id: working-with-globals
     title: Working with Globals
+  - id: testing-bundle
+    title: T3 Testing Bundle
 
 - title: API
   path: /api

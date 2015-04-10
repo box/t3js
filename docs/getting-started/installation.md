@@ -54,12 +54,12 @@ You can also include T3 directly from a CDN by using [RawGit](http://rawgit.com)
 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 
 <!-- Use the unminified version of T3 -->
-<script src="//cdn.rawgit.com/box/t3js/v1.0.2/dist/t3.js"></script>
+<script src="//cdn.rawgit.com/box/t3js/v{{ site.data.t3.version }}/dist/t3.js"></script>
 
 <!-- Or -->
 
 <!-- Use the minified version of T3 -->
-<script src="//cdn.rawgit.com/box/t3js/v1.0.2/dist/t3.min.js"></script>
+<script src="//cdn.rawgit.com/box/t3js/v{{ site.data.t3.version }}/dist/t3.min.js"></script>
 ```
 
 For development purposes, you can also link directly to the latest published version. This is not recommended in production because the contents of this file changes each time a new release is pushed:
