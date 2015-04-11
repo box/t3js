@@ -18,9 +18,9 @@
 	overflow: hidden;
 }
 
-@media 
-(-webkit-min-device-pixel-ratio: 1.25), 
-(min-resolution: 120dpi){ 
+@media
+(-webkit-min-device-pixel-ratio: 1.25),
+(min-resolution: 120dpi){
 	#nav-icon {
 		background: url(../img/icon-T3-nav@2x.png) center center no-repeat;
 		background: url(../img/icon-T3-nav.svg) center center no-repeat, none;
@@ -168,7 +168,7 @@ iframe {
 	width: 100%;
 	height: 100%;
 	padding-bottom: 50px;
-	overflow-y: auto;	
+	overflow-y: auto;
 	overflow-x: hidden;
 }
 
@@ -218,7 +218,7 @@ iframe {
 /*****************************************************************************/
 
 footer.footer {
-	
+
 }
 
 #copyright {
@@ -313,9 +313,7 @@ a.button:active {
 }
 
 .grad-text {
-	background-image: -moz-linear-gradient( 90deg, rgb(47,34,158) 0%, rgb(108,77,213) 100%);
 	background-image: -webkit-linear-gradient( 90deg, rgb(47,34,158) 0%, rgb(108,77,213) 100%);
-	background-image: -ms-linear-gradient( 90deg, rgb(47,34,158) 0%, rgb(108,77,213) 100%);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 }
