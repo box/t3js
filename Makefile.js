@@ -114,14 +114,14 @@ function getSourceDirectories() {
  * @private
  */
 function getVersionTags() {
-    var tags = exec("git tag", { silent: true }).output.trim().split(/\n/g);
+	var tags = exec("git tag", { silent: true }).output.trim().split(/\n/g);
 
-    return tags.reduce(function(list, tag) {
-        if (semver.valid(tag)) {
-            list.push(tag);
-        }
-        return list;
-    }, []).sort(semver.compare);
+	return tags.reduce(function(list, tag) {
+		if (semver.valid(tag)) {
+			list.push(tag);
+		}
+		return list;
+	}, []).sort(semver.compare);
 }
 
 /**
@@ -133,9 +133,9 @@ function release(type) {
 	target.test();
 
 	// Step 1: Create the new version
-    var newVersion = exec("npm version " + type).output.trim();
+	var newVersion = exec("npm version " + type).output.trim();
 
-    // Step 2: Generate files
+	// Step 2: Generate files
 	target.dist();
 	target.changelog();
 
@@ -194,6 +194,7 @@ target.dist = function() {
 	var pkg = require('./package.json'),
 		distFilename = DIST_DIR + DIST_NAME + '.js',
 		minDistFilename = distFilename.replace(/\.js$/, '.min.js'),
+		minDistSourcemapFilename = minDistFilename + '.map',
 		distTestingFilename = DIST_DIR + DIST_TESTING_BUNDLE_NAME + '.js';
 
 	if (test('-d', DIST_DIR)) {
@@ -202,20 +203,17 @@ target.dist = function() {
 		mkdir(DIST_DIR);
 	}
 
-	// concatenate files together
-	cat(SRC_FILES).to(distFilename);
-	cat(TESTING_FILES).to(distTestingFilename);
-
-	// create minified version
-	nodeExec('uglifyjs', distFilename, '-o', minDistFilename);
-
 	// Add copyrights and version info
 	var versionComment = '/*! ' + DIST_NAME + ' v ' + pkg.version + '*/\n',
 		copyrightComment = cat('./config/copyright.txt');
 
-	(copyrightComment + versionComment + cat(distFilename)).to(distFilename);
-	(copyrightComment + versionComment + cat(minDistFilename)).to(minDistFilename);
-	(copyrightComment + versionComment + cat(distTestingFilename)).to(distTestingFilename);
+	// concatenate files together and add version/copyright notices
+	(versionComment + copyrightComment + cat(SRC_FILES)).to(distFilename);
+	(versionComment + copyrightComment + cat(TESTING_FILES)).to(distTestingFilename);
+
+	// create minified version with source maps
+	nodeExec('uglifyjs', distFilename, '-o', minDistFilename,
+			'--source-map', minDistSourcemapFilename, '--comments', '"/^!/"');
 
 	// ensure there's a newline at the end of each file
 	(cat(distFilename) + '\n').to(distFilename);
@@ -230,31 +228,31 @@ target.dist = function() {
 
 target.changelog = function() {
 
-    // get most recent two tags
-    var tags = getVersionTags(),
-        rangeTags = tags.slice(tags.length - 2),
-        now = new Date(),
-        timestamp = dateformat(now, 'mmmm d, yyyy');
+	// get most recent two tags
+	var tags = getVersionTags(),
+		rangeTags = tags.slice(tags.length - 2),
+		now = new Date(),
+		timestamp = dateformat(now, 'mmmm d, yyyy');
 
-    // output header
-    (rangeTags[1] + ' - ' + timestamp + '\n').to('CHANGELOG.tmp');
+	// output header
+	(rangeTags[1] + ' - ' + timestamp + '\n').to('CHANGELOG.tmp');
 
-    // get log statements
-    var logs = exec('git log --pretty=format:"* %s (%an)" ' + rangeTags.join('..'), {silent: true}).output.split(/\n/g);
-    logs = logs.filter(function(line) {
-        return line.indexOf('Merge pull request') === -1 && line.indexOf('Merge branch') === -1;
-    });
-    logs.push(''); // to create empty lines
-    logs.unshift('');
+	// get log statements
+	var logs = exec('git log --pretty=format:"* %s (%an)" ' + rangeTags.join('..'), {silent: true}).output.split(/\n/g);
+	logs = logs.filter(function(line) {
+		return line.indexOf('Merge pull request') === -1 && line.indexOf('Merge branch') === -1;
+	});
+	logs.push(''); // to create empty lines
+	logs.unshift('');
 
-    // output log statements
-    logs.join('\n').toEnd('CHANGELOG.tmp');
+	// output log statements
+	logs.join('\n').toEnd('CHANGELOG.tmp');
 
-    // switch-o change-o
-    cat('CHANGELOG.tmp', 'CHANGELOG.md').to('CHANGELOG.md.tmp');
-    rm('CHANGELOG.tmp');
-    rm('CHANGELOG.md');
-    mv('CHANGELOG.md.tmp', 'CHANGELOG.md');
+	// switch-o change-o
+	cat('CHANGELOG.tmp', 'CHANGELOG.md').to('CHANGELOG.md.tmp');
+	rm('CHANGELOG.tmp');
+	rm('CHANGELOG.md');
+	mv('CHANGELOG.md.tmp', 'CHANGELOG.md');
 };
 
 
