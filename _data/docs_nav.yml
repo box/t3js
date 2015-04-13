@@ -25,6 +25,8 @@
     title: Working with Globals
   - id: testing-bundle
     title: T3 Testing Bundle
+  - id: testing-services
+    title: Testing Services
 
 - title: API
   path: /api
