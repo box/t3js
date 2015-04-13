@@ -2,7 +2,7 @@
  * @fileoverview Build file
  * @author nzakas
  */
-/*global target, exec, echo, find, which, test, exit, mkdir*/
+/*global config, target, exec, echo, find, which, test, exit, mkdir*/
 
 'use strict';
 
@@ -48,6 +48,19 @@ var NODE = 'node ',	// intentional extra space
 //------------------------------------------------------------------------------
 // Helpers
 //------------------------------------------------------------------------------
+
+/**
+ * Checks if current repository has any uncommitted changes
+ * @return {boolean}
+ */
+function isDirectoryClean() {
+	var fatalState = config.fatal; // save current fatal state
+	config.fatal = false;
+	var isUnstagedChanges = exec('git diff --exit-code', {silent:true}).code;
+	var isStagedChanged = exec('git diff --cached --exit-code', {silent:true}).code;
+	config.fatal = fatalState; // restore fatal state
+	return !(isUnstagedChanges || isStagedChanged);
+}
 
 /**
  * Executes a Node CLI and exits with a non-zero exit code if the
@@ -130,6 +143,13 @@ function getVersionTags() {
  * @returns {void}
  */
 function release(type) {
+
+	// 'npm version' needs a clean repository to run
+	if (!isDirectoryClean()) {
+		echo('RELEASE ERROR: Working directory must be clean to push release!');
+		exit(1);
+	}
+
 	target.test();
 
 	// Step 1: Create the new version
@@ -149,7 +169,19 @@ function release(type) {
 	// Step 5: publish to git
 	execOrExit('git push origin master --tags');
 
-	// Step 6: profit
+	// Step 6: publish to npm
+	execOrExit('npm publish');
+
+	// Step 7: Update version number in docs site
+	execOrExit('git checkout gh-pages');
+	('version: ' + newVersion).to('_data/t3.yml');
+	execOrExit('git commit -am "Update version number to ' + newVersion + '"');
+	execOrExit('git fetch origin && git rebase origin/master && git push origin gh-pages');
+
+	// Step 8: Switch back to master
+	execOrExit('git checkout master');
+
+	// Step 9: Party time
 }
 
 

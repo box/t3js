@@ -3,6 +3,18 @@
   "description": "T3 Javascript Framework",
   "version": "1.1.0",
   "author": "Box (https://www.box.com/)",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist"
+  ],
+  "bugs": "http://github.com/box/t3js/issues",
+  "homepage": "http://t3js.org",
+  "license": "Apache-2.0",
+  "repository" : {
+      "type" : "git",
+      "url" : "https://github.com/box/t3js"
+  },
   "scripts": {
     "test": "node Makefile.js test",
     "test-watch": "node Makefile.js test-watch",
@@ -12,7 +24,6 @@
     "minor": "node Makefile.js minor",
     "major": "node Makefile.js major"
   },
-  "private": true,
   "devDependencies": {
     "assertive-chai": "^1.0.2",
     "dateformat": "^1.0.11",
@@ -30,5 +41,13 @@
     "shelljs-nodecli": "^0.1.1",
     "sinon": "^1.14.1",
     "uglify-js": "^2.4.17"
-  }
+  },
+  "keywords": [
+    "javascript",
+    "framework",
+    "browser",
+    "client-side",
+    "modular",
+    "component"
+  ]
 }
