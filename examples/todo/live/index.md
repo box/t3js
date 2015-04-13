@@ -78,7 +78,7 @@ todolink: /examples/todo/live/
 		</ul>
 		<script src="bower_components/jquery-1.11.1.min/index.js"></script>
 		<script src="bower_components/todomvc-common/base.js"></script>
-		<script src="{{ site.baseurl }}/js/archive/t3-1.0.0.js"></script>
+		<script src="//cdn.rawgit.com/box/t3js/v{{ site.data.t3.version }}/dist/t3.js"></script>
 		<script src="js/app.js"></script>
 		<script src="js/services/todos-db.js"></script>
 		<script src="js/services/router.js"></script>

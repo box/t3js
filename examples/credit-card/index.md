@@ -8,7 +8,7 @@ permalink: /examples/credit-card/
 
 This is an example of how to build a simple module and service to handle credit card validation.
 
-<link rel="stylesheet" href="{{ site.baseurl }}/examples/credit-card/css/credit-card.css" />
+<link rel="stylesheet" href="css/credit-card.css" />
 
 <div class=" credit-card-container" data-module="cc-validation-form">
 	<form>
@@ -63,6 +63,7 @@ Please note that this example does not cover input validation. Input validation 
 via native HTML5 form validation or a separate T3 service.
 
 <div class="anchor" id="module"></div>
+
 ## Module
 
 {% highlight js %}
@@ -133,6 +134,7 @@ Box.Application.addModule('cc-validation-form', function(context) {
 {% endhighlight %}
 
 <div class="anchor" id="service"></div>
+
 ## Service
 
 {% highlight js %}
@@ -234,6 +236,7 @@ Box.Application.addService('credit-card', function(application) {
 {% endhighlight %}
 
 <div class="anchor" id="init"></div>
+
 ## init
 
 {% highlight js %}
@@ -246,9 +249,9 @@ Box.Application.init();
 
 
 <script src="bower_components/jquery-1.11.1.min/index.js"></script>
-<script src="{{ site.baseurl }}/js/archive/t3-1.0.0.js"></script>
-<script src="{{ site.baseurl }}/examples/credit-card/js/modules/cc-validation-form.js"></script>
-<script src="{{ site.baseurl }}/examples/credit-card/js/services/credit-card.js"></script>
+<script src="//cdn.rawgit.com/box/t3js/v{{ site.data.t3.version }}/dist/t3.js"></script>
+<script src="js/modules/cc-validation-form.js"></script>
+<script src="js/services/credit-card.js"></script>
 <script>
 Box.Application.init();
 </script>
