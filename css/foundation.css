@@ -27,6 +27,7 @@ meta.foundation-data-attribute-namespace {
 html, body {
   height: 100%; }
 
+
 *,
 *:before,
 *:after {
@@ -157,6 +158,15 @@ select {
   padding-right: 0.9375em;
   width: 100%;
   float: left; }
+
+/* for IE */
+.medium-3 {
+  width: 25%;
+}
+
+.medium-9 {
+  width: 75%;
+}
 
 @media only screen {
   .column.small-centered,
@@ -1195,7 +1205,9 @@ h1, h2, h3, h4, h5, h6 {
   color: #4d37b9;
   text-rendering: optimizeLegibility;
   margin-top: 0.2rem;
+  margin-top: 0.2em;
   margin-bottom: 0.5rem;
+  margin-bottom: 0.5em;
   line-height: 1.4; }
   h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
     font-size: 60%;
@@ -2212,3 +2224,5 @@ th.hide-for-touch {
 
 .touch th.show-for-touch {
   display: table-cell !important; }
+
+

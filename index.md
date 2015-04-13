@@ -13,19 +13,19 @@ overviewpage: true
 
     <div class="row pad-top-50">
         <div class="medium-4 columns text-center">
-        	<img class="pad-top-25" width="250" height="120" data-interchange="[{{ site.baseurl }}/img/feature-modular.png, (default)], [{{ site.baseurl }}/img/feature-modular@2x.png, (retina)]">
+        	<img class="pad-top-25" width="250" height="120" src="{{ site.baseurl }}/img/feature-modular.png" data-interchange="[{{ site.baseurl }}/img/feature-modular.png, (default)], [{{ site.baseurl }}/img/feature-modular@2x.png, (retina)]">
             <noscript><img class="pad-top-25" width="250" height="120" src="{{ site.baseurl }}/img/feature-modular.png" /></noscript>
             <h4 class="margin-top-50 font-force-dark">Modular Design</h4>
             <p class="font-force-gray">T3’s modular approach to applications allows you to focus on building small pieces of functionality.</p>
         </div>
         <div class="medium-4 columns text-center">
-        	<img class="pad-top-25" width="250" height="120" data-interchange="[{{ site.baseurl }}/img/feature-collaboration.png, (default)], [{{ site.baseurl }}/img/feature-collaboration@2x.png, (retina)]">
+        	<img class="pad-top-25" width="250" height="120" src="{{ site.baseurl }}/img/feature-collaboration.png" data-interchange="[{{ site.baseurl }}/img/feature-collaboration.png, (default)], [{{ site.baseurl }}/img/feature-collaboration@2x.png, (retina)]">
             <noscript><img class="pad-top-25" width="250" height="120" src="{{ site.baseurl }}/img/feature-collaboration.png" /></noscript>
             <h4 class="margin-top-50 font-force-dark">Made for Collaboration</h4>
             <p class="font-force-gray">T3 components can be developed and tested independently , making it perfect for large, distributed teams.</p>
         </div>
         <div class="medium-4 columns text-center">
-        	<img class="pad-top-25" width="250" height="120" data-interchange="[{{ site.baseurl }}/img/feature-best-practice.png, (default)], [{{ site.baseurl }}/img/feature-best-practice@2x.png, (retina)]">
+        	<img class="pad-top-25" width="250" height="120" src="{{ site.baseurl }}/img/feature-best-practice.png" data-interchange="[{{ site.baseurl }}/img/feature-best-practice.png, (default)], [{{ site.baseurl }}/img/feature-best-practice@2x.png, (retina)]">
             <noscript><img class="pad-top-25" width="250" height="120" src="{{ site.baseurl }}/img/feature-best-practice.png" /></noscript>
             <h4 class="margin-top-50 font-force-dark">Promotes Best Practices</h4>
             <p class="font-force-gray">One of T3’s core goals is to prevent mistakes before they happen, by making it difficult for developers to do the wrong thing.</p>
@@ -43,7 +43,7 @@ overviewpage: true
         </div>
         <div class="medium-6 columns text-center">
             <h4 class="margin-top-25 font-force-dark">Component Communication</h4>
-            <img class="pad-top-50" width="398" height="537" data-interchange="[{{ site.baseurl }}/img/design-diagram.png, (default)], [{{ site.baseurl }}/img/design-diagram@2x.png, (retina)]">
+            <img class="pad-top-50" width="398" height="537" src="{{ site.baseurl }}/img/design-diagram.png" data-interchange="[{{ site.baseurl }}/img/design-diagram.png, (default)], [{{ site.baseurl }}/img/design-diagram@2x.png, (retina)]">
             <noscript><img class="pad-top-25" width="398" height="537" src="{{ site.baseurl }}/img/design-diagram.png" /></noscript>
         </div>
     </div>

@@ -294,26 +294,23 @@ th {
 	text-decoration: none;
 	padding: 15pt 30pt;
 	border-radius: 10px;
-	background-image: -moz-linear-gradient( 90deg, rgb(47,34,158) 0%, rgb(108,77,213) 100%);
-	background-image: -webkit-linear-gradient( 90deg, rgb(47,34,158) 0%, rgb(108,77,213) 100%);
-	background-image: -ms-linear-gradient( 90deg, rgb(47,34,158) 0%, rgb(108,77,213) 100%);
+	background: linear-gradient( 90deg, rgb(47,34,158) 0%, rgb(108,77,213) 100%);
+	background: rgb(108,77,213);
 	color: #fff;
 }
 a.button:hover {
 	color: #fff;
 	text-decoration: none;
-	background-image: -moz-linear-gradient( 90deg, rgb(52,38,176) 0%, rgb(130,93,255) 100%);
-	background-image: -webkit-linear-gradient( 90deg, rgb(52,38,176) 0%, rgb(130,93,255) 100%);
-	background-image: -ms-linear-gradient( 90deg, rgb(52,38,176) 0%, rgb(130,93,255) 100%);
+	background: linear-gradient( 90deg, rgb(52,38,176) 0%, rgb(130,93,255) 100%);
+	background: rgb(130,93,255);
 }
 a.button:active {
-	background-image: -moz-linear-gradient( 90deg, rgb(52,38,176) 0%, rgb(47,34,158) 100%);
-	background-image: -webkit-linear-gradient( 90deg, rgb(52,38,176) 0%, rgb(47,34,158) 100%);
-	background-image: -ms-linear-gradient( 90deg, rgb(52,38,176) 0%, rgb(47,34,158) 100%);
+	background: linear-gradient( 90deg, rgb(52,38,176) 0%, rgb(47,34,158) 100%);
+	background: rgb(47,34,158);
 }
 
 .grad-text {
-	background-image: -webkit-linear-gradient( 90deg, rgb(47,34,158) 0%, rgb(108,77,213) 100%);
+	background: linear-gradient( 90deg, rgb(47,34,158) 0%, rgb(108,77,213) 100%);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 }
