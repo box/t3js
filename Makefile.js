@@ -2,7 +2,7 @@
  * @fileoverview Build file
  * @author nzakas
  */
-/*global target, exec, echo, find, which, test, exit, mkdir*/
+/*global config, target, exec, echo, find, which, test, exit, mkdir*/
 
 'use strict';
 
@@ -48,6 +48,19 @@ var NODE = 'node ',	// intentional extra space
 //------------------------------------------------------------------------------
 // Helpers
 //------------------------------------------------------------------------------
+
+/**
+ * Checks if current repository has any uncommitted changes
+ * @return {boolean}
+ */
+function isDirectoryClean() {
+	var fatalState = config.fatal; // save current fatal state
+	config.fatal = false;
+	var isUnstagedChanges = exec('git diff --exit-code', {silent:true}).code;
+	var isStagedChanged = exec('git diff --cached --exit-code', {silent:true}).code;
+	config.fatal = fatalState; // restore fatal state
+	return !(isUnstagedChanges || isStagedChanged);
+}
 
 /**
  * Executes a Node CLI and exits with a non-zero exit code if the
@@ -114,14 +127,14 @@ function getSourceDirectories() {
  * @private
  */
 function getVersionTags() {
-    var tags = exec("git tag", { silent: true }).output.trim().split(/\n/g);
+	var tags = exec("git tag", { silent: true }).output.trim().split(/\n/g);
 
-    return tags.reduce(function(list, tag) {
-        if (semver.valid(tag)) {
-            list.push(tag);
-        }
-        return list;
-    }, []).sort(semver.compare);
+	return tags.reduce(function(list, tag) {
+		if (semver.valid(tag)) {
+			list.push(tag);
+		}
+		return list;
+	}, []).sort(semver.compare);
 }
 
 /**
@@ -130,12 +143,19 @@ function getVersionTags() {
  * @returns {void}
  */
 function release(type) {
+
+	// 'npm version' needs a clean repository to run
+	if (!isDirectoryClean()) {
+		echo('RELEASE ERROR: Working directory must be clean to push release!');
+		exit(1);
+	}
+
 	target.test();
 
 	// Step 1: Create the new version
-    var newVersion = exec("npm version " + type).output.trim();
+	var newVersion = exec("npm version " + type).output.trim();
 
-    // Step 2: Generate files
+	// Step 2: Generate files
 	target.dist();
 	target.changelog();
 
@@ -149,7 +169,19 @@ function release(type) {
 	// Step 5: publish to git
 	execOrExit('git push origin master --tags');
 
-	// Step 6: profit
+	// Step 6: publish to npm
+	execOrExit('npm publish');
+
+	// Step 7: Update version number in docs site
+	execOrExit('git checkout gh-pages');
+	('version: ' + newVersion).to('_data/t3.yml');
+	execOrExit('git commit -am "Update version number to ' + newVersion + '"');
+	execOrExit('git fetch origin && git rebase origin/master && git push origin gh-pages');
+
+	// Step 8: Switch back to master
+	execOrExit('git checkout master');
+
+	// Step 9: Party time
 }
 
 
@@ -230,31 +262,31 @@ target.dist = function() {
 
 target.changelog = function() {
 
-    // get most recent two tags
-    var tags = getVersionTags(),
-        rangeTags = tags.slice(tags.length - 2),
-        now = new Date(),
-        timestamp = dateformat(now, 'mmmm d, yyyy');
+	// get most recent two tags
+	var tags = getVersionTags(),
+		rangeTags = tags.slice(tags.length - 2),
+		now = new Date(),
+		timestamp = dateformat(now, 'mmmm d, yyyy');
 
-    // output header
-    (rangeTags[1] + ' - ' + timestamp + '\n').to('CHANGELOG.tmp');
+	// output header
+	(rangeTags[1] + ' - ' + timestamp + '\n').to('CHANGELOG.tmp');
 
-    // get log statements
-    var logs = exec('git log --pretty=format:"* %s (%an)" ' + rangeTags.join('..'), {silent: true}).output.split(/\n/g);
-    logs = logs.filter(function(line) {
-        return line.indexOf('Merge pull request') === -1 && line.indexOf('Merge branch') === -1;
-    });
-    logs.push(''); // to create empty lines
-    logs.unshift('');
+	// get log statements
+	var logs = exec('git log --pretty=format:"* %s (%an)" ' + rangeTags.join('..'), {silent: true}).output.split(/\n/g);
+	logs = logs.filter(function(line) {
+		return line.indexOf('Merge pull request') === -1 && line.indexOf('Merge branch') === -1;
+	});
+	logs.push(''); // to create empty lines
+	logs.unshift('');
 
-    // output log statements
-    logs.join('\n').toEnd('CHANGELOG.tmp');
+	// output log statements
+	logs.join('\n').toEnd('CHANGELOG.tmp');
 
-    // switch-o change-o
-    cat('CHANGELOG.tmp', 'CHANGELOG.md').to('CHANGELOG.md.tmp');
-    rm('CHANGELOG.tmp');
-    rm('CHANGELOG.md');
-    mv('CHANGELOG.md.tmp', 'CHANGELOG.md');
+	// switch-o change-o
+	cat('CHANGELOG.tmp', 'CHANGELOG.md').to('CHANGELOG.md.tmp');
+	rm('CHANGELOG.tmp');
+	rm('CHANGELOG.md');
+	mv('CHANGELOG.md.tmp', 'CHANGELOG.md');
 };
 
 
