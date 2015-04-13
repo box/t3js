@@ -1,3 +1,5 @@
+[![NPM version][npm-image]][npm-url]
+[![Build Status][travis-image]][travis-url]
 [![Project Status](http://opensource.box.com/badges/stable.svg)](http://opensource.box.com/badges)
 
 # T3 JavaScript Framework
@@ -14,7 +16,7 @@ The approaches taken in T3 have been battle-hardened through continuous producti
 
 ## Framework Design
 
-T3 is different than most JavaScript frameworks. It's meant to be a small piece of an overall architecture that allows you to build scalable client-side code.
+T3 is different from most JavaScript frameworks. It's meant to be a small piece of an overall architecture that allows you to build scalable client-side code.
 
 ### No MVC Here
 
@@ -133,7 +135,9 @@ In order to get started contributing to T3, you'll need to be familiar and have 
 
 ### Setup
 
-Once you clone the T3 git repository, run the following:
+Following the instructions in the [contributor guidelines](CONTRIBUTING.md) to setup a local copy of the T3 repository.
+
+Once you clone the T3 git repository, run the following inside the `t3js` directory:
 
 ```
 $ npm i
@@ -171,7 +175,6 @@ jQuery is used primarily for its browser-normalizing event handling so we can su
 
 The Box web application currently supports IE8 with a [planned end-of-life of December 31, 2015](https://support.box.com/hc/en-us/articles/200519838-What-Is-the-Box-Policy-for-Browser-and-OS-Support-). As such, T3 must continue to support IE8 until Box has officially end-of-lifed it.
 
-
 ## Support
 
 Need to contact us directly? Email oss@box.com and be sure to include the name of this project in the subject.
@@ -191,3 +194,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+[npm-image]: https://img.shields.io/npm/v/t3js.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/t3js
+[travis-image]: https://img.shields.io/travis/box/t3js/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/box/t3js
