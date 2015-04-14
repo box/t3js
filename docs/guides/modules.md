@@ -1,6 +1,8 @@
 ---
 layout: documentation
 title: Modules
+prev: thinking-in-t3
+next: services
 ---
 
 # Understanding Modules

@@ -1,7 +1,7 @@
 ---
 layout: documentation
 title: Installation
-next_section: application
+next: application
 ---
 
 # Installation

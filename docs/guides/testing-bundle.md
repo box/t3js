@@ -1,6 +1,8 @@
 ---
 layout: documentation
 title: T3 Testing Bundle
+prev: working-with-globals
+next: testing-modules-behaviors
 ---
 
 # T3 Testing Bundle

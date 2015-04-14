@@ -1,6 +1,7 @@
 ---
 layout: documentation
 title: Thinking in T3
+next: modules
 ---
 
 # Thinking in T3

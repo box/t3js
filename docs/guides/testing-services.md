@@ -1,13 +1,14 @@
 ---
 layout: documentation
 title: Testing Services
+prev: testing-modules-behaviors
 ---
 
 # Testing Services
 
 Services are designed to be completely unit testable, meaning that they need not have all of their dependencies included to be tested. You can use any JavaScript testing framework you prefer to test T3 modules. This guide shows examples in [QUnit](https://qunitjs.com) and [Mocha](http://mochajs.org) (with [Chai](http://chaijs.com)), but you should feel free to use your favorite testing framework.
 
-**Note:** Be sure to have the [T3 testing bundle](../testing-bundle) loaded for your module tests.
+**Note:** Be sure to have the [T3 testing bundle](testing-bundle) loaded for your module tests.
 
 ## Services with No Dependencies
 

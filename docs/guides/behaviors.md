@@ -1,6 +1,8 @@
 ---
 layout: documentation
 title: Understanding Behaviors
+prev: services
+next: working-with-globals
 ---
 
 # Understanding Behaviors

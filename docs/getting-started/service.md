@@ -1,7 +1,8 @@
 ---
 layout: documentation
 title: Services
-prev_section: module
+prev: module
+next: ../guides/thinking-in-t3
 ---
 
 # Creating a Service

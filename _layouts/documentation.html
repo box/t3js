@@ -11,6 +11,15 @@
             <div class="documentation medium-9 columns">
                 <div class="anchor" id="anchor-top"></div>
                 {{ content }}
+
+                <div class="docs-prevnext">
+                  {% if page.prev %}
+                    <a class="prev" href="{{ page.prev }}">&larr; Prev</a>
+                  {% endif %}
+                  {% if page.next %}
+                    <a class="next" href="{{ page.next }}">Next &rarr;</a>
+                  {% endif %}
+                </div>
             </div>
         </div>
 

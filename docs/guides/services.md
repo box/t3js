@@ -1,6 +1,8 @@
 ---
 layout: documentation
 title: Services
+prev: modules
+next: behaviors
 ---
 
 # Understanding Services

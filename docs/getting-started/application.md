@@ -1,8 +1,8 @@
 ---
 layout: documentation
 title: Application
-prev_section: installation
-next_section: module
+prev: installation
+next: module
 ---
 
 # Creating an Application

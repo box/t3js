@@ -1,6 +1,8 @@
 ---
 layout: documentation
 title: Working with Globals
+prev: behaviors
+next: testing-bundle
 ---
 
 # Working with Globals

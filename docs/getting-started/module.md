@@ -1,8 +1,8 @@
 ---
 layout: documentation
 title: Modules
-prev_section: application
-next_section: service
+prev: application
+next: service
 ---
 
 # Creating a Module
