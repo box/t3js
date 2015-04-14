@@ -1,7 +1,7 @@
 {
   "name": "t3js",
   "description": "T3 Javascript Framework",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": "Box (https://www.box.com/)",
   "files": [
     "LICENSE",
@@ -11,9 +11,9 @@
   "bugs": "http://github.com/box/t3js/issues",
   "homepage": "http://t3js.org",
   "license": "Apache-2.0",
-  "repository" : {
-      "type" : "git",
-      "url" : "https://github.com/box/t3js"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/box/t3js"
   },
   "scripts": {
     "test": "node Makefile.js test",

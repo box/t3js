@@ -1,3 +1,4 @@
+/*! t3 v 1.1.1*/
 /*!
 Copyright 2015 Box, Inc. All rights reserved.
 
@@ -13,7 +14,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-/*! t3 v 1.1.0*/
 /**
  * @fileoverview Base namespaces for Box JavaScript.
  * @author Box
