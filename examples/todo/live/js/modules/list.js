@@ -158,7 +158,7 @@ Application.addModule('list', function(context) {
 				newTodoEl = todoTemplateEl.cloneNode(true);
 
 			// Set the label of the todo
-			newTodoEl.querySelector('label').innerText = title;
+			newTodoEl.querySelector('label').innerHTML = title;
 			newTodoEl.setAttribute('data-todo-id', id);
 			if (isCompleted) {
 				newTodoEl.classList.add('completed');

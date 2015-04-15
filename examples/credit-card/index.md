@@ -125,7 +125,7 @@ Box.Application.addModule('cc-validation-form', function(context) {
 		 */
 		setMessage: function(message) {
 			var messageEl = moduleEl.querySelector('.message');
-			messageEl.innerText = message;
+			messageEl.innerHTML = message;
 		}
 	};
 

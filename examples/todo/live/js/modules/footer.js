@@ -129,8 +129,8 @@ Application.addModule('footer', function(context) {
 		updateItemsLeft: function(itemsLeft) {
 			var itemText = itemsLeft === 1 ? 'item' : 'items';
 
-			moduleEl.querySelector('.items-left-counter').innerText = itemsLeft;
-			moduleEl.querySelector('.items-left-text').innerText = itemText + ' left';
+			moduleEl.querySelector('.items-left-counter').innerHTML = itemsLeft;
+			moduleEl.querySelector('.items-left-text').innerHTML = itemText + ' left';
 		},
 
 		/**
@@ -140,7 +140,7 @@ Application.addModule('footer', function(context) {
 		 */
 		updateCompletedButton: function(completedCount) {
 			if (completedCount > 0) {
-				moduleEl.querySelector('.completed-count').innerText = completedCount;
+				moduleEl.querySelector('.completed-count').innerHTML = completedCount;
 				moduleEl.classList.add('has-completed-tasks');
 			} else {
 				moduleEl.classList.remove('has-completed-tasks');
