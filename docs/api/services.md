@@ -1,6 +1,6 @@
 ---
 layout: documentation
-title: T3 JavaScript Framework - API - Services
+title: API - Services
 permalink: /docs/api/services/
 ---
 

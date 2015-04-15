@@ -1,6 +1,6 @@
 ---
 layout: documentation
-title: T3 JavaScript Framework - API - Event Target
+title: API - Event Target
 permalink: /docs/api/event-target/
 ---
 

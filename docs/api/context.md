@@ -1,6 +1,6 @@
 ---
 layout: documentation
-title: T3 JavaScript Framework - API - Context
+title: API - Context
 permalink: /docs/api/context/
 ---
 

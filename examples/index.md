@@ -1,6 +1,6 @@
 ---
 layout: examples
-title: T3 JavaScript Framework - Code Examples
+title: Code Examples
 ---
 
 

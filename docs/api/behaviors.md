@@ -1,6 +1,6 @@
 ---
 layout: documentation
-title: T3 JavaScript Framework - API - Behaviors
+title: API - Behaviors
 permalink: /docs/api/behaviors/
 ---
 

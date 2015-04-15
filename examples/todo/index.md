@@ -1,9 +1,9 @@
 ---
 layout: examples
-title: T3 JavaScript Framework - Todo.js Example
+title: Todo.js Example
 permalink: /examples/todo/
 todolink: /examples/todo/
-sourcecode: https://gitenterprise.inside-box.net/Box/T3/tree/gh-pages/examples/todo/live
+sourcecode: https://github.com/box/t3js/tree/gh-pages/examples/todo/live
 ---
 
 # Todo List

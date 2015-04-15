@@ -1,6 +1,6 @@
 ---
 layout: default
-title: T3 JavaScript Framework - Download & View Source
+title: Download & View Source
 downloadpage: true
 developmentsize: 32.4 KB
 productionsize: 11.8 KB

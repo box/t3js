@@ -1,6 +1,6 @@
 ---
 layout: documentation
-title: T3 JavaScript Framework - API - Modules
+title: API - Modules
 permalink: /docs/api/modules/
 ---
 
