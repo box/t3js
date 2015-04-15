@@ -22,7 +22,7 @@ overviewpage: true
         	<img class="pad-top-25" width="250" height="120" src="{{ site.baseurl }}/img/feature-collaboration.png" data-interchange="[{{ site.baseurl }}/img/feature-collaboration.png, (default)], [{{ site.baseurl }}/img/feature-collaboration@2x.png, (retina)]">
             <noscript><img class="pad-top-25" width="250" height="120" src="{{ site.baseurl }}/img/feature-collaboration.png" /></noscript>
             <h4 class="margin-top-50 font-force-dark">Made for Collaboration</h4>
-            <p class="font-force-gray">T3 components can be developed and tested independently , making it perfect for large, distributed teams.</p>
+            <p class="font-force-gray">T3 components can be developed and tested independently, making it perfect for large, distributed teams.</p>
         </div>
         <div class="medium-4 columns text-center">
         	<img class="pad-top-25" width="250" height="120" src="{{ site.baseurl }}/img/feature-best-practice.png" data-interchange="[{{ site.baseurl }}/img/feature-best-practice.png, (default)], [{{ site.baseurl }}/img/feature-best-practice@2x.png, (retina)]">
