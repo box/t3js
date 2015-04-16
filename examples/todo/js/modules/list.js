@@ -101,11 +101,20 @@ Application.addModule('list', function(context) {
 
 			if (elementType === 'select-all-checkbox') {
 				// This selector avoids grabbing the select-all checkbox
-				var todoCheckboxesEls = moduleEl.querySelectorAll('#todo-list li input[type="checkbox"]');
-
+				var todoEls = moduleEl.querySelectorAll('#todo-list li');
 				var shouldMarkAsComplete = element.checked;
-				for (var i = 0, len = todoCheckboxesEls.length; i < len; i++) {
-					todoCheckboxesEls[i].checked = shouldMarkAsComplete;
+
+				for (var i = 0, len = todoEls.length; i < len; i++) {
+
+					var todoEl = todoEls[i];
+					var todoCheckboxEl = todoEl.querySelector('input[type="checkbox"]');
+
+					todoCheckboxEl.checked = shouldMarkAsComplete;
+					if (shouldMarkAsComplete) {
+						todoEl.classList.add('completed');
+					} else {
+						todoEl.classList.remove('completed');
+					}
 				}
 
 				if (shouldMarkAsComplete) {
