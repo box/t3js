@@ -7,11 +7,19 @@ describe('Box.Application', function() {
 
 	'use strict';
 
+	var $ = jQuery.noConflict(true);
 	var sandbox = sinon.sandbox.create();
 
 	var testModule,
 		testModule2,
-		nestedModule;
+		nestedModule,
+		customEvent;
+
+	var dispatch = function(selector) {
+		customEvent = document.createEvent('MouseEvent');
+		customEvent.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 1, null);
+		$(selector)[0].dispatchEvent(customEvent);
+	};
 
 	before(function() {
 		var fixture = document.createElement('div');
@@ -480,10 +488,22 @@ describe('Box.Application', function() {
 
 			Box.Application.start(testModule);
 
+			dispatch('#module-target');
+		});
+
+		it('should be called when an event occurs inside of a started module, using jQuery', function() {
+			window.$ = $;
+			Box.Application.addModule('test', sandbox.stub().returns({
+				onclick: sandbox.mock()
+			}));
+
+			Box.Application.start(testModule);
+
 			$('#module-target').trigger({
 				type: 'click',
 				button: 1
 			});
+			window.$ = undefined;
 		});
 
 		it('should be called on behaviors in correct order when defined', function() {
@@ -506,10 +526,7 @@ describe('Box.Application', function() {
 
 			Box.Application.start(testModule);
 
-			$('#module-target').trigger({
-				type: 'click',
-				button: 1
-			});
+			dispatch('#module-target');
 
 			assert.ok(moduleClickSpy.calledBefore(behaviorClickSpy), 'module called before first behavior');
 			assert.ok(behaviorClickSpy.calledBefore(behavior2ClickSpy), 'first behavior called before second behavior');
@@ -524,10 +541,7 @@ describe('Box.Application', function() {
 
 			Box.Application.start(testModule);
 
-			$('#module-target').trigger({
-				type: 'click',
-				button: 1
-			});
+			dispatch('#module-target');
 
 		});
 
@@ -546,10 +560,7 @@ describe('Box.Application', function() {
 
 			Box.Application.start(moduleWithDataTypeOutside.firstChild);
 
-			$('#inner-btn').trigger({
-				type: 'click',
-				button: 1
-			});
+			dispatch('#inner-btn');
 
 		});
 
@@ -562,16 +573,12 @@ describe('Box.Application', function() {
 			Box.Application.start(testModule);
 			Box.Application.stop(testModule);
 
-			$('#module-target').trigger({
-				type: 'click',
-				button: 1
-			});
+			dispatch('#module-target');
 
 		});
 
 
 	});
-
 
 	describe('broadcast()', function() {
 
