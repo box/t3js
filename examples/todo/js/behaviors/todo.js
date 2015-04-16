@@ -127,9 +127,7 @@ Application.addBehavior('todo', function(context) {
 					todosDB.markAsIncomplete(todoId);
 				}
 
-				context.broadcast('todostatuschange', {
-					id: todoId
-				});
+				context.broadcast('todostatuschange');
 
 			}
 
