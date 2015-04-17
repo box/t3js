@@ -101,28 +101,15 @@ Application.addModule('list', function(context) {
 		onchange: function(event, element, elementType) {
 
 			if (elementType === 'select-all-checkbox') {
-				// This selector avoids grabbing the select-all checkbox
-				var todoEls = moduleEl.querySelectorAll('#todo-list li');
 				var shouldMarkAsComplete = element.checked;
-
-				for (var i = 0, len = todoEls.length; i < len; i++) {
-
-					var todoEl = todoEls[i];
-					var todoCheckboxEl = todoEl.querySelector('input[type="checkbox"]');
-
-					todoCheckboxEl.checked = shouldMarkAsComplete;
-					if (shouldMarkAsComplete) {
-						todoEl.classList.add('completed');
-					} else {
-						todoEl.classList.remove('completed');
-					}
-				}
 
 				if (shouldMarkAsComplete) {
 					todosDB.markAllAsComplete();
 				} else {
 					todosDB.markAllAsIncomplete();
 				}
+
+				this.renderList();
 
 				context.broadcast('todostatuschange');
 			}
