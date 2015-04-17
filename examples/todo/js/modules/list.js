@@ -24,10 +24,11 @@ Application.addModule('list', function(context) {
 	 * @private
 	 */
 	function isListCompleted() {
-		var isComplete = true;
-		var todoCheckboxesEls = moduleEl.querySelectorAll('#todo-list li input[type="checkbox"]');
-		for (var i = 0, len = todoCheckboxesEls.length; i < len; i++) {
-			if (!todoCheckboxesEls[i].checked) {
+		var todos = todosDB.getList();
+		var len = todos.length;
+		var isComplete = len > 0;
+		for (var i = 0; i < len; i++) {
+			if (!todos[i].completed) {
 				isComplete = false;
 				break;
 			}
@@ -100,28 +101,15 @@ Application.addModule('list', function(context) {
 		onchange: function(event, element, elementType) {
 
 			if (elementType === 'select-all-checkbox') {
-				// This selector avoids grabbing the select-all checkbox
-				var todoEls = moduleEl.querySelectorAll('#todo-list li');
 				var shouldMarkAsComplete = element.checked;
-
-				for (var i = 0, len = todoEls.length; i < len; i++) {
-
-					var todoEl = todoEls[i];
-					var todoCheckboxEl = todoEl.querySelector('input[type="checkbox"]');
-
-					todoCheckboxEl.checked = shouldMarkAsComplete;
-					if (shouldMarkAsComplete) {
-						todoEl.classList.add('completed');
-					} else {
-						todoEl.classList.remove('completed');
-					}
-				}
 
 				if (shouldMarkAsComplete) {
 					todosDB.markAllAsComplete();
 				} else {
 					todosDB.markAllAsIncomplete();
 				}
+
+				this.renderList();
 
 				context.broadcast('todostatuschange');
 			}
@@ -167,7 +155,7 @@ Application.addModule('list', function(context) {
 				newTodoEl = todoTemplateEl.cloneNode(true);
 
 			// Set the label of the todo
-			newTodoEl.querySelector('label').innerText = title;
+			newTodoEl.querySelector('label').textContent = title;
 			newTodoEl.setAttribute('data-todo-id', id);
 			if (isCompleted) {
 				newTodoEl.classList.add('completed');
