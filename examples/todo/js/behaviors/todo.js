@@ -218,7 +218,7 @@ Application.addBehavior('todo', function(context) {
 				editInputEl = todoEl.querySelector('.edit'),
 				newTitle = (editInputEl.value).trim();
 
-			todoEl.querySelector('label').innerText = newTitle;
+			todoEl.querySelector('label').textContent = newTitle;
 			todosDB.edit(todoId, newTitle);
 		}
 	};

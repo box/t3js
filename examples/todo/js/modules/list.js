@@ -24,10 +24,11 @@ Application.addModule('list', function(context) {
 	 * @private
 	 */
 	function isListCompleted() {
-		var isComplete = true;
-		var todoCheckboxesEls = moduleEl.querySelectorAll('#todo-list li input[type="checkbox"]');
-		for (var i = 0, len = todoCheckboxesEls.length; i < len; i++) {
-			if (!todoCheckboxesEls[i].checked) {
+		var todos = todosDB.getList();
+		var len = todos.length;
+		var isComplete = len > 0;
+		for (var i = 0; i < len; i++) {
+			if (!todos[i].completed) {
 				isComplete = false;
 				break;
 			}
@@ -167,7 +168,7 @@ Application.addModule('list', function(context) {
 				newTodoEl = todoTemplateEl.cloneNode(true);
 
 			// Set the label of the todo
-			newTodoEl.querySelector('label').innerText = title;
+			newTodoEl.querySelector('label').textContent = title;
 			newTodoEl.setAttribute('data-todo-id', id);
 			if (isCompleted) {
 				newTodoEl.classList.add('completed');
