@@ -4,7 +4,7 @@
 
 # T3 JavaScript Framework
 
-T3 is a client-side JavaScript framework for building large-scale web applications. It's design is based on the principles of [Scalable JavaScript Application Architecture](https://www.youtube.com/watch?v=mKouqShWI4o), specifically:
+T3 is a client-side JavaScript framework for building large-scale web applications. Its design is based on the principles of [Scalable JavaScript Application Architecture](https://www.youtube.com/watch?v=mKouqShWI4o), specifically:
 
 * Enforcing loose coupling between components
 * Making dependencies explicit
