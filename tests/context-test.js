@@ -3,9 +3,11 @@
  * @author Box
  */
 
-describe('Box.Context', function() {
+'use strict';
 
-	'use strict';
+var Context = require('../lib/context');
+
+describe('Context', function() {
 
 	var sandbox = sinon.sandbox.create();
 	var element = document.body;
@@ -24,7 +26,7 @@ describe('Box.Context', function() {
 				};
 
 			sandbox.mock(application).expects('broadcast').withArgs(message);
-			context = new Box.Context(application, element);
+			context = new Context(application, element);
 			context.broadcast(message);
 		});
 
@@ -37,7 +39,7 @@ describe('Box.Context', function() {
 				};
 
 			sandbox.mock(application).expects('broadcast').withArgs(message, data);
-			context = new Box.Context(application, element);
+			context = new Context(application, element);
 			context.broadcast(message, data);
 		});
 
@@ -54,7 +56,7 @@ describe('Box.Context', function() {
 				};
 
 			sandbox.mock(application).expects('getService').withArgs(serviceName).returns(service);
-			context = new Box.Context(application, element);
+			context = new Context(application, element);
 			assert.equal(context.getService(serviceName), service, 'getService() should return correct service');
 		});
 
@@ -70,7 +72,7 @@ describe('Box.Context', function() {
 				};
 
 			sandbox.mock(application).expects('getModuleConfig').withArgs(element, 'foo').returns(config);
-			context = new Box.Context(application, element);
+			context = new Context(application, element);
 			context.getConfig('foo');
 		});
 	});
@@ -84,7 +86,7 @@ describe('Box.Context', function() {
 
 			sandbox.stub(application, 'getGlobal').withArgs('foo').returns('bar');
 
-			var context = new Box.Context(application, element);
+			var context = new Context(application, element);
 			assert.strictEqual(context.getGlobal('foo'), 'bar', 'global var returned');
 		});
 
@@ -100,7 +102,7 @@ describe('Box.Context', function() {
 				};
 
 			sandbox.mock(application).expects('getGlobalConfig').withArgs('foo').returns('bar');
-			context = new Box.Context(application, element);
+			context = new Context(application, element);
 			assert.equal(context.getGlobalConfig('foo'), 'bar', 'correct config value returned');
 		});
 
@@ -116,7 +118,7 @@ describe('Box.Context', function() {
 				exception = new Error('test error');
 
 			sandbox.mock(application).expects('reportError').withArgs(exception);
-			context = new Box.Context(application, element);
+			context = new Context(application, element);
 
 			context.reportError(exception);
 		});

@@ -3,7 +3,11 @@
  * @author Box
  */
 
-describe('Box.EventTarget', function() {
+'use strict';
+
+var EventTarget = require('../lib/event-target');
+
+describe('EventTarget', function() {
 
 	'use strict';
 
@@ -11,7 +15,7 @@ describe('Box.EventTarget', function() {
 	var eventTarget;
 
 	beforeEach(function() {
-		eventTarget = new Box.EventTarget();
+		eventTarget = new EventTarget();
 	});
 
 	afterEach(function() {

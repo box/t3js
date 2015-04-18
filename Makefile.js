@@ -40,8 +40,8 @@ var NODE = 'node ',	// intentional extra space
 	JS_DIRS = getSourceDirectories(),
 
 	// Files
-	SRC_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/context.js', 'lib/application.js'],
-	TESTING_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/application-stub.js', 'lib/test-service-provider.js'],
+	T3_CORE_FILE = 'box.js',
+	T3_TESTING_FILE = 'box-testing.js',
 	JS_FILES = find(JS_DIRS).filter(fileType('js')).join(' '),
 	TEST_FILES = find('tests/').filter(fileType('js')).join(' ');
 
@@ -235,13 +235,16 @@ target.dist = function() {
 		mkdir(DIST_DIR);
 	}
 
+	// First, browserify the code
+	target.browserify();
+
 	// Add copyrights and version info
 	var versionComment = '/*! ' + DIST_NAME + ' v ' + pkg.version + '*/\n',
 		copyrightComment = cat('./config/copyright.txt');
 
 	// concatenate files together and add version/copyright notices
-	(versionComment + copyrightComment + cat(SRC_FILES)).to(distFilename);
-	(versionComment + copyrightComment + cat(TESTING_FILES)).to(distTestingFilename);
+	(versionComment + copyrightComment + cat(BUILD_DIR + T3_CORE_FILE)).to(distFilename);
+	(versionComment + copyrightComment + cat(BUILD_DIR + T3_TESTING_FILE)).to(distTestingFilename);
 
 	// create minified version with source maps
 	nodeExec('uglifyjs', distFilename, '-o', minDistFilename,
@@ -256,6 +259,20 @@ target.dist = function() {
 	cp(distFilename, distFilename.replace('.js', '-' + pkg.version + '.js'));
 	cp(minDistFilename, minDistFilename.replace('.min.js', '-' + pkg.version + '.min.js'));
 	cp(distTestingFilename, distTestingFilename.replace('.js', '-' + pkg.version + '.js'));
+};
+
+target.browserify = function() {
+
+	// 1. Make sure build directory exists
+	if (!test('-d', BUILD_DIR)) {
+		mkdir(BUILD_DIR);
+	}
+
+	// 2. Browserify T3
+	nodeExec('browserify', LIB_DIR + T3_CORE_FILE, '-o', BUILD_DIR + T3_CORE_FILE);
+
+	// 3. Browserify T3 Testing Bundle
+	nodeExec('browserify', LIB_DIR + T3_TESTING_FILE, '-o', BUILD_DIR + T3_TESTING_FILE);
 };
 
 target.changelog = function() {

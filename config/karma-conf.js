@@ -9,7 +9,7 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-// None!
+var browserifyIstanbul = require('browserify-istanbul');
 
 //------------------------------------------------------------------------------
 // Public
@@ -24,7 +24,7 @@ module.exports = function(config) {
 
 		// frameworks to use
 		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-		frameworks: ['mocha'],
+		frameworks: ['browserify', 'mocha'],
 
 		// list of files / patterns to load in the browser
 		files: [
@@ -33,11 +33,7 @@ module.exports = function(config) {
 			'node_modules/sinon/pkg/sinon.js',
 			'node_modules/jquery/dist/jquery.js',
 			'tests/utils/common-setup.js',
-			'lib/box.js',
-			'lib/context.js',
-			'lib/event-target.js',
-			'lib/application.js',
-			'tests/*.js'
+			'tests/*-test.js'
 		],
 
 		// list of files to exclude
@@ -47,7 +43,24 @@ module.exports = function(config) {
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			'lib/*.js': ['coverage']
+			'tests/*-test.js': ['browserify']
+		},
+
+		// Browserify tests
+		browserify: {
+			debug: true,
+			plugin: ['proxyquire-universal'],
+			extensions: ['.js'],
+			configure: function(bundle) {
+				// Add code coverage via the browserify-istanbul module.
+				// @WARNING: karma-coverage 0.2.7 has a bug that breaks this, so use 0.2.6 until that is fixed
+				bundle.on('prebundle', function() {
+					bundle.transform(browserifyIstanbul({
+						ignore: ['tests/*', 'tests/utils/*'],
+						defaultIgnore: true
+					}));
+				});
+			}
 		},
 
 		// web server port
