@@ -26,6 +26,14 @@ describe('Box.EventTarget', function() {
 			eventTarget.fire('myevent');
 		});
 
+		it('should be prevented for duplicate handlers', function() {
+			var callback = sandbox.mock();
+			eventTarget.on('myevent', callback);
+			eventTarget.on('myevent', callback);
+			eventTarget.on('myevent', callback);
+			eventTarget.fire('myevent');
+		});
+
 	});
 
 	describe('Separate event handlers', function() {
