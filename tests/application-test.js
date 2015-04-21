@@ -486,6 +486,23 @@ describe('Box.Application', function() {
 			});
 		});
 
+		it('should still be called with a null element when an event occurs on a recently detached element', function() {
+			// Background on this edge case:
+			//  1. event handlers like mouseout may sometimes detach nodes from the DOM
+			//  2. event handlers like mouseleave will still fire on the detached node
+			// Without checking the existence of a parentNode and returning null, we would throw errors
+			Box.Application.addModule('test', sandbox.stub().returns({
+				onclick: sandbox.mock().withArgs(sinon.match.any, null)
+			}));
+
+			Box.Application.start(testModule);
+
+			$('#module-target').trigger({
+				type: 'click',
+				target: document.createElement('div') // Detached node
+			});
+		});
+
 		it('should be called on behaviors in correct order when defined', function() {
 
 			var moduleClickSpy = sandbox.spy(),
