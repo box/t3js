@@ -3,11 +3,6 @@
 		"mocha": true
 	},
 	"globals": {
-		"window": false,
-		"document": false,
-		"Box": false,
-		"$": false,
-		"mocha": false,
 		"chai": false,
 		"sinon": false,
 		"assert": false
@@ -15,7 +10,6 @@
 	"rules": {
 		"brace-style": 2,
 		"func-style": [2, "declaration"],
-		"strict": [2, "function"],
 		"guard-for-in": 2,
 		"no-floating-decimal": 2,
 		"no-underscore-dangle": 0,

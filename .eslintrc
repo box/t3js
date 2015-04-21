@@ -1,14 +1,13 @@
 {
-	"globals": {
-		"window": false,
-		"document": false,
-		"Box": false,
-		"$": false
+	"env": {
+		"node": true,
+		"browser": true,
+		"jquery": true
 	},
 	"rules": {
 		"brace-style": 2,
 		"func-style": [2, "declaration"],
-		"strict": [2, "function"],
+		"strict": [2, "global"],
 		"guard-for-in": 2,
 		"no-floating-decimal": 2,
 		"no-underscore-dangle": 0,
