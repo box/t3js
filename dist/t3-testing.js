@@ -64,23 +64,11 @@ Box.EventTarget = (function() {
 		 * @returns {void}
 		 */
 		on: function(type, handler) {
-
-			var handlers = this._handlers[type],
-				i,
-				len;
-
-			if (typeof handlers === 'undefined') {
-				handlers = this._handlers[type] = [];
+			if (typeof this._handlers[type] === 'undefined') {
+				this._handlers[type] = [];
 			}
 
-			for (i = 0, len = handlers.length; i < len; i++) {
-				if (handlers[i] === handler) {
-					// prevent duplicate handlers
-					return;
-				}
-			}
-
-			handlers.push(handler);
+			this._handlers[type].push(handler);
 		},
 
 		/**
