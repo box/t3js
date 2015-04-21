@@ -40,8 +40,8 @@ var NODE = 'node ',	// intentional extra space
 	JS_DIRS = getSourceDirectories(),
 
 	// Files
-	SRC_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/context.js', 'lib/application.js'],
-	TESTING_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/application-stub.js', 'lib/test-service-provider.js'],
+	SRC_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/context.js', 'lib/application.js', 'lib/wrap-end.partial'],
+	TESTING_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/application-stub.js', 'lib/test-service-provider.js', 'lib/wrap-end.partial'],
 	JS_FILES = find(JS_DIRS).filter(fileType('js')).join(' '),
 	TEST_FILES = find('tests/').filter(fileType('js')).join(' ');
 

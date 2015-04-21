@@ -2,7 +2,7 @@
 	"globals": {
 		"window": false,
 		"document": false,
-		"Box": false,
+		"Box": true,
 		"$": false
 	},
 	"rules": {
