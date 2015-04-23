@@ -1,10 +1,4 @@
 {
-	"globals": {
-		"window": false,
-		"document": false,
-		"Box": false,
-		"$": false
-	},
 	"rules": {
 		"brace-style": 2,
 		"func-style": [2, "declaration"],
