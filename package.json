@@ -33,6 +33,7 @@
     "karma": "^0.12.31",
     "karma-coverage": "^0.2.7",
     "karma-mocha": "^0.1.10",
+    "karma-mocha-reporter": "^1.0.2",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-threshold-reporter": "^0.1.15",
     "mocha": "^2.2.1",
