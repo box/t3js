@@ -1,4 +1,4 @@
-/*! t3 v 1.1.1*/
+/*! t3 v 1.2.0*/
 /*!
 Copyright 2015 Box, Inc. All rights reserved.
 
@@ -14,16 +14,23 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Start wrapper
+// We use this to make sure we don't assign globals unless we actually want to
+(function(window) {
+
 /**
  * @fileoverview Base namespaces for Box JavaScript.
  * @author Box
  */
 
+/* eslint-disable no-unused-vars */
+
 /**
  * The one global object for Box JavaScript.
  * @namespace
  */
-window.Box = window.Box || {};
+var Box = {};
+/* eslint-enable no-unused-vars */
 
 /**
  * @fileoverview Definition of a custom event type. This is used as a utility
@@ -64,11 +71,23 @@ Box.EventTarget = (function() {
 		 * @returns {void}
 		 */
 		on: function(type, handler) {
-			if (typeof this._handlers[type] === 'undefined') {
-				this._handlers[type] = [];
+
+			var handlers = this._handlers[type],
+				i,
+				len;
+
+			if (typeof handlers === 'undefined') {
+				handlers = this._handlers[type] = [];
 			}
 
-			this._handlers[type].push(handler);
+			for (i = 0, len = handlers.length; i < len; i++) {
+				if (handlers[i] === handler) {
+					// prevent duplicate handlers
+					return;
+				}
+			}
+
+			handlers.push(handler);
 		},
 
 		/**
@@ -347,4 +366,23 @@ Box.EventTarget = (function() {
 	}
 
 }());
+
+	// CommonJS/npm, we want to export Box instead of assigning to global Window
+	if (typeof module === 'object' && typeof module.exports === 'object') {
+		module.exports = Box;
+	} else {
+		// Make sure not to override Box namespace
+		window.Box = window.Box || {};
+
+		// Copy all properties onto namespace (ES3 safe for loop)
+		for (var key in Box) {
+			if (Box.hasOwnProperty(key)) {
+				window.Box[key] = Box[key];
+			}
+		}
+	}
+
+// Potentially window is not defined yet, so bind to 'this' instead
+}(typeof window !== 'undefined' ? window : this));
+// End Wrapper
 

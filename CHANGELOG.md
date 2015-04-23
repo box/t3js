@@ -1,3 +1,20 @@
+v1.2.0 - April 23, 2015
+
+* 1.2.0 (Nicholas C. Zakas)
+* Change karma to use mocha reporter (Jeff Tan)
+* Fix embedded sourcemap URL (fixes #31) (Nicholas C. Zakas)
+* Add wrapper to T3 for CommonJS (Jeff Tan)
+* Remove event delegation on detached nodes (Jeff Tan)
+* Update: Fire event when broadcast() is called (fixes #43) (Nicholas C. Zakas)
+* Reverting dist changes (Priyajeet Hora)
+* Prevent event-target.js duplicate handlers. Fixes #35. (Priyajeet Hora)
+* Clean up duplicated assign code (fixes #29) (azu)
+* Todo example fails to update completed items. Fixes #25 (Priyajeet Hora)
+* Firefox innerText fixes as well as switching the select all checkbox logic to use the model data instead of view elements Fixes #21 (Priyajeet Hora)
+* readme grammar (Matthew Hadley)
+* Apply or remove completed class when select all is clicked. Fixes #18. (Priyajeet Hora)
+* Adding missing doctype Fixes #14 (Priyajeet Hora)
+
 v1.1.1 - April 14, 2015
 
 * 1.1.1 (Nicholas C. Zakas)
