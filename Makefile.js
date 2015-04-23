@@ -178,7 +178,7 @@ function release(type) {
 	execOrExit('git checkout gh-pages');
 	('version: ' + newVersion).to('_data/t3.yml');
 	execOrExit('git commit -am "Update version number to ' + newVersion + '"');
-	execOrExit('git fetch origin && git rebase origin/master && git push origin gh-pages');
+	execOrExit('git fetch origin && git rebase origin/gh-pages && git push origin gh-pages');
 
 	// Step 8: Switch back to master
 	execOrExit('git checkout master');
