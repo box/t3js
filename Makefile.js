@@ -13,9 +13,11 @@
 require('shelljs/make');
 
 var util = require('util'),
+	path = require('path'),
 	nodeCLI = require('shelljs-nodecli'),
 	semver = require('semver'),
-	dateformat = require('dateformat');
+	dateformat = require('dateformat'),
+	uglifyjs = require('uglify-js');
 
 //------------------------------------------------------------------------------
 // Data
@@ -244,8 +246,14 @@ target.dist = function() {
 	(versionComment + copyrightComment + cat(TESTING_FILES)).to(distTestingFilename);
 
 	// create minified version with source maps
-	nodeExec('uglifyjs', distFilename, '-o', minDistFilename,
-			'--source-map', minDistSourcemapFilename, '--comments', '"/^!/"');
+	var result = uglifyjs.minify(distFilename, {
+		output: {
+			comments: /^!/
+		},
+		outSourceMap: path.basename(minDistSourcemapFilename)
+	});
+	result.code.to(minDistFilename);
+	result.map.to(minDistSourcemapFilename);
 
 	// ensure there's a newline at the end of each file
 	(cat(distFilename) + '\n').to(distFilename);
