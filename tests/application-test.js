@@ -589,8 +589,9 @@ describe('Box.Application', function() {
 
 	});
 
-
 	describe('broadcast()', function() {
+
+		var eventHandlerMock;
 
 		beforeEach(function() {
 			Box.Application.init();
@@ -600,6 +601,12 @@ describe('Box.Application', function() {
 			testModule = $('<div data-module="test"><span id="module-target"></span></div>')[0];
 			testModule2 = $('<div data-module="test2" />')[0];
 			$('#mocha-fixture').append(testModule, testModule2);
+		});
+
+		afterEach(function() {
+			if (eventHandlerMock) {
+				Box.Application.off('message', eventHandlerMock);
+			}
 		});
 
 		it('should call onmessage of modules listening for the specific message when called', function() {
@@ -660,6 +667,35 @@ describe('Box.Application', function() {
 			Box.Application.stop(testModule);
 
 			Box.Application.broadcast('abc');
+		});
+
+		it('should fire an event when a message is broadcast', function() {
+
+			eventHandlerMock = sandbox.mock().withArgs({
+				type: 'message',
+				data: {
+					message: 'abc',
+					messageData: undefined
+				}
+			});
+
+			Box.Application.on('message', eventHandlerMock);
+			Box.Application.broadcast('abc');
+		});
+
+		it('should fire an event when a message is broadcast with extra data', function() {
+
+			var extraData = {};
+			eventHandlerMock = sandbox.mock().withArgs({
+				type: 'message',
+				data: {
+					message: 'abc',
+					messageData: extraData
+				}
+			});
+
+			Box.Application.on('message', eventHandlerMock);
+			Box.Application.broadcast('abc', extraData);
 		});
 
 	});
@@ -788,13 +824,3 @@ describe('Box.Application', function() {
 	});
 
 });
-
-
-
-
-
-
-/*
-
-
-*/
