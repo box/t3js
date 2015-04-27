@@ -1,5 +1,10 @@
-	// CommonJS/npm, we want to export Box instead of assigning to global Window
-	if (typeof module === 'object' && typeof module.exports === 'object') {
+	if (typeof define === 'function' && define.amd) {
+		// AMD
+		define('t3', [], function() {
+			return Box;
+		});
+	} else if (typeof module === 'object' && typeof module.exports === 'object') {
+		// CommonJS/npm, we want to export Box instead of assigning to global Window
 		module.exports = Box;
 	} else {
 		// Make sure not to override Box namespace
