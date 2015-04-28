@@ -243,12 +243,12 @@ The `onclick()` method is automatically called when a click happens inside of th
 
 You can pull any additional information off of the `event` object as necessary to take the correct course of action. In the previous example, the code is using `elementType` to determine what to do next. This is the most common use case.
 
-Note that not all events are supported. Specifically, we support most events that bubble and do not support any events that don't bubble. The most notable events that don't bubble and are therefore not support are `focus` and `blur`.
-
 Some best practices for event handlers:
 
 * Don't pass the `event` object into another method. Take whatever information you need off of the `event` object and pass it into the next method.
 * Don't include application logic in the event handler. Everything the module is capable of doing should be represented as a method on the object and the event handler should call out to those methods.
+
+**Limitation:** Note that not all events are supported. Specifically, we support most events that bubble and do not support any events that don't bubble. The most notable events that don't bubble and are therefore not supported are `focus` and `blur`. Instead, we recommend using `focusin` and `focusout`, which are the equivalent events that do bubble. Firefox doesn't yet support these events natively, however, jQuery provides a shim that implements `focusin` and `focusout` across all browsers. Since T3 depends on jQuery, you can safely use `focusin` and `focusout`.
 
 ## Cross-Module Messaging
 
