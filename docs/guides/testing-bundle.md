@@ -48,6 +48,36 @@ contextFake.getService('service2') === service2Fake;    // true
 
 This code sets up a fake `context` object for a test by using a `Box.TestServiceProvider` that is wired up to return two services: `service1` and `service2`. Each of these names are tied to fake service objects that should be returned when `getService()` is called. In this way, you can quickly write up service dependencies for your tests.
 
+### How to Use a Real Service
+
+Occasionally, you will need to use an actual service instead of a stub. A DOM manipulation service is a great example of a utility that is hard to stub/fake short of just re-implementing the functionality in the test. `Box.TestServiceProvider` will include any services that are registered to the application stub before the `Box.TestServiceProvider` is instantiated. For example:
+
+```js
+
+// services/dom.js
+Box.Application.addService('dom', function(application) {
+    return {
+        ...
+        addClass: function(element, class) {
+            ...
+        }
+    };
+});
+```
+
+```js
+// *** include services/dom.js via <script> or test config ***
+// path/to/test-file.js
+var service1Fake = {};
+var contextFake = new Box.TestServiceProvider({
+    // name : object to return
+    service1: service1Fake
+});
+var domService = contextFake.getService('dom'); // Return the actual `dom` service.
+```
+
+**Note:** The component being tested will use the real service. That does not prevent you from stubbing or mocking methods as normal.
+
 ## Box.Application Stub
 
 The T3 testing bundle stubs out `Box.Application` so you can focus on testing just your components in an isolated environment. This stub contains the `addModule()`, `addService()`, and `addBehavior()` methods that are used to register components, so your components are never aware they aren't running with the real `Box.Application`.
