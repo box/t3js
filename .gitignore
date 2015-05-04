@@ -6,3 +6,5 @@ doc
 *.iml
 .idea
 .DS_Store
+coverage-client
+npm-debug.log
