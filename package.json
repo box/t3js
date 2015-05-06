@@ -36,6 +36,7 @@
     "karma-mocha-reporter": "^1.0.2",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-threshold-reporter": "^0.1.15",
+    "leche": "^2.1.1",
     "mocha": "^2.2.1",
     "phantomjs": "^1.9.16",
     "semver": "^4.3.3",

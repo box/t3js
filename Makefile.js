@@ -36,14 +36,19 @@ var NODE = 'node ',	// intentional extra space
 
 	// Since our npm package name is actually 't3js'
 	DIST_NAME = 't3',
-	DIST_TESTING_BUNDLE_NAME = 't3-testing',
+	DIST_JQUERY_NAME = DIST_NAME + '-jquery',
+	DIST_NATIVE_NAME = DIST_NAME + '-native',
+	DIST_TESTING_BUNDLE_NAME_JQUERY = DIST_JQUERY_NAME + '-testing',
+	DIST_TESTING_BUNDLE_NAME_NATIVE = DIST_NATIVE_NAME + '-testing',
 
 	// Directories
 	JS_DIRS = getSourceDirectories(),
 
 	// Files
-	SRC_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/context.js', 'lib/application.js', 'lib/wrap-end.partial'],
-	TESTING_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/application-stub.js', 'lib/test-service-provider.js', 'lib/wrap-end.partial'],
+	SRC_JQUERY_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/dom-jquery.js', 'lib/context.js', 'lib/application.js'],
+	SRC_NATIVE_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/dom-native.js', 'lib/context.js', 'lib/application.js'],
+	TESTING_JQUERY_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/dom-jquery.js', 'lib/application-stub.js', 'lib/test-service-provider.js'],
+	TESTING_NATIVE_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/dom-native.js', 'lib/application-stub.js', 'lib/test-service-provider.js'],
 	JS_FILES = find(JS_DIRS).filter(fileType('js')).join(' '),
 	TEST_FILES = find('tests/').filter(fileType('js')).join(' ');
 
@@ -224,26 +229,21 @@ target.docs = function() {
 	echo('Documentation has been output to /jsdoc');
 };
 
-target.dist = function() {
+
+function generateDistFiles(dist){
 	var pkg = require('./package.json'),
-		distFilename = DIST_DIR + DIST_NAME + '.js',
+		distFilename = DIST_DIR + dist.name + '.js',
 		minDistFilename = distFilename.replace(/\.js$/, '.min.js'),
 		minDistSourcemapFilename = minDistFilename + '.map',
-		distTestingFilename = DIST_DIR + DIST_TESTING_BUNDLE_NAME + '.js';
-
-	if (test('-d', DIST_DIR)) {
-		rm('-r', DIST_DIR + '*');
-	} else {
-		mkdir(DIST_DIR);
-	}
+		distTestingFilename = DIST_DIR + dist.name + '-testing' + '.js';
 
 	// Add copyrights and version info
-	var versionComment = '/*! ' + DIST_NAME + ' v ' + pkg.version + '*/\n',
+	var versionComment = '/*! ' + dist.name + ' v ' + pkg.version + '*/\n',
 		copyrightComment = cat('./config/copyright.txt');
 
 	// concatenate files together and add version/copyright notices
-	(versionComment + copyrightComment + cat(SRC_FILES)).to(distFilename);
-	(versionComment + copyrightComment + cat(TESTING_FILES)).to(distTestingFilename);
+	(versionComment + copyrightComment + cat(dist.files)).to(distFilename);
+	(versionComment + copyrightComment + cat(dist.testingFiles)).to(distTestingFilename);
 
 	// create minified version with source maps
 	var result = uglifyjs.minify(distFilename, {
@@ -264,6 +264,30 @@ target.dist = function() {
 	cp(distFilename, distFilename.replace('.js', '-' + pkg.version + '.js'));
 	cp(minDistFilename, minDistFilename.replace('.min.js', '-' + pkg.version + '.min.js'));
 	cp(distTestingFilename, distTestingFilename.replace('.js', '-' + pkg.version + '.js'));
+}
+
+target.dist = function() {
+	if (test('-d', DIST_DIR)) {
+		rm('-r', DIST_DIR + '*');
+	} else {
+		mkdir(DIST_DIR);
+	}
+
+    [{
+        name: DIST_NATIVE_NAME,
+        files: SRC_NATIVE_FILES,
+        testingFiles: TESTING_NATIVE_FILES
+    }, {
+        name: DIST_JQUERY_NAME,
+        files: SRC_JQUERY_FILES,
+        testingFiles: TESTING_JQUERY_FILES
+    }, {
+        name: DIST_NAME,
+        files: SRC_JQUERY_FILES,
+        testingFiles: TESTING_JQUERY_FILES
+    }].forEach(function(dist){
+        generateDistFiles(dist);
+    });
 };
 
 target.changelog = function() {

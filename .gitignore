@@ -11,3 +11,4 @@ dist/t3-testing-[0-9]*.js
 
 # Karama generated test coverage
 coverage-client
+/.dir-locals.el
