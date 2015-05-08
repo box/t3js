@@ -29,6 +29,8 @@
     title: Testing Modules and Behaviors
   - id: testing-services
     title: Testing Services
+  - id: dynamic-loading
+    title: Dynamic Loading of Modules
 
 - title: API
   path: /api
