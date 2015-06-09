@@ -104,7 +104,7 @@ Box.Application.addService('credit-card', function(application) {
 });
 ```
 
-The service exposes three methods: `isValid()`, `isValidNumer()`, and `isExpired()`. There's also one private function called `doLuhnCheck()` that performs the actual checksum validation. Keep in mind that not every consumer of this service will use all of these methods, however, all of the methods are useful on their own and make it easier to write tests for service.
+The service exposes three methods: `isValid()`, `isValidNumber()`, and `isExpired()`. There's also one private function called `doLuhnCheck()` that performs the actual checksum validation. Keep in mind that not every consumer of this service will use all of these methods, however, all of the methods are useful on their own and make it easier to write tests for service.
 
 ## Accessing a Service
 
