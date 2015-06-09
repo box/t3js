@@ -1,3 +1,10 @@
+v1.3.0 - June 9, 2015
+
+* 1.3.0 (Jeff Tan)
+* Breaking out dom events into an abstraction layer, building different versions of t3 accordingly (Jason Divock)
+* Add AMD support. Fixes #50 (Priyajeet Hora)
+* Fix release script (Nicholas C. Zakas)
+
 v1.2.0 - April 23, 2015
 
 * 1.2.0 (Nicholas C. Zakas)

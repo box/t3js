@@ -1,4 +1,4 @@
-/*! t3 v 1.3.0*/
+/*! t3-jquery v 1.3.0*/
 /*!
 Copyright 2015 Box, Inc. All rights reserved.
 
