@@ -45,10 +45,10 @@ var NODE = 'node ',	// intentional extra space
 	JS_DIRS = getSourceDirectories(),
 
 	// Files
-	SRC_JQUERY_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/dom-jquery.js', 'lib/context.js', 'lib/application.js'],
-	SRC_NATIVE_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/dom-native.js', 'lib/context.js', 'lib/application.js'],
-	TESTING_JQUERY_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/dom-jquery.js', 'lib/application-stub.js', 'lib/test-service-provider.js'],
-	TESTING_NATIVE_FILES = ['lib/box.js', 'lib/event-target.js', 'lib/dom-native.js', 'lib/application-stub.js', 'lib/test-service-provider.js'],
+	SRC_JQUERY_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/dom-jquery.js', 'lib/context.js', 'lib/application.js', 'lib/wrap-end.partial'],
+	SRC_NATIVE_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/dom-native.js', 'lib/context.js', 'lib/application.js', 'lib/wrap-end.partial'],
+	TESTING_JQUERY_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/dom-jquery.js', 'lib/application-stub.js', 'lib/test-service-provider.js', 'lib/wrap-end.partial'],
+	TESTING_NATIVE_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/dom-native.js', 'lib/application-stub.js', 'lib/test-service-provider.js', 'lib/wrap-end.partial'],
 	JS_FILES = find(JS_DIRS).filter(fileType('js')).join(' '),
 	TEST_FILES = find('tests/').filter(fileType('js')).join(' ');
 
@@ -145,6 +145,21 @@ function getVersionTags() {
 }
 
 /**
+ * Verifies that common module loaders can be used with dist files
+ * @returns {void}
+ * @private
+ */
+function validateModuleLoading() {
+	var t3js = require(DIST_DIR + DIST_NAME + '.js');
+
+	// Validate CommonJS
+	if (!t3js || !('Application' in t3js)) {
+		echo('ERROR: The dist file is not wrapped correctly for CommonJS');
+		exit(1);
+	}
+}
+
+/**
  * Creates a release version tag and pushes to origin.
  * @param {string} type The type of release to do (patch, minor, major)
  * @returns {void}
@@ -166,29 +181,32 @@ function release(type) {
 	target.dist();
 	target.changelog();
 
-	// Step 3: Add files to current commit
+	// Step 3: Validate CommonJS wrapping
+	validateModuleLoading();
+
+	// Step 4: Add files to current commit
 	execOrExit('git add -A');
 	execOrExit('git commit --amend --no-edit');
 
-	// Step 4: reset the git tag to the latest commit
+	// Step 5: reset the git tag to the latest commit
 	execOrExit('git tag -f ' + newVersion);
 
-	// Step 5: publish to git
+	// Step 6: publish to git
 	execOrExit('git push origin master --tags');
 
-	// Step 6: publish to npm
+	// Step 7: publish to npm
 	execOrExit('npm publish');
 
-	// Step 7: Update version number in docs site
+	// Step 8: Update version number in docs site
 	execOrExit('git checkout gh-pages');
 	('version: ' + newVersion).to('_data/t3.yml');
 	execOrExit('git commit -am "Update version number to ' + newVersion + '"');
 	execOrExit('git fetch origin && git rebase origin/gh-pages && git push origin gh-pages');
 
-	// Step 8: Switch back to master
+	// Step 9: Switch back to master
 	execOrExit('git checkout master');
 
-	// Step 9: Party time
+	// Step 10: Party time
 }
 
 
@@ -228,7 +246,6 @@ target.docs = function() {
 	exec(JSDOC + '-d jsdoc ' + JS_DIRS.join(' '));
 	echo('Documentation has been output to /jsdoc');
 };
-
 
 function generateDistFiles(dist){
 	var pkg = require('./package.json'),
@@ -273,21 +290,21 @@ target.dist = function() {
 		mkdir(DIST_DIR);
 	}
 
-    [{
-        name: DIST_NATIVE_NAME,
-        files: SRC_NATIVE_FILES,
-        testingFiles: TESTING_NATIVE_FILES
-    }, {
-        name: DIST_JQUERY_NAME,
-        files: SRC_JQUERY_FILES,
-        testingFiles: TESTING_JQUERY_FILES
-    }, {
-        name: DIST_NAME,
-        files: SRC_JQUERY_FILES,
-        testingFiles: TESTING_JQUERY_FILES
-    }].forEach(function(dist){
-        generateDistFiles(dist);
-    });
+	[{
+		name: DIST_NATIVE_NAME,
+		files: SRC_NATIVE_FILES,
+		testingFiles: TESTING_NATIVE_FILES
+	}, {
+		name: DIST_JQUERY_NAME,
+		files: SRC_JQUERY_FILES,
+		testingFiles: TESTING_JQUERY_FILES
+	}, {
+		name: DIST_NAME,
+		files: SRC_JQUERY_FILES,
+		testingFiles: TESTING_JQUERY_FILES
+	}].forEach(function(dist){
+		generateDistFiles(dist);
+	});
 };
 
 target.changelog = function() {
