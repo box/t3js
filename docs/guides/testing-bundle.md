@@ -20,7 +20,7 @@ The `t3-testing.js` file is located in the `/dist` directory. Depending on how y
 <script src="./node_modules/dist/t3-testing.js"></script>
 
 <!-- if you're using the CDN with a specific version -->
-<script src="//cdn.rawgit.com/box/t3js/v{{ site.data.t3.version }}/dist/t3-testing.js"></script>
+<script src="//cdn.rawgit.com/box/t3js/{{ site.data.t3.version }}/dist/t3-testing.js"></script>
 
 <!-- if you're using a local copy -->
 <script src="/path/to/t3/t3-testing.js"></script>
