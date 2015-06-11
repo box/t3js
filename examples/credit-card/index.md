@@ -249,7 +249,7 @@ Box.Application.init();
 
 
 <script src="bower_components/jquery-1.11.1.min/index.js"></script>
-<script src="//cdn.rawgit.com/box/t3js/v{{ site.data.t3.version }}/dist/t3.js"></script>
+<script src="//cdn.rawgit.com/box/t3js/{{ site.data.t3.version }}/dist/t3.js"></script>
 <script src="js/modules/cc-validation-form.js"></script>
 <script src="js/services/credit-card.js"></script>
 <script>
