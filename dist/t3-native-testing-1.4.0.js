@@ -1,4 +1,4 @@
-/*! t3-jquery v 1.3.0*/
+/*! t3-native v 1.4.0*/
 /*!
 Copyright 2015 Box, Inc. All rights reserved.
 
@@ -14,6 +14,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Start wrapper
+// We use this to make sure we don't assign globals unless we actually want to
+(function(window) {
+
 /**
  * @fileoverview Base namespaces for Box JavaScript.
  * @author Box
@@ -144,17 +148,18 @@ Box.EventTarget = (function() {
 }());
 
 /**
- * @fileoverview DOM abstraction to use jquery to add and remove event listeners
+ * @fileoverview DOM abstraction to use native browser functionality to add and remove event listeners
  * in T3
  * @author jdivock
  */
 
-Box.JQueryDOM = (function() {
+
+Box.NativeDOM = (function(){
     'use strict';
 
     return {
 
-		type: 'jquery',
+		type: 'native',
 
 		/**
 		 * Returns the first element that is a descendant of the element
@@ -164,9 +169,8 @@ Box.JQueryDOM = (function() {
 		 *
 		 * @returns {HTMLElement} first element found matching query
 		 */
-		query: function(root, selector) {
-			// Aligning with native which returns null if not found
-			return $(root).find(selector)[0] || null;
+		query: function(root, selector){
+			return root.querySelector(selector);
 		},
 
 		/**
@@ -177,12 +181,12 @@ Box.JQueryDOM = (function() {
 		 *
 		 * @returns {Array} elements found matching query
 		 */
-		queryAll: function(root, selector) {
-			return $.makeArray($(root).find(selector));
+		queryAll: function(root, selector){
+			return root.querySelectorAll(selector);
 		},
 
 		/**
-		 * Adds event listener to element via jquery
+		 * Adds event listener to element using native event listener
 		 * @param {HTMLElement} element Target to attach listener to
 		 * @param {string} type Name of the action to listen for
 		 * @param {function} listener Function to be executed on action
@@ -190,11 +194,11 @@ Box.JQueryDOM = (function() {
 		 * @returns {void}
 		 */
 		on: function(element, type, listener) {
-			$(element).on(type, listener);
+			element.addEventListener(type, listener, false);
 		},
 
 		/**
-		 * Removes event listener to element via jquery
+		 * Removes event listener to element using native event listener functions
 		 * @param {HTMLElement} element Target to remove listener from
 		 * @param {string} type Name of the action remove listener from
 		 * @param {function} listener Function to be removed from action
@@ -202,12 +206,12 @@ Box.JQueryDOM = (function() {
 		 * @returns {void}
 		 */
 		off: function(element, type, listener) {
-			$(element).off(type, listener);
+			element.removeEventListener(type, listener, false);
 		}
     };
 }());
 
-Box.DOM = Box.JQueryDOM;
+Box.DOM = Box.NativeDOM;
 
 /**
  * @fileoverview Fake application to use during testing
@@ -428,4 +432,28 @@ Box.DOM = Box.JQueryDOM;
 	}
 
 }());
+
+	if (typeof define === 'function' && define.amd) {
+		// AMD
+		define('t3', [], function() {
+			return Box;
+		});
+	} else if (typeof module === 'object' && typeof module.exports === 'object') {
+		// CommonJS/npm, we want to export Box instead of assigning to global Window
+		module.exports = Box;
+	} else {
+		// Make sure not to override Box namespace
+		window.Box = window.Box || {};
+
+		// Copy all properties onto namespace (ES3 safe for loop)
+		for (var key in Box) {
+			if (Box.hasOwnProperty(key)) {
+				window.Box[key] = Box[key];
+			}
+		}
+	}
+
+// Potentially window is not defined yet, so bind to 'this' instead
+}(typeof window !== 'undefined' ? window : this));
+// End Wrapper
 

@@ -1,3 +1,8 @@
+v1.4.0 - June 11, 2015
+
+* 1.4.0 (Jeff Tan)
+* Add missing commonJS and AMD wrappers (Jeff Tan)
+
 v1.3.0 - June 9, 2015
 
 * 1.3.0 (Jeff Tan)
