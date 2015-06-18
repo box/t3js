@@ -151,7 +151,9 @@ describe('Box.Application', function() {
 					data: sinon.match({
 						exception: sinon.match({
 							name: 'test.init() - Error',
-							message: 'test.init() - Something bad happened.'
+							message: 'test.init() - Something bad happened.',
+							methodName: 'init',
+							objectName: 'test'
 						})
 					})
 				}));
