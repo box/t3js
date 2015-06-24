@@ -1,4 +1,4 @@
-/*! t3-jquery v 1.4.0*/
+/*! t3-jquery v 1.4.1*/
 /*!
 Copyright 2015 Box, Inc. All rights reserved.
 
@@ -526,6 +526,8 @@ Box.Application = (function() {
 						try {
 							return method.apply(this, arguments);
 						} catch (ex) {
+							ex.methodName = methodName;
+							ex.objectName = objectName;
 							ex.name = errorPrefix + ex.name;
 							ex.message = errorPrefix + ex.message;
 							error(ex);

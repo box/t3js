@@ -1,3 +1,9 @@
+v1.4.1 - June 24, 2015
+
+* 1.4.1 (Jeff Tan)
+* Ammended existing test to cover new fields (Jason Divock)
+* Making errors a bit more reportable (Jason Divock)
+
 v1.4.0 - June 11, 2015
 
 * 1.4.0 (Jeff Tan)
