@@ -177,7 +177,7 @@ The Box web application currently supports IE8 with a [planned end-of-life of De
 
 ## Support
 
-Need to contact us directly? Email oss@box.com and be sure to include the name of this project in the subject.
+Need to contact us directly? Email [t3js@box.com](mailto:t3js@box.com) with your questions or comments.
 
 ## Copyright and License
 
