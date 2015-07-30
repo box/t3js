@@ -37,6 +37,7 @@ module.exports = function(config) {
 			'lib/box.js',
 			'lib/dom-native.js',
 			'lib/dom-jquery.js',
+			'lib/dom-event-delegate.js',
 			'lib/context.js',
 			'lib/event-target.js',
 			'lib/application.js',

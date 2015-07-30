@@ -551,6 +551,63 @@ describe('Box.Application', function() {
 
 			});
 
+
+			it('should not be called on behaviors when stopImmediatePropagation() is called', function() {
+
+				// Can only test using jQuery because stopImmediatePropagation() doesn't exist in IE8
+
+				if (Box.DOM.type === 'jquery') {
+
+					Box.Application.addModule('test', sandbox.stub().returns({
+						behaviors: ['test-behavior', 'test-behavior2'],
+						onclick: function(event) {
+							event.stopImmediatePropagation();
+						}
+					}));
+
+					Box.Application.addBehavior('test-behavior', sandbox.stub().returns({
+						onclick: sandbox.mock().never()
+					}));
+					Box.Application.addBehavior('test-behavior2', sandbox.stub().returns({
+						onclick: sandbox.mock().never()
+					}));
+
+					Box.Application.start(testModule);
+
+					testTarget.click();
+				}
+
+			});
+
+			it('should not be called on secondary behavior when stopImmediatePropagation() is called in first behavior', function() {
+
+				// Can only test using jQuery because stopImmediatePropagation() doesn't exist in IE8
+
+				if (Box.DOM.type === 'jquery') {
+
+					Box.Application.addModule('test', sandbox.stub().returns({
+						behaviors: ['test-behavior', 'test-behavior2'],
+						onclick: sandbox.stub()
+					}));
+
+					Box.Application.addBehavior('test-behavior', sandbox.stub().returns({
+						onclick: function(event) {
+							event.stopImmediatePropagation();
+						}
+					}));
+
+					Box.Application.addBehavior('test-behavior2', sandbox.stub().returns({
+						onclick: sandbox.mock().never()
+					}));
+
+					Box.Application.start(testModule);
+
+					testTarget.click();
+				}
+
+			});
+
+
 			it('should be called with the nearest type element and type when an event occurs inside of a started module', function() {
 
 				Box.Application.addModule('test', sandbox.stub().returns({
