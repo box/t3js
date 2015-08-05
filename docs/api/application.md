@@ -36,13 +36,16 @@ Initializes the application. This will start modules on the page.
 	</tbody>
 </table>
 
+### Returns
+The `Box.Application` object (for chaining purposes).
+
 ### Example
 {% highlight javascript %}
-Application.init();
+Box.Application.init();
 {% endhighlight %}
 or
 {% highlight javascript %}
-Application.init({
+Box.Application.init({
 	debug: true,
 	foo: { ... },
 	bar: "baz"
@@ -56,9 +59,12 @@ Application.init({
 ### Description
 Destroys the application. This will stop modules on the page and unregister modules, services, and behaviors.
 
+### Returns
+The `Box.Application` object (for chaining purposes).
+
 ### Example
 {% highlight javascript %}
-Application.destroy();
+Box.Application.destroy();
 {% endhighlight %}
 
 <hr class="separator">
@@ -96,14 +102,17 @@ Register a T3 Service component.
 		<tr>
 			<td class="optional">options.exports</td>
 			<td>String[]</td>
-			<td>List of methods that will be exported onto Application.</td>
+			<td>List of methods that will be exported onto Box.Application.</td>
 		</tr>
 	</tbody>
 </table>
 
+### Returns
+The `Box.Application` object (for chaining purposes).
+
 ### Example
 {% highlight javascript %}
-Application.addService('some-service', function(application) {
+Box.Application.addService('some-service', function(application) {
 	return {
 		foo: function() { ... }
 	};
@@ -112,7 +121,7 @@ Application.addService('some-service', function(application) {
 
 
 {% highlight javascript %}
-Application.addService('router', function(application) {
+Box.Application.addService('router', function(application) {
 	return {
 		route: function() { ... }
 	};
@@ -120,7 +129,7 @@ Application.addService('router', function(application) {
 	exports: ['route']
 });
 
-Application.route(...);
+Box.Application.route(...);
 {% endhighlight %}
 
 <hr class="separator">
@@ -153,9 +162,12 @@ Register a T3 Module component.
 	</tbody>
 </table>
 
+### Returns
+The `Box.Application` object (for chaining purposes).
+
 ### Example
 {% highlight javascript %}
-Application.addModule('some-module', function(context) {
+Box.Application.addModule('some-module', function(context) {
 	return {
 		init: function() { ... },
 		destroy: function() { ... }
@@ -169,6 +181,7 @@ Application.addModule('some-module', function(context) {
 ## addBehavior
 ### Description
 Register a T3 Behavior component.
+
 
 ### Usage
 <table class="table table-striped">
@@ -193,9 +206,12 @@ Register a T3 Behavior component.
 	</tbody>
 </table>
 
+### Returns
+The `Box.Application` object (for chaining purposes).
+
 ### Example
 {% highlight javascript %}
-Application.addBehavior('some-behavior', function(context) {
+Box.Application.addBehavior('some-behavior', function(context) {
 	return {
 		init: function() { ... },
 		destroy: function() { ... }
@@ -262,7 +278,7 @@ The global variable if it exists or null.
 
 ### Example
 {% highlight javascript %}
-var navigator = Application.getGlobal('navigator');
+var navigator = Box.Application.getGlobal('navigator');
 console.log(navigator.userAgent);
 {% endhighlight %}
 
@@ -297,11 +313,11 @@ Object.
 
 ### Example
 {% highlight javascript %}
-Application.init({
+Box.Application.init({
 	username: 'bob'
 });
 
-console.log(Application.getGlobalConfig('username')); // Outputs "bob"
+console.log(Box.Application.getGlobalConfig('username')); // Outputs "bob"
 {% endhighlight %}
 
 
@@ -352,13 +368,13 @@ Object.
 var moduleEl = document.getElementById('mod-test-module');
 
 // outputs {"foo": "bar"}
-console.log(Application.getModuleConfig(moduleEl));
+console.log(Box.Application.getModuleConfig(moduleEl));
 
 // outputs "bar"
-console.log(Application.getModuleConfig(moduleEl, 'foo'));
+console.log(Box.Application.getModuleConfig(moduleEl, 'foo'));
 
 // outputs null
-console.log(Application.getModuleConfig(moduleEl, 'baz'));
+console.log(Box.Application.getModuleConfig(moduleEl, 'baz'));
 {% endhighlight %}
 
 <hr class="separator">
@@ -386,6 +402,9 @@ Begins the lifecycle of a module (registers and binds listeners).
 	</tbody>
 </table>
 
+### Returns
+The `Box.Application` object (for chaining purposes).
+
 ### Example
 {% highlight html %}
 <div id="mod-test-module" data-module="test-module">
@@ -396,7 +415,7 @@ Begins the lifecycle of a module (registers and binds listeners).
 {% highlight javascript %}
 var moduleEl = document.getElementById('mod-test-module');
 
-Application.start(moduleEl);
+Box.Application.start(moduleEl);
 {% endhighlight %}
 
 <hr class="separator">
@@ -424,6 +443,9 @@ Starts all modules contained within an element.
 	</tbody>
 </table>
 
+### Returns
+The `Box.Application` object (for chaining purposes).
+
 ### Example
 {% highlight html %}
 <div id="content">
@@ -439,7 +461,7 @@ Starts all modules contained within an element.
 {% highlight javascript %}
 var contentEl = document.getElementById('content');
 
-Application.startAll(contentEl); // starts both modules
+Box.Application.startAll(contentEl); // starts both modules
 {% endhighlight %}
 
 <hr class="separator">
@@ -467,6 +489,9 @@ Ends the lifecycle of a module (unregisters and unbinds listeners).
 	</tbody>
 </table>
 
+### Returns
+The `Box.Application` object (for chaining purposes).
+
 ### Example
 {% highlight html %}
 <div id="mod-test-module" data-module="test-module">
@@ -477,7 +502,7 @@ Ends the lifecycle of a module (unregisters and unbinds listeners).
 {% highlight javascript %}
 var moduleEl = document.getElementById('mod-test-module');
 
-Application.stop(moduleEl);
+Box.Application.stop(moduleEl);
 {% endhighlight %}
 
 <hr class="separator">
@@ -505,6 +530,9 @@ Stops all modules contained within an element.
 	</tbody>
 </table>
 
+### Returns
+The `Box.Application` object (for chaining purposes).
+
 ### Example
 {% highlight html %}
 <div id="content">
@@ -520,7 +548,7 @@ Stops all modules contained within an element.
 {% highlight javascript %}
 var contentEl = document.getElementById('content');
 
-Application.stopAll(contentEl); // stop both modules
+Box.Application.stopAll(contentEl); // stop both modules
 {% endhighlight %}
 
 <hr class="separator">
@@ -562,11 +590,11 @@ Returns true if module is started. False, otherwise.
 {% highlight javascript %}
 var moduleEl = document.getElementById('mod-test-module');
 
-console.log(Application.isStarted(moduleEl)); // Returns false
+console.log(Box.Application.isStarted(moduleEl)); // Returns false
 
-Application.start(moduleEl);
+Box.Application.start(moduleEl);
 
-console.log(Application.isStarted(moduleEl)); // Returns true
+console.log(Box.Application.isStarted(moduleEl)); // Returns true
 {% endhighlight %}
 
 <hr class="separator">
@@ -599,6 +627,9 @@ Broadcasts a message to all registered listeners
 	</tbody>
 </table>
 
+### Returns
+The `Box.Application` object (for chaining purposes).
+
 ### Example
 {% highlight html %}
 <div id="mod-test-module" data-module="test-module">
@@ -607,11 +638,11 @@ Broadcasts a message to all registered listeners
 {% endhighlight %}
 
 {% highlight javascript %}
-Application.broadcast('some-message');
+Box.Application.broadcast('some-message');
 {% endhighlight %}
 
 {% highlight javascript %}
-Application.broadcast('statechanged', {
+Box.Application.broadcast('statechanged', {
 	foo: 'search',
 	bar: 'home'
 });
@@ -643,7 +674,7 @@ Signals that an error has occurred. If in debug mode, an error is thrown. Otherw
 
 ### Example
 {% highlight javascript %}
-Application.reportError(new Error('Invalid User ID'));
+Box.Application.reportError(new Error('Invalid User ID'));
 {% endhighlight %}
 
 <hr class="separator">

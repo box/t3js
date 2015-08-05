@@ -44,6 +44,8 @@
   - id: behaviors
     title: Behaviors
   - id: event-target
-    title: Event Target
+    title: EventTarget
+  - id: dom-event-delegate
+    title: DOMEventDelegate
   - id: context
     title: Context
