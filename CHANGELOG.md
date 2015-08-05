@@ -1,3 +1,10 @@
+v1.5.0 - August 5, 2015
+
+* 1.5.0 (Nicholas C. Zakas)
+* Update: Make Box.Application chainable (fixes #65) (Nicholas C. Zakas)
+* New: Add Box.DOMEventDelegate (fixes #47, fixes #63) (Nicholas C. Zakas)
+* Update email address for support (Nicholas C. Zakas)
+
 v1.4.1 - June 24, 2015
 
 * 1.4.1 (Jeff Tan)

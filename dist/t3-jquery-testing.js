@@ -1,4 +1,4 @@
-/*! t3-jquery v 1.4.1*/
+/*! t3-jquery v 1.5.0*/
 /*!
 Copyright 2015 Box, Inc. All rights reserved.
 
@@ -235,48 +235,52 @@ Box.DOM = Box.JQueryDOM;
 
 			/**
 			 * Resets the application stub back to a clean state. Will also remove pre-registered components.
-			 * @returns {void}
+		     * @returns {Box.Application} The application object.
 			 */
 			reset: function() {
 				services = {};
 				modules = {};
 				behaviors = {};
+				return this;
 			},
 
 			/**
 			 * Registers a service to the application stub
 			 * @param {string} serviceName The name of the service
 			 * @param {Function} creator The service creator function
-			 * @returns {void}
+		     * @returns {Box.Application} The application object.
 			 */
 			addService: function(serviceName, creator) {
 				services[serviceName] = {
 					creator: creator
 				};
+				return this;
 			},
 
 			/**
 			 * Registers a module to the application stub
 			 * @param {string} moduleName The name of the module
 			 * @param {Function} creator The behavior creator function
-			 * @returns {void}
+		     * @returns {Box.Application} The application object.
 			 */
 			addModule: function(moduleName, creator) {
 				modules[moduleName] = {
 					creator: creator
 				};
+				return this;
 			},
 
 			/**
 			 * Registers a behavior to the application stub
 			 * @param {string} behaviorName The name of the behavior
 			 * @param {Function} creator The behavior creator function
-			 * @returns {void}
+		     * @returns {Box.Application} The application object.
 			 */
 			addBehavior: function(behaviorName, creator) {
 				behaviors[behaviorName] = {
 					creator: creator
 				};
+				return this;
 			},
 
 			/**

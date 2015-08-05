@@ -1,4 +1,4 @@
-/*! t3 v 1.4.1*/
+/*! t3 v 1.5.0*/
 /*!
 Copyright 2015 Box, Inc. All rights reserved.
 
@@ -376,11 +376,6 @@ Box.Application = (function() {
 
 		application = new Box.EventTarget();	// base object for application
 
-	// Supported events for modules. Only events that bubble properly can be used in T3.
-	var eventTypes = ['click', 'mouseover', 'mouseout', 'mousedown', 'mouseup',
-			'mouseenter', 'mouseleave', 'keydown', 'keyup', 'submit', 'change',
-			'contextmenu', 'dblclick', 'input', 'focusin', 'focusout'];
-
 	/**
 	 * Simple implementation of ES6 Object.assign() with just two parameters.
 	 * @param {Object} receiver The object to receive properties
@@ -556,26 +551,6 @@ Box.Application = (function() {
 	}
 
 	/**
-	 * Determines if a given element represents a module.
-	 * @param {HTMLElement} element The element to check.
-	 * @returns {boolean} True if the element represents a module, false if not.
-	 * @private
-	 */
-	function isModuleElement(element) {
-		return element && element.hasAttribute('data-module');
-	}
-
-	/**
-	 * Determines if a given element represents a T3 type.
-	 * @param {HTMLElement} element The element to check.
-	 * @returns {boolean} True if the element represents a T3 type, false if not.
-	 * @private
-	 */
-	function isTypeElement(element) {
-		return element && element.hasAttribute('data-type');
-	}
-
-	/**
 	 * Calls a method on an object if it exists
 	 * @param {Box.Application~ModuleInstance} instance Module object to call the method on.
 	 * @param {string} method Name of method
@@ -638,17 +613,22 @@ Box.Application = (function() {
 			moduleBehaviorInstances;
 
 		behaviorNames = instanceData.instance.behaviors || [];
+
 		for (i = 0; i < behaviorNames.length; i++) {
+
 			if (!('behaviorInstances' in instanceData)) {
 				instanceData.behaviorInstances = {};
 			}
+
 			moduleBehaviorInstances = instanceData.behaviorInstances;
 			behaviorData = behaviors[behaviorNames[i]];
 
 			if (behaviorData) {
+
 				if (!moduleBehaviorInstances[behaviorNames[i]]) {
 					moduleBehaviorInstances[behaviorNames[i]] = behaviorData.creator(instanceData.context);
 				}
+
 				behaviorInstances.push(moduleBehaviorInstances[behaviorNames[i]]);
 			} else {
 				error(new Error('Behavior "' + behaviorNames[i] + '" not found'));
@@ -659,53 +639,18 @@ Box.Application = (function() {
 	}
 
 	/**
-	 * Finds the closest ancestor that of an element that has a data-type
-	 * attribute.
-	 * @param {HTMLElement} element The element to start searching from.
-	 * @returns {HTMLElement} The matching element or null if not found.
-	 */
-	function getNearestTypeElement(element) {
-		var found = isTypeElement(element);
-
-
-		// We need to check for the existence of 'element' since occasionally we call this on a detached element node.
-		// For example:
-		//  1. event handlers like mouseout may sometimes detach nodes from the DOM
-		//  2. event handlers like mouseleave will still fire on the detached node
-		// Without checking the existence of a parentNode and returning null, we would throw errors
-		while (!found && element && !isModuleElement(element)) {
-			element = element.parentNode;
-			found = isTypeElement(element);
-		}
-
-		return found ? element : null;
-	}
-
-	/**
-	 * Binds a user event to a DOM element with the given handler
-	 * @param {HTMLElement} element DOM element to bind the event to
-	 * @param {string} type Event type (click, mouseover, ...)
-	 * @param {Function[]} handlers Array of event callbacks to be called in that order
-	 * @returns {Function} The event handler
+	 * Creates a new event delegate and sets up its event handlers.
+	 * @param {Array} eventDelegates The array of event delegates to add to.
+	 * @param {HTMLElement} element The HTML element to bind to.
+	 * @param {Object} handler The handler object for the delegate (either the
+	 *		module instance or behavior instance).
+	 * @returns {void}
 	 * @private
 	 */
-	function bindEventType(element, type, handlers) {
-
-		function eventHandler(event) {
-
-			var targetElement = getNearestTypeElement(event.target),
-				elementType = targetElement ? targetElement.getAttribute('data-type') : '';
-
-			for (var i = 0; i < handlers.length; i++) {
-				handlers[i](event, targetElement, elementType);
-			}
-
-			return true;
-		}
-
-		Box.DOM.on(element, type, eventHandler);
-
-		return eventHandler;
+	function createAndBindEventDelegate(eventDelegates, element, handler) {
+		var delegate = new Box.DOMEventDelegate(element, handler);
+		eventDelegates.push(delegate);
+		delegate.attachEvents();
 	}
 
 	/**
@@ -715,34 +660,15 @@ Box.Application = (function() {
 	 * @private
 	 */
 	function bindEventListeners(instanceData) {
-		var i,
-			j,
-			type,
-			eventHandlerName,
-			eventHandlerFunctions,
+		var eventDelegates = instanceData.eventDelegates,
 			moduleBehaviors = getBehaviors(instanceData);
 
-		for (i = 0; i < eventTypes.length; i++) {
-			eventHandlerFunctions = [];
+		// bind the module events
+		createAndBindEventDelegate(eventDelegates, instanceData.element, instanceData.instance);
 
-			type = eventTypes[i];
-			eventHandlerName = 'on' + type;
-
-			// Module's event handler gets called first
-			if (instanceData.instance[eventHandlerName]) {
-				eventHandlerFunctions.push(bind(instanceData.instance[eventHandlerName], instanceData.instance));
-			}
-
-			// And then all of its behaviors in the order they were declared
-			for (j = 0; j < moduleBehaviors.length; j++) {
-				if (moduleBehaviors[j][eventHandlerName]) {
-					eventHandlerFunctions.push(bind(moduleBehaviors[j][eventHandlerName], moduleBehaviors[j]));
-				}
-			}
-
-			if (eventHandlerFunctions.length) {
-				instanceData.eventHandlers[type] = bindEventType(instanceData.element, type, eventHandlerFunctions);
-			}
+		// bind the behavior(s) events
+		for (var i = 0; i < moduleBehaviors.length; i++) {
+			createAndBindEventDelegate(eventDelegates, instanceData.element, moduleBehaviors[i]);
 		}
 	}
 
@@ -753,13 +679,14 @@ Box.Application = (function() {
 	 * @private
 	 */
 	function unbindEventListeners(instanceData) {
-		for (var type in instanceData.eventHandlers) {
-			if (instanceData.eventHandlers.hasOwnProperty(type)) {
-				Box.DOM.off(instanceData.element, type, instanceData.eventHandlers[type]);
-			}
+
+		var eventDelegates = instanceData.eventDelegates;
+
+		for (var i = 0; i < eventDelegates.length; i++) {
+			eventDelegates[i].detachEvents();
 		}
 
-		instanceData.eventHandlers = {};
+		instanceData.eventDelegates = [];
 	}
 
 	/**
@@ -786,7 +713,7 @@ Box.Application = (function() {
 		/**
 		 * Initializes the application
 		 * @param {Object} [params] Configuration object
-		 * @returns {void}
+		 * @returns {Box.Application} The application object.
 		 */
 		init: function(params) {
 			assign(globalConfig, params || {});
@@ -795,16 +722,19 @@ Box.Application = (function() {
 
 			this.fire('init');
 			initialized = true;
+			return this;
 		},
 
 		/**
 		 * Stops all modules and clears all saved state
-		 * @returns {void}
+		 * @returns {Box.Application} The application object.
 		 */
 		destroy: function() {
 			this.stopAll(document.documentElement);
 
 			reset();
+
+			return this;
 		},
 
 		//----------------------------------------------------------------------
@@ -816,7 +746,7 @@ Box.Application = (function() {
 		 * If the element doesn't have a data-module attribute, this method
 		 * always returns false.
 		 * @param {HTMLElement} element The element that represents a module.
-		 * @returns {Boolean} True if the module is started, false if not.
+		 * @returns {boolean} True if the module is started, false if not.
 		 */
 		isStarted: function(element) {
 			var instanceData = getInstanceDataByElement(element);
@@ -826,7 +756,7 @@ Box.Application = (function() {
 		/**
 		 * Begins the lifecycle of a module (registers and binds listeners)
 		 * @param {HTMLElement} element DOM element associated with module to be started
-		 * @returns {void}
+		 * @returns {Box.Application} The application object.
 		 */
 		start: function(element) {
 			var moduleName = getModuleName(element),
@@ -837,7 +767,7 @@ Box.Application = (function() {
 
 			if (!moduleData) {
 				error(new Error('Module type "' + moduleName + '" is not defined.'));
-				return;
+				return this;
 			}
 
 			if (!this.isStarted(element)) {
@@ -862,7 +792,7 @@ Box.Application = (function() {
 					instance: module,
 					context: context,
 					element: element,
-					eventHandlers: {}
+					eventDelegates: []
 				};
 
 				bindEventListeners(instanceData);
@@ -880,12 +810,14 @@ Box.Application = (function() {
 				}
 
 			}
+
+			return this;
 		},
 
 		/**
 		 * Ends the lifecycle of a module (unregisters and unbinds listeners)
 		 * @param {HTMLElement} element DOM element associated with module to be stopped
-		 * @returns {void}
+		 * @returns {Box.Application} The application object.
 		 */
 		stop: function(element) {
 			var instanceData = getInstanceDataByElement(element);
@@ -894,7 +826,7 @@ Box.Application = (function() {
 
 				if (globalConfig.debug) {
 					error(new Error('Unable to stop module associated with element: ' + element.id));
-					return;
+					return this;
 				}
 
 			} else {
@@ -913,12 +845,14 @@ Box.Application = (function() {
 
 				delete instances[element.id];
 			}
+
+			return this;
 		},
 
 		/**
 		 * Starts all modules contained within an element
 		 * @param {HTMLElement} root DOM element which contains modules
-		 * @returns {void}
+		 * @returns {Box.Application} The application object.
 		 */
 		startAll: function(root) {
 			var moduleElements = Box.DOM.queryAll(root, MODULE_SELECTOR);
@@ -926,12 +860,14 @@ Box.Application = (function() {
 			for (var i = 0, len = moduleElements.length; i < len; i++) {
 				this.start(moduleElements[i]);
 			}
+
+			return this;
 		},
 
 		/**
 		 * Stops all modules contained within an element
 		 * @param {HTMLElement} root DOM element which contains modules
-		 * @returns {void}
+		 * @returns {Box.Application} The application object.
 		 */
 		stopAll: function(root) {
 			var moduleElements = Box.DOM.queryAll(root, MODULE_SELECTOR);
@@ -939,6 +875,8 @@ Box.Application = (function() {
 			for (var i = 0, len = moduleElements.length; i < len; i++) {
 				this.stop(moduleElements[i]);
 			}
+
+			return this;
 		},
 
 		//----------------------------------------------------------------------
@@ -949,18 +887,20 @@ Box.Application = (function() {
 		 * Registers a new module
 		 * @param {string} moduleName Unique module identifier
 		 * @param {Function} creator Factory function used to generate the module
-		 * @returns {void}
+		 * @returns {Box.Application} The application object.
 		 */
 		addModule: function(moduleName, creator) {
 			if (typeof modules[moduleName] !== 'undefined') {
 				error(new Error('Module ' + moduleName + ' has already been added.'));
-				return;
+				return this;
 			}
 
 			modules[moduleName] = {
 				creator: creator,
 				counter: 1 // increments for each new instance
 			};
+
+			return this;
 		},
 
 		/**
@@ -1012,13 +952,13 @@ Box.Application = (function() {
 		 * @param {Function} creator Factory function used to generate the service
 		 * @param {Object} [options] Additional options
 		 * @param {string[]} [options.exports] Method names to expose on context and application
-		 * @returns {void}
+		 * @returns {Box.Application} The application object.
 		 */
 		addService: function(serviceName, creator, options) {
 
 			if (typeof services[serviceName] !== 'undefined') {
 				error(new Error('Service ' + serviceName + ' has already been added.'));
-				return;
+				return this;
 			}
 
 			options = options || {};
@@ -1047,14 +987,14 @@ Box.Application = (function() {
 
 					if (exportedMethodName in this) {
 						error(new Error(exportedMethodName + ' already exists on Application object'));
-						return;
+						return this;
 					} else {
 						this[exportedMethodName] = handler;
 					}
 
 					if (exportedMethodName in Box.Context.prototype) {
 						error(new Error(exportedMethodName + ' already exists on Context prototype'));
-						return;
+						return this;
 					} else {
 						Box.Context.prototype[exportedMethodName] = handler;
 					}
@@ -1062,6 +1002,8 @@ Box.Application = (function() {
 					exports.push(exportedMethodName);
 				}
 			}
+
+			return this;
 		},
 
 		/**
@@ -1080,18 +1022,20 @@ Box.Application = (function() {
 		 * Registers a new behavior
 		 * @param {string} behaviorName Unique behavior identifier
 		 * @param {Function} creator Factory function used to generate the behavior
-		 * @returns {void}
+		 * @returns {Box.Application} The application object.
 		 */
 		addBehavior: function(behaviorName, creator) {
 			if (typeof behaviors[behaviorName] !== 'undefined') {
 				error(new Error('Behavior ' + behaviorName + ' has already been added.'));
-				return;
+				return this;
 			}
 
 			behaviors[behaviorName] = {
 				creator: creator,
 				instance: null
 			};
+
+			return this;
 		},
 
 		//----------------------------------------------------------------------
@@ -1102,7 +1046,7 @@ Box.Application = (function() {
 		 * Broadcasts a message to all registered listeners
 		 * @param {string} name Name of the message
 		 * @param {*} [data] Custom parameters for the message
-		 * @returns {void}
+		 * @returns {Box.Application} The application object.
 		 */
 		broadcast: function(name, data) {
 			var i,
@@ -1145,6 +1089,8 @@ Box.Application = (function() {
 				message: name,
 				messageData: data
 			});
+
+			return this;
 		},
 
 		//----------------------------------------------------------------------
@@ -1183,15 +1129,16 @@ Box.Application = (function() {
 		/**
 		 * Sets the global configuration data
 		 * @param {Object} config Global configuration object
-		 * @returns {void}
+		 * @returns {Box.Application} The application object.
 		 */
 		setGlobalConfig: function(config) {
 			if (initialized) {
 				error(new Error('Cannot set global configuration after application initialization'));
-				return;
+				return this;
 			}
 
 			assign(globalConfig, config);
+			return this;
 		},
 
 		//----------------------------------------------------------------------
