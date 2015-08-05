@@ -51,6 +51,11 @@ describe('Box.Application', function() {
 				Box.Application.init();
 			});
 
+			it('should return Box.Application when called', function() {
+				var result = Box.Application.init();
+				assert.equal(result, Box.Application);
+			});
+
 		});
 
 		describe('destroy()', function() {
@@ -60,6 +65,10 @@ describe('Box.Application', function() {
 				Box.Application.destroy();
 			});
 
+			it('should return Box.Application when called', function() {
+				var result = Box.Application.destroy();
+				assert.equal(result, Box.Application);
+			});
 		});
 
 		describe('isStarted()', function() {
@@ -98,10 +107,15 @@ describe('Box.Application', function() {
 				$('#mocha-fixture').append(testModule, testModule2);
 			});
 
+			it('should return Box.Application when called', function() {
+				Box.Application.addModule('test', sandbox.stub().returns({}));
+				var result = Box.Application.start(testModule);
+				assert.equal(result, Box.Application);
+			});
+
 			it('should create a new module when called with an HTML element with data-module', function() {
 				Box.Application.addModule('test', sandbox.mock().withArgs(sinon.match.any).returns({}));
 				Box.Application.start(testModule);
-				assert.ok(Box.Application.isStarted(testModule), 'module started');
 			});
 
 			it('should generate different IDs for modules when two modules of the same type are started', function() {
@@ -232,6 +246,13 @@ describe('Box.Application', function() {
 				Box.Application.stop(testModule);
 			});
 
+			it('should return Box.Application when called', function() {
+				Box.Application.addModule('test', sandbox.stub().returns({}));
+				Box.Application.start(testModule);
+				var result = Box.Application.stop(testModule);
+				assert.equal(result, Box.Application);
+			});
+
 			it('stop calls destroy() on module and behaviors in reverse order when called', function() {
 				var moduleDestroySpy = sandbox.spy(),
 					behaviorDestroySpy = sandbox.spy(),
@@ -274,6 +295,13 @@ describe('Box.Application', function() {
 				assert.notOk(Box.Application.isStarted(nestedModule), 'Parent module should not be started');
 				assert.ok(Box.Application.isStarted(nestedModule.children[0]), 'Child module should be started');
 			});
+
+			it('should return Box.Application when called', function() {
+				Box.Application.addModule('test', sandbox.stub().returns({}));
+				var result = Box.Application.startAll(testModule);
+				assert.equal(result, Box.Application);
+			});
+
 		});
 
 		describe('stopAll()', function() {
@@ -294,12 +322,24 @@ describe('Box.Application', function() {
 				assert.notOk(Box.Application.isStarted(nestedModule.children[0]), 'child module stopped');
 			});
 
+			it('should return Box.Application when called', function() {
+				Box.Application.addModule('test', sandbox.stub().returns({}));
+				Box.Application.startAll(testModule);
+				var result = Box.Application.stopAll(testModule);
+				assert.equal(result, Box.Application);
+			});
+
 		});
 
 		describe('addService()', function() {
 
 			beforeEach(function(){
 				Box.Application.destroy();
+			});
+
+			it('should return Box.Application when called', function() {
+				var result = Box.Application.addService('some-service', sandbox.stub().returns({}));
+				assert.equal(result, Box.Application);
 			});
 
 			it('should throw an error when adding a service that already exists', function() {
@@ -394,6 +434,11 @@ describe('Box.Application', function() {
 				$('#mocha-fixture').append(testModule);
 			});
 
+			it('should return Box.Application when called', function() {
+				var result = Box.Application.addModule('some-module', sandbox.stub().returns({}));
+				assert.equal(result, Box.Application);
+			});
+
 			it('should throw an error when adding a module that already exists', function() {
 				Box.Application.addModule('test', sandbox.stub().returns({}));
 
@@ -409,6 +454,12 @@ describe('Box.Application', function() {
 		});
 
 		describe('addBehavior()', function() {
+
+			it('should return Box.Application when called', function() {
+				var result = Box.Application.addBehavior('some-behavior', sandbox.stub().returns({}));
+				assert.equal(result, Box.Application);
+			});
+
 
 			it('should throw an error when adding a behavior that already exists', function() {
 				Box.Application.addModule('test', sandbox.stub().returns({}));
@@ -675,6 +726,11 @@ describe('Box.Application', function() {
 				}
 			});
 
+			it('should return Box.Application when called', function() {
+				var result = Box.Application.broadcast('abc');
+				assert.equal(result, Box.Application);
+			});
+
 			it('should call onmessage of modules listening for the specific message when called', function() {
 				var messageData = {};
 
@@ -864,6 +920,13 @@ describe('Box.Application', function() {
 				assert.equal(Box.Application.getGlobalConfig('foo'), 'bar', 'config value is set');
 			});
 
+			it('should return Box.Application when called', function() {
+				var result = Box.Application.setGlobalConfig({
+					foo: 'bar'
+				});
+				assert.equal(result, Box.Application);
+			});
+
 			it('should throw an error after application initialization', function() {
 				Box.Application.init({
 					debug: true
@@ -876,7 +939,7 @@ describe('Box.Application', function() {
 				});
 			});
 
-			it('should have globalConfig overriden by application initialization', function() {
+			it('should have globalConfig overridden by application initialization', function() {
 				Box.Application.setGlobalConfig({
 					theAnswer: 12
 				});
