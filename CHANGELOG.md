@@ -1,3 +1,8 @@
+v1.5.1 - August 10, 2015
+
+* 1.5.1 (Nicholas C. Zakas)
+* Fix: Ensure DOMEventDelegate is in T3 release (Nicholas C. Zakas)
+
 v1.5.0 - August 5, 2015
 
 * 1.5.0 (Nicholas C. Zakas)
