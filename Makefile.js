@@ -45,10 +45,11 @@ var NODE = 'node ',	// intentional extra space
 	JS_DIRS = getSourceDirectories(),
 
 	// Files
-	SRC_JQUERY_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/dom-jquery.js', 'lib/context.js', 'lib/application.js', 'lib/wrap-end.partial'],
-	SRC_NATIVE_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/dom-native.js', 'lib/context.js', 'lib/application.js', 'lib/wrap-end.partial'],
-	TESTING_JQUERY_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/dom-jquery.js', 'lib/application-stub.js', 'lib/test-service-provider.js', 'lib/wrap-end.partial'],
-	TESTING_NATIVE_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/dom-native.js', 'lib/application-stub.js', 'lib/test-service-provider.js', 'lib/wrap-end.partial'],
+
+	SRC_JQUERY_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/dom-jquery.js', 'lib/dom-event-delegate.js', 'lib/context.js', 'lib/application.js', 'lib/wrap-end.partial'],
+	SRC_NATIVE_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/dom-native.js', 'lib/dom-event-delegate.js', 'lib/context.js', 'lib/application.js', 'lib/wrap-end.partial'],
+	TESTING_JQUERY_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/dom-jquery.js', 'lib/dom-event-delegate.js', 'lib/application-stub.js', 'lib/test-service-provider.js', 'lib/wrap-end.partial'],
+	TESTING_NATIVE_FILES = ['lib/wrap-start.partial', 'lib/box.js', 'lib/event-target.js', 'lib/dom-native.js', 'lib/dom-event-delegate.js', 'lib/application-stub.js', 'lib/test-service-provider.js', 'lib/wrap-end.partial'],
 	JS_FILES = find(JS_DIRS).filter(fileType('js')).join(' '),
 	TEST_FILES = find('tests/').filter(fileType('js')).join(' ');
 
