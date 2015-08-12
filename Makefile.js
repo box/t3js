@@ -31,7 +31,6 @@ var NODE = 'node ',	// intentional extra space
 
 	// Utilities - intentional extra space at the end of each string
 	ISTANBUL = NODE + NODE_MODULES + 'istanbul/lib/cli.js ',
-	MOCHA = NODE_MODULES + 'mocha/bin/_mocha ',
 	JSDOC = NODE + NODE_MODULES + 'jsdoc/jsdoc.js ',
 
 	// Since our npm package name is actually 't3js'
@@ -232,6 +231,19 @@ target.test = function() {
 	if (code !== 0) {
 		exit(code);
 	}
+
+	echo('Running API tests');
+	target['api-test']();
+};
+
+target['api-test'] = function() {
+	// generate dist files that are used by api-test
+	target.dist();
+
+	nodeExec('mocha', './tests/api-test.js');
+
+	// revert generated files
+	execOrExit('git checkout dist');
 };
 
 target['test-watch'] = function() {
@@ -301,8 +313,8 @@ target.dist = function() {
 		testingFiles: TESTING_JQUERY_FILES
 	}, {
 		name: DIST_NAME,
-		files: SRC_JQUERY_FILES,
-		testingFiles: TESTING_JQUERY_FILES
+		files: SRC_NATIVE_FILES,
+		testingFiles: TESTING_NATIVE_FILES
 	}].forEach(function(dist){
 		generateDistFiles(dist);
 	});
