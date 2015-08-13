@@ -24,7 +24,7 @@
     "minor": "node Makefile.js minor",
     "major": "node Makefile.js major"
   },
-  "main": "dist/t3.js",
+  "main": "dist/t3-native.js",
   "devDependencies": {
     "assertive-chai": "^1.0.2",
     "dateformat": "^1.0.11",
