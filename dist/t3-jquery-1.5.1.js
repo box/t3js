@@ -154,9 +154,9 @@ Box.EventTarget = (function() {
  */
 
 Box.JQueryDOM = (function() {
-    'use strict';
+	'use strict';
 
-    return {
+	return {
 
 		type: 'jquery',
 
@@ -208,7 +208,7 @@ Box.JQueryDOM = (function() {
 		off: function(element, type, listener) {
 			$(element).off(type, listener);
 		}
-    };
+	};
 }());
 
 Box.DOM = Box.JQueryDOM;
@@ -747,21 +747,21 @@ Box.Application = (function() {
 
 		if (serviceData) {
 
-			// check for circular dependencies
-			if (isServiceBeingInstantiated(serviceName)) {
-				error(new ReferenceError('Circular service dependency: ' + serviceStack.join(' -> ') + ' -> ' + serviceName));
-				return null;
-			}
-
-			// flag that this service is being initialized just in case there's a circular dependency issue
-			serviceStack.push(serviceName);
-
 			if (!serviceData.instance) {
-				serviceData.instance = serviceData.creator(application);
-			}
+				// check for circular dependencies
+				if (isServiceBeingInstantiated(serviceName)) {
+					error(new ReferenceError('Circular service dependency: ' + serviceStack.join(' -> ') + ' -> ' + serviceName));
+					return null;
+				}
 
-			// no error was thrown for circular dependencies, so we're done
-			serviceStack.pop();
+				// flag that this service is being initialized just in case there's a circular dependency issue
+				serviceStack.push(serviceName);
+
+				serviceData.instance = serviceData.creator(application);
+
+				// no error was thrown for circular dependencies, so we're done
+				serviceStack.pop();
+			}
 
 			return serviceData.instance;
 		}
