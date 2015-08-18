@@ -155,9 +155,9 @@ Box.EventTarget = (function() {
 
 
 Box.NativeDOM = (function(){
-	'use strict';
+    'use strict';
 
-	return {
+    return {
 
 		type: 'native',
 
@@ -208,7 +208,7 @@ Box.NativeDOM = (function(){
 		off: function(element, type, listener) {
 			element.removeEventListener(type, listener, false);
 		}
-	};
+    };
 }());
 
 Box.DOM = Box.NativeDOM;

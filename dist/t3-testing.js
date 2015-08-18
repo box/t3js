@@ -148,18 +148,17 @@ Box.EventTarget = (function() {
 }());
 
 /**
- * @fileoverview DOM abstraction to use native browser functionality to add and remove event listeners
+ * @fileoverview DOM abstraction to use jquery to add and remove event listeners
  * in T3
  * @author jdivock
  */
 
+Box.JQueryDOM = (function() {
+    'use strict';
 
-Box.NativeDOM = (function(){
-	'use strict';
+    return {
 
-	return {
-
-		type: 'native',
+		type: 'jquery',
 
 		/**
 		 * Returns the first element that is a descendant of the element
@@ -169,8 +168,9 @@ Box.NativeDOM = (function(){
 		 *
 		 * @returns {HTMLElement} first element found matching query
 		 */
-		query: function(root, selector){
-			return root.querySelector(selector);
+		query: function(root, selector) {
+			// Aligning with native which returns null if not found
+			return $(root).find(selector)[0] || null;
 		},
 
 		/**
@@ -181,12 +181,12 @@ Box.NativeDOM = (function(){
 		 *
 		 * @returns {Array} elements found matching query
 		 */
-		queryAll: function(root, selector){
-			return root.querySelectorAll(selector);
+		queryAll: function(root, selector) {
+			return $.makeArray($(root).find(selector));
 		},
 
 		/**
-		 * Adds event listener to element using native event listener
+		 * Adds event listener to element via jquery
 		 * @param {HTMLElement} element Target to attach listener to
 		 * @param {string} type Name of the action to listen for
 		 * @param {function} listener Function to be executed on action
@@ -194,11 +194,11 @@ Box.NativeDOM = (function(){
 		 * @returns {void}
 		 */
 		on: function(element, type, listener) {
-			element.addEventListener(type, listener, false);
+			$(element).on(type, listener);
 		},
 
 		/**
-		 * Removes event listener to element using native event listener functions
+		 * Removes event listener to element via jquery
 		 * @param {HTMLElement} element Target to remove listener from
 		 * @param {string} type Name of the action remove listener from
 		 * @param {function} listener Function to be removed from action
@@ -206,12 +206,12 @@ Box.NativeDOM = (function(){
 		 * @returns {void}
 		 */
 		off: function(element, type, listener) {
-			element.removeEventListener(type, listener, false);
+			$(element).off(type, listener);
 		}
-	};
+    };
 }());
 
-Box.DOM = Box.NativeDOM;
+Box.DOM = Box.JQueryDOM;
 
 /**
  * @fileoverview An object that encapsulates event delegation wireup for a

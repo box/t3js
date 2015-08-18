@@ -154,9 +154,9 @@ Box.EventTarget = (function() {
  */
 
 Box.JQueryDOM = (function() {
-	'use strict';
+    'use strict';
 
-	return {
+    return {
 
 		type: 'jquery',
 
@@ -208,7 +208,7 @@ Box.JQueryDOM = (function() {
 		off: function(element, type, listener) {
 			$(element).off(type, listener);
 		}
-	};
+    };
 }());
 
 Box.DOM = Box.JQueryDOM;
