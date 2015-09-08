@@ -537,9 +537,29 @@ describe('Box.Application', function() {
 				assert.equal(first, second, 'same service returned');
 			});
 
-			it('should return null when called for a non-existing service', function() {
+			it('should return null when called for a non-existing service (debug off)', function() {
 				var service = Box.Application.getService('test');
+
 				assert.equal(service, null, 'null returned');
+			});
+
+			it('should fire an error when called for a non-existing service (debug off)', function() {
+				var errorHandlerMock = sandbox.mock();
+
+				Box.Application.on('error', errorHandlerMock);
+
+				var service = Box.Application.getService('test');
+
+				Box.Application.off('error', errorHandlerMock);
+			});
+
+			it('should throw an error when called for a non-existing service (debug on)', function() {
+				Box.Application.init({
+					debug: true
+				});
+				assert.throws(function() {
+					Box.Application.getService('test');
+				}, /Service "test" not found/);
 			});
 
 			it('should throw an error when a circular dependency exists between services', function() {
@@ -557,6 +577,19 @@ describe('Box.Application', function() {
 				assert.throws(function() {
 					Box.Application.getService('test');
 				}, /Circular service dependency: test -> test2 -> test/);
+			});
+
+		});
+
+		describe('hasService()', function() {
+
+			it('should return true when the service exists', function() {
+				Box.Application.addService('test', function() {});
+				assert.isTrue(Box.Application.hasService('test'));
+			});
+
+			it('should return false when the service does not exist', function() {
+				assert.isFalse(Box.Application.hasService('test'));
 			});
 
 		});
