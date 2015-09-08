@@ -195,6 +195,25 @@ describe('Box.Application', function() {
 				Box.Application.off('error', mock);
 			});
 
+			it('should emit an error when a module specifies a behavior twice', function() {
+				Box.Application.addModule('test', sandbox.stub().returns({
+					behaviors: ['test-behavior', 'test-behavior']
+				}));
+				Box.Application.addBehavior('test-behavior', sandbox.stub().returns({}));
+
+				// Using atLeast(1) since both bindEventListeners and the init loop call getBehaviors twice
+				var mock = sandbox.mock().atLeast(1).withArgs(sinon.match({
+					type: 'error',
+					data: sinon.match({
+						exception: new Error('Behavior "test-behavior" cannot be specified twice in a module.')
+					})
+				}));
+
+				Box.Application.on('error', mock);
+				Box.Application.start(testModule);
+				Box.Application.off('error', mock);
+			});
+
 		});
 
 		describe('start() - debug mode', function() {
