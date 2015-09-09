@@ -43,7 +43,7 @@ Although configuration information is mostly inert, there is one special configu
 
 ```js
 Box.Application.init({
-    debug: true;
+    debug: true
 });
 ```
 
