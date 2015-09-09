@@ -87,7 +87,8 @@ Application.addService('router', function(application) {
 		}
 	}
 
-	return {
+	var routerService = {
+
 		/**
 		 * The magical method the application code will call to navigate around,
 		 * high level it pushes the state, gets the templates from server, puts
@@ -133,7 +134,7 @@ Application.addService('router', function(application) {
 				// Check the hash and the URL and make sure they aren't the same
 				// and then navigate (in the case of an anchors href='#')
 				if (url !== history.state.hash) {
-					application.route({}, '', url);
+					routerService.route({}, '', url);
 				}
 			});
 
@@ -141,7 +142,7 @@ Application.addService('router', function(application) {
 				var state = history.state,
 					url = state.hash;
 
-				application.route({}, '', url);
+				routerService.route({}, '', url);
 			};
 
 			history.pushState({}, '', window.location.pathname);
@@ -155,7 +156,7 @@ Application.addService('router', function(application) {
 			$(document).off('click.router', 'a');
 		}
 	};
-}, {
-	exports: ['route']
+
+	return routerService;
 });
 
