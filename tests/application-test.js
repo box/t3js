@@ -133,6 +133,18 @@ describe('Box.Application', function() {
 				Box.Application.start(testModule);
 			});
 
+			it('should call init() on module before binding event handlers when called', function() {
+				Box.Application.addModule('test', function() {
+					return {
+						init: function() {
+							document.getElementById('module-target').click();
+						},
+						onclick: sandbox.mock().never()
+					};
+				});
+				Box.Application.start(testModule);
+			});
+
 			it('should call init() on module and behaviors in order they are defined when called', function() {
 				var moduleInitSpy = sandbox.spy(),
 					behaviorInitSpy = sandbox.spy(),
