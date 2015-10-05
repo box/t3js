@@ -145,7 +145,7 @@ describe('Box.Application', function() {
 				Box.Application.start(testModule);
 			});
 
-			it('should call init() on module and behaviors in order they are defined when called', function() {
+			it('should call init() behaviors in order they are defined and then the module when called', function() {
 				var moduleInitSpy = sandbox.spy(),
 					behaviorInitSpy = sandbox.spy(),
 					behavior2InitSpy = sandbox.spy();
@@ -162,8 +162,9 @@ describe('Box.Application', function() {
 				}));
 				Box.Application.start(testModule);
 
-				assert.ok(moduleInitSpy.calledBefore(behaviorInitSpy), 'module init called before first behavior init');
 				assert.ok(behaviorInitSpy.calledBefore(behavior2InitSpy), 'first behavior init called before second behavior init');
+				assert.ok(behavior2InitSpy.calledBefore(moduleInitSpy), 'module init called after second behavior init');
+
 			});
 
 			it('should emit an error event when not in debug mode', function() {
