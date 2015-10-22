@@ -232,8 +232,18 @@ target.test = function() {
 		exit(code);
 	}
 
+	echo('Running Utilities tests');
+	target['utils-test']();
+
 	echo('Running API tests');
 	target['api-test']();
+};
+
+target['utils-test'] = function() {
+	var code = exec('node ./node_modules/karma/bin/karma start config/testing-utils-karma-conf.js').code;
+	if (code !== 0) {
+		exit(code);
+	}
 };
 
 target['api-test'] = function() {

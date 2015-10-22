@@ -1,6 +1,6 @@
 /**
- * @fileoverview Karma configuration for T3 development.
- * @author nzakas
+ * @fileoverview Karma configuration for T3 Testing Utilities
+ * @author jtan
  */
 
 "use strict";
@@ -38,22 +38,22 @@ module.exports = function(config) {
 			'lib/dom-native.js',
 			'lib/dom-jquery.js',
 			'lib/dom-event-delegate.js',
-			'lib/context.js',
 			'lib/event-target.js',
-			'lib/application.js',
-			'tests/*.js'
+			'lib/application-stub.js',
+			'lib/test-service-provider.js',
+			// Actual tests to run
+			'tests/test-service-provider-test.js',
 		],
 
 		// list of files to exclude
 		exclude: [
-			'tests/api-test.js',
-			'tests/test-service-provider-test.js'
+			'tests/api-test.js'
 		],
 
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			'lib/*.js': ['coverage']
+			'lib/test-service-provider.js': ['coverage']
 		},
 
 		// web server port
@@ -85,7 +85,7 @@ module.exports = function(config) {
 		thresholdReporter: {
 			statements: 94,
 			branches: 80,
-			functions: 98,
+			functions: 88,
 			lines: 94
 		},
 
