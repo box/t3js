@@ -245,7 +245,35 @@ Retrieves an instance of a registered service.
 </table>
 
 ### Returns
-T3 Service or null.
+T3 Service or throws an error if it does not exist.
+
+<hr class="separator">
+
+<div class="anchor" id="hasService"></div>
+## hasService
+### Description
+Checks if a service has been registered.
+
+### Usage
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Parameter</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="required">service</td>
+			<td>string</td>
+			<td>Name of service.</td>
+		</tr>
+	</tbody>
+</table>
+
+### Returns
+True if the service exists, false otherwise.
 
 <hr class="separator">
 

@@ -186,6 +186,17 @@ Box.Application.addModule('module-name', function(context) {
 });
 ```
 
+## Optional Services
+
+Occasionally, you may want to include a service but only if it is available. Use the `hasService()` method to check if your service has been included on the page.
+
+```js
+var someService;
+if (application.hasService('some-service')) {
+	someService = application.getService('some-service');
+}
+```
+
 ## Do's and Don'ts
 
 * Do think about your public interface. You are creating a utility that is designed to be used by someone else, make sure the interface makes sense.

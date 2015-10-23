@@ -50,7 +50,7 @@ This code sets up a fake `context` object for a test by using a `Box.TestService
 
 ### How to Use a Real Service
 
-Occasionally, you will need to use an actual service instead of a stub. A DOM manipulation service is a great example of a utility that is hard to stub/fake short of just re-implementing the functionality in the test. `Box.TestServiceProvider` will include any services that are registered to the application stub before the `Box.TestServiceProvider` is instantiated. For example:
+Occasionally, you will need to use an actual service instead of a stub. A DOM manipulation service is a great example of a utility that is hard to stub/fake short of just re-implementing the functionality in the test. `Box.TestServiceProvider` will include any services that are registered to the application stub before the `Box.TestServiceProvider` is instantiated, provided that you specify the services in the 2nd param, `allowedServicesList` of a TestServiceProvider. For example:
 
 ```js
 
@@ -72,7 +72,7 @@ var service1Fake = {};
 var contextFake = new Box.TestServiceProvider({
     // name : object to return
     service1: service1Fake
-});
+}, ['dom']);
 var domService = contextFake.getService('dom'); // Return the actual `dom` service.
 ```
 
@@ -98,7 +98,7 @@ var contextFake = new Box.TestServiceProvider({
     // name : object to return
     service1: service1Fake,
     service2: service2Fake
-});
+}, ['some-real-service']);
 
 // use this to get a reference to the module being tested
 var module = Box.Application.getModuleForTest('mymodule', contextFake);

@@ -9,6 +9,8 @@
     title: Creating a Module
   - id: service
     title: Creating a Service
+  - id: migrating-to-2-0-0
+    title: Migrating to 2.0.0
 
 - title: Guides
   path: /guides
