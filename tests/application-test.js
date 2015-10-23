@@ -549,7 +549,7 @@ describe('Box.Application', function() {
 
 				Box.Application.on('error', errorHandlerMock);
 
-				var service = Box.Application.getService('test');
+				Box.Application.getService('test');
 
 				Box.Application.off('error', errorHandlerMock);
 			});

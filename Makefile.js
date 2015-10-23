@@ -220,7 +220,7 @@ target.all = function() {
 
 target.lint = function() {
 	echo('Validating JavaScript files');
-	nodeExec('eslint', JS_FILES);
+	nodeExec('eslint', [JS_FILES, TEST_FILES].join(' '));
 };
 
 target.test = function() {

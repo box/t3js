@@ -10,7 +10,8 @@
 		"mocha": false,
 		"chai": false,
 		"sinon": false,
-		"assert": false
+		"assert": true,
+		"leche": true
 	},
 	"rules": {
 		"brace-style": 2,
