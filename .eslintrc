@@ -3,7 +3,6 @@
 		"window": false,
 		"document": false,
 		"Box": true,
-		"leche": false,
 		"$": false
 	},
 	"extends": "eslint:recommended",

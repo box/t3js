@@ -3,6 +3,9 @@
  * @author Box
  */
 
+/* eslint-env node */
+/* eslint strict: [2, "global"] */
+
 'use strict';
 
 // @NOTE(nzakas): This file runs in Node.js, not Karma!

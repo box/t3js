@@ -16,11 +16,6 @@ describe('Box.DOMEventDelegate', function() {
 		var sandbox = sinon.sandbox.create(),
 			delegate;
 
-		var testModule,
-			testModule2,
-			testTarget,
-			nestedModule;
-
 		before(function() {
 			Box.DOM = dom;
 			var fixture = document.createElement('div');
@@ -74,9 +69,9 @@ describe('Box.DOMEventDelegate', function() {
 
 				delegate = new Box.DOMEventDelegate(testElement, {
 					onclick: sandbox.mock().withExactArgs(
-						sinon.match({ type: "click" }),
+						sinon.match({ type: 'click' }),
 						testElement.firstChild,
-						"submit"
+						'submit'
 					)
 				});
 
@@ -89,7 +84,7 @@ describe('Box.DOMEventDelegate', function() {
 
 				delegate = new Box.DOMEventDelegate(testElement, {
 					onclick: sandbox.mock().withExactArgs(
-						sinon.match({ type: "click" }),
+						sinon.match({ type: 'click' }),
 						null,
 						''
 					)
