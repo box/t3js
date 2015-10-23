@@ -38,27 +38,26 @@ We've found that by using a combination of these three component types, we're ab
 
 ## Installation
 
-**Dependency:** T3 requires jQuery v1.8.0 or higher.
-
 To include T3 in a web page, you can use [RawGit](http://rawgit.com).
 
 The last published release:
 
 ```
-<!-- Recommended: Use a specific version of T3 -->
-<script src="https://cdn.rawgit.com/box/t3js/v1.1.0/dist/t3.js"></script>
+<!-- Recommended: Latest version of T3 -->
+<script src="https://cdn.rawgit.com/box/t3js/v1.5.1/dist/t3.js"></script>
 
-<!-- Recommended: Use a specific minified version of T3 -->
-<script src="https://cdn.rawgit.com/box/t3js/v1.1.0/dist/t3.min.js"></script>
+<!-- Recommended: Latest minified version of T3 -->
+<script src="https://cdn.rawgit.com/box/t3js/v1.5.1/dist/t3.min.js"></script>
 
-<!-- Dev-only: latest published release -->
-<script src="https://cdn.rawgit.com/box/t3js/master/dist/t3.js"></script>
+<!-- jQuery version (IE8 + 1.8.0+ jQuery) -->
+<script src="https://cdn.rawgit.com/box/t3js/v1.5.1/dist/t3-jquery.js"></script>
 
-<!-- Dev-only: latest published release minified -->
-<script src="https://cdn.rawgit.com/box/t3js/master/dist/t3.min.js"></script>
+<!-- jQuery minified version (IE8 + 1.8.0+ jQuery) -->
+<script src="https://cdn.rawgit.com/box/t3js/v1.5.1/dist/t3-jquery.min.js"></script>
 ```
+## Upgrade from 1.5.1 to 2.0.0
 
-**Note:** We highly recommend using a specific version of T3. Linking directly to the master branch means getting updates without notice.
+Please see [these instructions](http://t3js.org/docs/getting-started/migrating-to-2-0-0) for upgrading to the newest version of T3.js.
 
 ## Getting Started
 
@@ -67,7 +66,7 @@ Your T3 front-end is made up of modules, so the first step is to indicate which 
 ```html
 <div data-module="header">
     <h1>Box</h1>
-    <button id="welcome">Show Welcome</button>
+    <button data-type="welcome-btn">Show Welcome</button>
 </div>
 ```
 
@@ -78,8 +77,8 @@ Box.Application.addModule('header', function(context) {
 
     return {
 
-        onclick: function(event) {
-            if (event.target.id === 'welcome') {
+        onclick: function(event, element, elementType) {
+            if (elementType === 'welcome-btn') {
                 alert('Welcome, T3 user!');
             } else {
                 alert('You clicked outside the button.');
@@ -107,7 +106,7 @@ There are more extensive tutorials and examples on our [website](http://t3js.org
 
 T3 is tested and known to work in the following browsers:
 
-* Internet Explorer 8 and higher
+* Internet Explorer 9 and higher
 * Firefox (latest version)
 * Chrome (latest version)
 * Safari (latest version)
@@ -167,13 +166,13 @@ The following build commands are available:
 
 ## Frequently Asked Questions
 
-### Why is there a dependency on jQuery?
+### Can I use this with older browsers?
 
-jQuery is used primarily for its browser-normalizing event handling so we can support IE8. We investigated creating our own event handling library, but ultimately decided it wasn't worth the time because we were using jQuery already. When we drop support for IE8, we'll be able to remove the dependence on jQuery and use the native browser event handling.
+We provide a custom version of T3 built with jQuery that is compatible with older browsers such as IE8.
 
 ### Why support IE8?
 
-The Box web application currently supports IE8 with a [planned end-of-life of December 31, 2015](https://support.box.com/hc/en-us/articles/200519838-What-Is-the-Box-Policy-for-Browser-and-OS-Support-). As such, T3 must continue to support IE8 until Box has officially end-of-lifed it.
+The Box web application currently supports IE8 with a [planned end-of-life of December 31, 2015](https://support.box.com/hc/en-us/articles/200519838-What-Is-the-Box-Policy-for-Browser-and-OS-Support-). We will be dropping T3 support for IE8 at the same time.
 
 ## Support
 
