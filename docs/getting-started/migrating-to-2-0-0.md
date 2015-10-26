@@ -21,7 +21,7 @@ Box.Application.addService('some-module', function(application) {
 });
 ```
 
-#### Behaviors init() before module init()
+#### Behaviors `init()` before module `init()`
 
 This should allow the modules to rely on any required setup from the behaviors.
 
@@ -55,13 +55,13 @@ foo
 bar
 ```
 
-#### getService() throws errors when the service does not exist
+#### `getService()` throws errors when the service does not exist
 
 ```js
 application.getService('non-existent-service'); // Error
 ```
 
-Previously, this would return null. Use `hasService()` to check for optional services.
+Previously, this would return `null`. Use `hasService()` to check for optional services.
 
 ```js
 var service = application.hasService('some-service')
@@ -69,14 +69,17 @@ var service = application.hasService('some-service')
 ```
 This change will allow developers to catch issues with missing services before they hit production.
 
-#### Removed `exports` option from addService()
+#### Removed `exports` option from `addService()`
 
 ```js
-Box.Application.addService('foo', function() { ... }, { exports: ['bar'] }); // no longer works
+Box.Application.addService('foo', function() { ... }, {
+	exports: ['bar']
+});
+Box.Application.bar(); // no longer works
 ```
-This option was unused and dangerous since it modified the global Application object which could lead to unexpected coupling.
+This option was unused and dangerous since it modified the global `Application` object which could lead to unexpected coupling.
 
-#### TestServiceProvider requires explicit pre-registered services
+#### `TestServiceProvider` requires explicit pre-registered services
 
 ```js
 beforeEach(function() {
