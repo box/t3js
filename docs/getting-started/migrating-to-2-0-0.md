@@ -69,6 +69,13 @@ var service = application.hasService('some-service')
 ```
 This change will allow developers to catch issues with missing services before they hit production.
 
+#### Removed `exports` option from addService()
+
+```js
+Box.Application.addService('foo', function() { ... }, { exports: ['bar'] }); // no longer works
+```
+This option was unused and dangerous since it modified the global Application object which could lead to unexpected coupling.
+
 #### TestServiceProvider requires explicit pre-registered services
 
 ```js
