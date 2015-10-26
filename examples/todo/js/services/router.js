@@ -121,6 +121,8 @@ Application.addService('router', function(application) {
 			// Turn the routes globs into regular expressions...
 			parseRoutes();
 
+			var me = this;
+
 			// Bind the document click listener to all anchor tags
 			$(document).on('click.router', 'a', function(e) {
 				// Append the query string to the end of the pathname
@@ -133,7 +135,7 @@ Application.addService('router', function(application) {
 				// Check the hash and the URL and make sure they aren't the same
 				// and then navigate (in the case of an anchors href='#')
 				if (url !== history.state.hash) {
-					application.route({}, '', url);
+					me.route({}, '', url);
 				}
 			});
 
@@ -141,7 +143,7 @@ Application.addService('router', function(application) {
 				var state = history.state,
 					url = state.hash;
 
-				application.route({}, '', url);
+				me.route({}, '', url);
 			};
 
 			history.pushState({}, '', application.getGlobal('location').pathname);
@@ -155,7 +157,5 @@ Application.addService('router', function(application) {
 			$(document).off('click.router', 'a');
 		}
 	};
-}, {
-	exports: ['route']
 });
 

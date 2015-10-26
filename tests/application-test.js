@@ -386,65 +386,6 @@ describe('Box.Application', function() {
 				});
 			});
 
-			it('should register methods on Application when passed multiple exports', function() {
-				Box.Application.addService('test', sandbox.stub().returns({
-					foo: sandbox.mock().returns(1),
-					bar: sandbox.mock().returns(2)
-				}), {
-					exports: ['foo', 'bar']
-				});
-
-				Box.Application.init({
-					debug: true
-				});
-
-				assert.equal(Box.Application.foo(), 1);
-				assert.equal(Box.Application.bar(), 2);
-			});
-
-			it('should register methods on the context object when passed multiple exports', function() {
-				testModule = $('<div data-module="test"><span id="module-target" data-type="target"></span></div>')[0];
-				$('#mocha-fixture').append(testModule);
-
-				Box.Application.addService('test', sandbox.stub().returns({
-					foo: sandbox.mock().returns(1),
-					bar: sandbox.mock().returns(2)
-				}), {
-					exports: ['foo', 'bar']
-				});
-
-				Box.Application.addModule('test', function(context) {
-					return {
-						init: function() {
-							assert.equal(context.foo(), 1);
-							assert.equal(context.bar(), 2);
-						}
-					};
-				});
-
-				Box.Application.start(testModule);
-			});
-
-			it('should throw an error when an extension already exists', function() {
-				Box.Application.init({
-					debug: true
-				});
-
-				Box.Application.addService('test', sandbox.stub().returns({
-					foo: function() {}
-				}), {
-					exports: ['foo']
-				});
-
-				assert.throws(function() {
-					Box.Application.addService('test2', sandbox.stub().returns({
-						foo: function() {}
-					}), {
-						exports: ['foo']
-					});
-				});
-			});
-
 			it('should throw an error when the service name already exists', function() {
 				Box.Application.init({
 					debug: true
@@ -934,7 +875,7 @@ describe('Box.Application', function() {
 
 		});
 
-		describe('getGlobal', function() {
+		describe('getGlobal()', function() {
 
 			it('should return the window-scope var when it exists', function() {
 				window.foo = 'bar';
