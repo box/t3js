@@ -25,20 +25,15 @@ var util = require('util'),
 
 var NODE = 'node ',	// intentional extra space
 	NODE_MODULES = './node_modules/',
-	BUILD_DIR = './build/',
 	DIST_DIR = './dist/',
-	LIB_DIR = './lib/',
 
 	// Utilities - intentional extra space at the end of each string
-	ISTANBUL = NODE + NODE_MODULES + 'istanbul/lib/cli.js ',
 	JSDOC = NODE + NODE_MODULES + 'jsdoc/jsdoc.js ',
 
 	// Since our npm package name is actually 't3js'
 	DIST_NAME = 't3',
 	DIST_JQUERY_NAME = DIST_NAME + '-jquery',
 	DIST_NATIVE_NAME = DIST_NAME + '-native',
-	DIST_TESTING_BUNDLE_NAME_JQUERY = DIST_JQUERY_NAME + '-testing',
-	DIST_TESTING_BUNDLE_NAME_NATIVE = DIST_NATIVE_NAME + '-testing',
 
 	// Directories
 	JS_DIRS = getSourceDirectories(),
@@ -134,7 +129,7 @@ function getSourceDirectories() {
  * @private
  */
 function getVersionTags() {
-	var tags = exec("git tag", { silent: true }).output.trim().split(/\n/g);
+	var tags = exec('git tag', { silent: true }).output.trim().split(/\n/g);
 
 	return tags.reduce(function(list, tag) {
 		if (semver.valid(tag)) {
@@ -160,6 +155,24 @@ function validateModuleLoading() {
 }
 
 /**
+ * Updates the README links with the latest version
+ * @param string version The latest version string
+ * @returns {void}
+ * @private
+ */
+function updateReadme(version) {
+	// Copy to temp file
+	cat('README.md').to('README.tmp');
+
+	// Replace Version String
+	sed('-i', /\/box\/t3js\/v([^/])+/g, '/box/t3js/' + version, 'README.tmp');
+
+	// Replace README
+	rm('README.md');
+	mv('README.tmp', 'README.md');
+}
+
+/**
  * Creates a release version tag and pushes to origin.
  * @param {string} type The type of release to do (patch, minor, major)
  * @returns {void}
@@ -175,11 +188,12 @@ function release(type) {
 	target.test();
 
 	// Step 1: Create the new version
-	var newVersion = exec("npm version " + type).output.trim();
+	var newVersion = exec('npm version ' + type).output.trim();
 
 	// Step 2: Generate files
 	target.dist();
 	target.changelog();
+	updateReadme(newVersion);
 
 	// Step 3: Validate CommonJS wrapping
 	validateModuleLoading();
@@ -270,7 +284,7 @@ target.docs = function() {
 	echo('Documentation has been output to /jsdoc');
 };
 
-function generateDistFiles(dist){
+function generateDistFiles(dist) {
 	var pkg = require('./package.json'),
 		distFilename = DIST_DIR + dist.name + '.js',
 		minDistFilename = distFilename.replace(/\.js$/, '.min.js'),
@@ -358,7 +372,6 @@ target.changelog = function() {
 	rm('CHANGELOG.md');
 	mv('CHANGELOG.md.tmp', 'CHANGELOG.md');
 };
-
 
 target.patch = function() {
 	release('patch');
