@@ -60,6 +60,34 @@ describe('Box.Context', function() {
 
 	});
 
+	describe('hasService()', function() {
+
+		it('should return true when Application has the service', function() {
+			var context,
+				serviceName = 'foo',
+				application = {
+					hasService: function() {}
+				};
+
+			sandbox.mock(application).expects('hasService').withArgs(serviceName).returns(true);
+			context = new Box.Context(application, element);
+			assert.isTrue(context.hasService(serviceName), 'hasService() should return true');
+		});
+
+		it('should return false when Application has the service', function() {
+			var context,
+				serviceName = 'foo',
+				application = {
+					hasService: function() {}
+				};
+
+			sandbox.mock(application).expects('hasService').withArgs(serviceName).returns(false);
+			context = new Box.Context(application, element);
+			assert.isFalse(context.hasService(serviceName), 'hasService() should return false');
+		});
+
+	});
+
 	describe('getConfig()', function() {
 
 		it('should pass through module element and config name to application.getModuleConfig() when called', function() {
