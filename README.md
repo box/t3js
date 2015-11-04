@@ -57,7 +57,7 @@ The last published release:
 ```
 ## Upgrade from 1.5.1 to 2.0.0
 
-Please see [these instructions](http://t3js.org/docs/getting-started/migrating-to-2-0-0) for upgrading to the newest version of T3.js.
+T3 2.0.0 will be released late-November with some major changes. To prepare for the upgrade, please see [these instructions](http://t3js.org/docs/getting-started/migrating-to-2-0-0).
 
 ## Getting Started
 
