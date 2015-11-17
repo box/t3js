@@ -33,10 +33,11 @@ describe('Box.TestServiceProvider', function() {
 			assert.propertyVal(testServiceProvider.stubs, 'foo', serviceStub);
 		});
 
-		it('should map allowedServiceList to this.allowedServices when called', function() {
+		it('should set allowedServicesList to this.allowedServicesList when called', function() {
 			testServiceProvider = new Box.TestServiceProvider({}, ['example-service']);
 
-			assert.propertyVal(testServiceProvider.allowedServices, 'example-service', true);
+			assert.deepEqual(testServiceProvider.allowedServicesList, ['example-service']);
+			assert.deepEqual(testServiceProvider.serviceInstances, {});
 		});
 
 	});
@@ -73,6 +74,11 @@ describe('Box.TestServiceProvider', function() {
 			assert.deepEqual(testServiceProvider.getService('service3'), preRegisteredService3);
 		});
 
+		it('should return the same pre-registered service instance when called multiple times', function() {
+			assert.deepEqual(testServiceProvider.getService('service3'), preRegisteredService3);
+			assert.strictEqual(testServiceProvider.getService('service3'), testServiceProvider.getService('service3'));
+		});
+
 		it('should throw an error when service is not available and service is on the allowedServiceList', function() {
 			assert.throws(function() {
 				testServiceProvider.getService('service4');
@@ -82,7 +88,7 @@ describe('Box.TestServiceProvider', function() {
 		it('should throw an error when service is not available and service is not on the allowedServiceList', function() {
 			assert.throws(function() {
 				testServiceProvider.getService('not-available-service');
-			}, 'Service "not-available-service" is not on the `allowedServiceList`.');
+			}, 'Service "not-available-service" is not on the `allowedServiceList`. Use "new Box.TestServiceProvider({ ...stubs... }, [\'not-available-service\']);" or stub the service out.');
 		});
 
 	});
