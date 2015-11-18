@@ -293,11 +293,12 @@ function generateDistFiles(dist) {
 
 	// Add copyrights and version info
 	var versionComment = '/*! ' + dist.name + ' v' + pkg.version + ' */\n',
+		testingVersionComment = '/*! ' + dist.name + '-testing v' + pkg.version + ' */\n',
 		copyrightComment = cat('./config/copyright.txt');
 
 	// concatenate files together and add version/copyright notices
 	(versionComment + copyrightComment + cat(dist.files)).to(distFilename);
-	(versionComment + copyrightComment + cat(dist.testingFiles)).to(distTestingFilename);
+	(testingVersionComment + copyrightComment + cat(dist.testingFiles)).to(distTestingFilename);
 
 	// create minified version with source maps
 	var result = uglifyjs.minify(distFilename, {
