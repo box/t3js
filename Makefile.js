@@ -292,7 +292,7 @@ function generateDistFiles(dist) {
 		distTestingFilename = DIST_DIR + dist.name + '-testing' + '.js';
 
 	// Add copyrights and version info
-	var versionComment = '/*! ' + dist.name + ' v ' + pkg.version + '*/\n',
+	var versionComment = '/*! ' + dist.name + ' v' + pkg.version + ' */\n',
 		copyrightComment = cat('./config/copyright.txt');
 
 	// concatenate files together and add version/copyright notices
@@ -308,11 +308,6 @@ function generateDistFiles(dist) {
 	});
 	result.code.to(minDistFilename);
 	result.map.to(minDistSourcemapFilename);
-
-	// ensure there's a newline at the end of each file
-	(cat(distFilename) + '\n').to(distFilename);
-	(cat(minDistFilename) + '\n').to(minDistFilename);
-	(cat(distTestingFilename) + '\n').to(distTestingFilename);
 
 	// create filenames with version in them
 	cp(distFilename, distFilename.replace('.js', '-' + pkg.version + '.js'));
