@@ -1,3 +1,27 @@
+v2.0.0 - November 18, 2015
+
+* 2.0.0 (Jeff Tan)
+* Add separate file header for testing package (Jeff Tan)
+* Fixing spaces in build script (Jeff Tan)
+* Return singleton service instance when getService is called on pre-registered services (Jeff Tan)
+* Add mousemove to allowed event types (Jeff Tan)
+* Update README.md (Jeff Tan)
+* Remove service exports from T3 (Jeff Tan)
+* Update Readme for 2.0.0 release and add auto-version updating (Jeff Tan)
+* Add hasService() to context object (Jeff Tan)
+* [Breaking] Add allowedServiceList to TestServiceProvider (Jeff Tan)
+* Use jQuery instead of $ for dom event delegation (Jeff Tan)
+* Add linting to test directory (Jeff Tan)
+* Breaking: Initialize behaviors before module (Jeff Tan)
+* Change getService() to throw error when requesting non-existent service. Add hasService() method. (Jeff Tan)
+* Bind event handlers after init() is called (Jeff Tan)
+* Throw error when duplicate behaviors are included (Jeff Tan)
+* Revert "Check for circular dependencies only during instantiation of service" (Denis Rodin)
+* Check for circular dependencies only during instantiation of service (Denis Rodin)
+* Check for circular dependencies only during instantiation of service (Denis Rodin)
+* Breaking: Use NativeDOM by default (fixes #76) (Nicholas C. Zakas)
+* Build: Upgrade ESLint (fixes #90) (Nicholas C. Zakas)
+
 v1.5.1 - August 10, 2015
 
 * 1.5.1 (Nicholas C. Zakas)
