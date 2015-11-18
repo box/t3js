@@ -1,3 +1,9 @@
+v2.0.1 - November 18, 2015
+
+* 2.0.1 (Jeff Tan)
+* Fix release script to work with multiple dist calls (Jeff Tan)
+* Add debug output to release script (Jeff Tan)
+
 v2.0.0 - November 18, 2015
 
 * 2.0.0 (Jeff Tan)
