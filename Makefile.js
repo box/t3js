@@ -185,17 +185,22 @@ function release(type) {
 		exit(1);
 	}
 
+	echo('Running tests');
 	target.test();
 
 	// Step 1: Create the new version
+	echo('Creating new version');
 	var newVersion = exec('npm version ' + type).output.trim();
 
 	// Step 2: Generate files
+	echo('Generating dist files');
 	target.dist();
+	echo('Generating changelog');
 	target.changelog();
 	updateReadme(newVersion);
 
 	// Step 3: Validate CommonJS wrapping
+	echo('Validating module loading');
 	validateModuleLoading();
 
 	// Step 4: Add files to current commit
@@ -206,12 +211,15 @@ function release(type) {
 	execOrExit('git tag -f ' + newVersion);
 
 	// Step 6: publish to git
+	echo('Pushing to github');
 	execOrExit('git push origin master --tags');
 
 	// Step 7: publish to npm
+	echo('Publishing to NPM');
 	execOrExit('npm publish');
 
 	// Step 8: Update version number in docs site
+	echo('Updating documentation site');
 	execOrExit('git checkout gh-pages');
 	('version: ' + newVersion).to('_data/t3.yml');
 	execOrExit('git commit -am "Update version number to ' + newVersion + '"');
