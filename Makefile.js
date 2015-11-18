@@ -173,6 +173,72 @@ function updateReadme(version) {
 }
 
 /**
+ * Generate distribution files for a single package
+ * @param Object config The distribution configuration
+ * @returns {void}
+ * @private
+ */
+function generateDistFiles(config) {
+	var pkg = require('./package.json'),
+		distFilename = DIST_DIR + config.name + '.js',
+		minDistFilename = distFilename.replace(/\.js$/, '.min.js'),
+		minDistSourcemapFilename = minDistFilename + '.map',
+		distTestingFilename = DIST_DIR + config.name + '-testing' + '.js';
+
+	// Add copyrights and version info
+	var versionComment = '/*! ' + config.name + ' v' + pkg.version + ' */\n',
+		testingVersionComment = '/*! ' + config.name + '-testing v' + pkg.version + ' */\n',
+		copyrightComment = cat('./config/copyright.txt');
+
+	// concatenate files together and add version/copyright notices
+	(versionComment + copyrightComment + cat(config.files)).to(distFilename);
+	(testingVersionComment + copyrightComment + cat(config.testingFiles)).to(distTestingFilename);
+
+	// create minified version with source maps
+	var result = uglifyjs.minify(distFilename, {
+		output: {
+			comments: /^!/
+		},
+		outSourceMap: path.basename(minDistSourcemapFilename)
+	});
+	result.code.to(minDistFilename);
+	result.map.to(minDistSourcemapFilename);
+
+	// create filenames with version in them
+	cp(distFilename, distFilename.replace('.js', '-' + pkg.version + '.js'));
+	cp(minDistFilename, minDistFilename.replace('.min.js', '-' + pkg.version + '.min.js'));
+	cp(distTestingFilename, distTestingFilename.replace('.js', '-' + pkg.version + '.js'));
+}
+
+/**
+ * Generate all distribution files
+ * @private
+ */
+function dist() {
+	if (test('-d', DIST_DIR)) {
+		rm('-r', DIST_DIR + '*');
+	} else {
+		mkdir(DIST_DIR);
+	}
+
+	[{
+		name: DIST_NATIVE_NAME,
+		files: SRC_NATIVE_FILES,
+		testingFiles: TESTING_NATIVE_FILES
+	}, {
+		name: DIST_JQUERY_NAME,
+		files: SRC_JQUERY_FILES,
+		testingFiles: TESTING_JQUERY_FILES
+	}, {
+		name: DIST_NAME,
+		files: SRC_NATIVE_FILES,
+		testingFiles: TESTING_NATIVE_FILES
+	}].forEach(function(config){
+		generateDistFiles(config);
+	});
+}
+
+/**
  * Creates a release version tag and pushes to origin.
  * @param {string} type The type of release to do (patch, minor, major)
  * @returns {void}
@@ -194,9 +260,12 @@ function release(type) {
 
 	// Step 2: Generate files
 	echo('Generating dist files');
-	target.dist();
+	dist();
+
 	echo('Generating changelog');
 	target.changelog();
+
+	echo('Updating README');
 	updateReadme(newVersion);
 
 	// Step 3: Validate CommonJS wrapping
@@ -270,7 +339,7 @@ target['utils-test'] = function() {
 
 target['api-test'] = function() {
 	// generate dist files that are used by api-test
-	target.dist();
+	dist();
 
 	nodeExec('mocha', './tests/api-test.js');
 
@@ -292,60 +361,9 @@ target.docs = function() {
 	echo('Documentation has been output to /jsdoc');
 };
 
-function generateDistFiles(dist) {
-	var pkg = require('./package.json'),
-		distFilename = DIST_DIR + dist.name + '.js',
-		minDistFilename = distFilename.replace(/\.js$/, '.min.js'),
-		minDistSourcemapFilename = minDistFilename + '.map',
-		distTestingFilename = DIST_DIR + dist.name + '-testing' + '.js';
-
-	// Add copyrights and version info
-	var versionComment = '/*! ' + dist.name + ' v' + pkg.version + ' */\n',
-		testingVersionComment = '/*! ' + dist.name + '-testing v' + pkg.version + ' */\n',
-		copyrightComment = cat('./config/copyright.txt');
-
-	// concatenate files together and add version/copyright notices
-	(versionComment + copyrightComment + cat(dist.files)).to(distFilename);
-	(testingVersionComment + copyrightComment + cat(dist.testingFiles)).to(distTestingFilename);
-
-	// create minified version with source maps
-	var result = uglifyjs.minify(distFilename, {
-		output: {
-			comments: /^!/
-		},
-		outSourceMap: path.basename(minDistSourcemapFilename)
-	});
-	result.code.to(minDistFilename);
-	result.map.to(minDistSourcemapFilename);
-
-	// create filenames with version in them
-	cp(distFilename, distFilename.replace('.js', '-' + pkg.version + '.js'));
-	cp(minDistFilename, minDistFilename.replace('.min.js', '-' + pkg.version + '.min.js'));
-	cp(distTestingFilename, distTestingFilename.replace('.js', '-' + pkg.version + '.js'));
-}
-
+// Don't assign directly to dist since shelljs wraps this function
 target.dist = function() {
-	if (test('-d', DIST_DIR)) {
-		rm('-r', DIST_DIR + '*');
-	} else {
-		mkdir(DIST_DIR);
-	}
-
-	[{
-		name: DIST_NATIVE_NAME,
-		files: SRC_NATIVE_FILES,
-		testingFiles: TESTING_NATIVE_FILES
-	}, {
-		name: DIST_JQUERY_NAME,
-		files: SRC_JQUERY_FILES,
-		testingFiles: TESTING_JQUERY_FILES
-	}, {
-		name: DIST_NAME,
-		files: SRC_NATIVE_FILES,
-		testingFiles: TESTING_NATIVE_FILES
-	}].forEach(function(dist){
-		generateDistFiles(dist);
-	});
+	dist();
 };
 
 target.changelog = function() {
