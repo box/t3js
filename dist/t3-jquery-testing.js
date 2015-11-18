@@ -1,4 +1,4 @@
-/*! t3-jquery v 1.5.1*/
+/*! t3-jquery-testing v2.0.0 */
 /*!
 Copyright 2015 Box, Inc. All rights reserved.
 
@@ -153,10 +153,12 @@ Box.EventTarget = (function() {
  * @author jdivock
  */
 
-Box.JQueryDOM = (function() {
-    'use strict';
+/* eslint-env jquery */
 
-    return {
+Box.JQueryDOM = (function() {
+	'use strict';
+
+	return {
 
 		type: 'jquery',
 
@@ -170,7 +172,7 @@ Box.JQueryDOM = (function() {
 		 */
 		query: function(root, selector) {
 			// Aligning with native which returns null if not found
-			return $(root).find(selector)[0] || null;
+			return jQuery(root).find(selector)[0] || null;
 		},
 
 		/**
@@ -182,7 +184,7 @@ Box.JQueryDOM = (function() {
 		 * @returns {Array} elements found matching query
 		 */
 		queryAll: function(root, selector) {
-			return $.makeArray($(root).find(selector));
+			return jQuery.makeArray(jQuery(root).find(selector));
 		},
 
 		/**
@@ -194,7 +196,7 @@ Box.JQueryDOM = (function() {
 		 * @returns {void}
 		 */
 		on: function(element, type, listener) {
-			$(element).on(type, listener);
+			jQuery(element).on(type, listener);
 		},
 
 		/**
@@ -206,9 +208,9 @@ Box.JQueryDOM = (function() {
 		 * @returns {void}
 		 */
 		off: function(element, type, listener) {
-			$(element).off(type, listener);
+			jQuery(element).off(type, listener);
 		}
-    };
+	};
 }());
 
 Box.DOM = Box.JQueryDOM;
@@ -225,7 +227,7 @@ Box.DOMEventDelegate = (function() {
 
 	// Supported events for modules. Only events that bubble properly can be used in T3.
 	var EVENT_TYPES = ['click', 'mouseover', 'mouseout', 'mousedown', 'mouseup',
-			'mouseenter', 'mouseleave', 'keydown', 'keyup', 'submit', 'change',
+			'mouseenter', 'mouseleave', 'mousemove', 'keydown', 'keyup', 'submit', 'change',
 			'contextmenu', 'dblclick', 'input', 'focusin', 'focusout'];
 
 
@@ -405,7 +407,7 @@ Box.DOMEventDelegate = (function() {
 
 			/**
 			 * Resets the application stub back to a clean state. Will also remove pre-registered components.
-		     * @returns {Box.Application} The application object.
+			 * @returns {Box.Application} The application object.
 			 */
 			reset: function() {
 				services = {};
@@ -418,7 +420,7 @@ Box.DOMEventDelegate = (function() {
 			 * Registers a service to the application stub
 			 * @param {string} serviceName The name of the service
 			 * @param {Function} creator The service creator function
-		     * @returns {Box.Application} The application object.
+			 * @returns {Box.Application} The application object.
 			 */
 			addService: function(serviceName, creator) {
 				services[serviceName] = {
@@ -431,7 +433,7 @@ Box.DOMEventDelegate = (function() {
 			 * Registers a module to the application stub
 			 * @param {string} moduleName The name of the module
 			 * @param {Function} creator The behavior creator function
-		     * @returns {Box.Application} The application object.
+			 * @returns {Box.Application} The application object.
 			 */
 			addModule: function(moduleName, creator) {
 				modules[moduleName] = {
@@ -444,13 +446,22 @@ Box.DOMEventDelegate = (function() {
 			 * Registers a behavior to the application stub
 			 * @param {string} behaviorName The name of the behavior
 			 * @param {Function} creator The behavior creator function
-		     * @returns {Box.Application} The application object.
+			 * @returns {Box.Application} The application object.
 			 */
 			addBehavior: function(behaviorName, creator) {
 				behaviors[behaviorName] = {
 					creator: creator
 				};
 				return this;
+			},
+
+			/**
+			 * Checks if a service exists
+			 * @param {string} serviceName The name of the service to check.
+			 * @returns {boolean} True, if service exist. False, otherwise.
+			 */
+			hasService: function(serviceName) {
+				return services.hasOwnProperty(serviceName);
 			},
 
 			/**
@@ -542,21 +553,42 @@ Box.DOMEventDelegate = (function() {
 	 * @returns {Function} A function stub
 	 */
 	function functionStub(method) {
+		/* eslint-disable no-extra-parens */
 		return (function(methodKey) {
 			return function() {
 				throw new Error('Unexpected call to method "' + methodKey + '". You must stub this method out.');
 			};
 		}(method));
+		/* eslint-enable no-extra-parens */
+	}
+
+	/**
+	 * Check if service is allowed. This should be replaced by Array.prototype.indexOf when we drop IE 8 support
+	 * @param {string} serviceName The name of the service being checked
+	 * @param {string[]} allowedServicesList The list of services allowed by the user
+	 * @returns {boolean} Returns true if service is in the allowed list
+	 * @private
+	 */
+	function isServiceAllowed(serviceName, allowedServicesList) {
+		for (var i = 0, len = allowedServicesList.length; i < len; i++) {
+			if (allowedServicesList[i] === serviceName) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
 	 * This object is used as a stub for application/context that is normally passed into services/modules/behaviors at create time.
-	 * It exposes the stubbed services passed in through the getService() method and can also return real services if necessary.
+	 * It exposes the stubbed services passed in through the getService() method. Also allows the use of pre-registered services.
 	 * @param {Object} serviceStubs A map of service stubs
+	 * @param {string[]} [allowedServicesList] List of real services to allow access to
 	 * @constructor
 	 */
-	Box.TestServiceProvider = function(serviceStubs) {
+	Box.TestServiceProvider = function(serviceStubs, allowedServicesList) {
 		this.stubs = serviceStubs || {};
+		this.allowedServicesList = allowedServicesList || [];
+		this.serviceInstances = {}; // Stores the instances of pre-registered services
 	};
 
 	Box.TestServiceProvider.prototype = {
@@ -565,23 +597,44 @@ Box.DOMEventDelegate = (function() {
 		 * Will retrieve either a service stub (prioritized) or the real service. Returns null if neither exists.
 		 * @param {string} serviceName The name of the service being retrieved
 		 * @returns {?Object} A service object or null if none exists
+		 * @throws {Error} Will throw an error if service does not exist
 		 */
 		getService: function(serviceName) {
-			var service = this.stubs[serviceName],
-				preRegisteredService;
+			var service = this.stubs[serviceName];
 
 			// Return a service stub if found
 			if (service) {
 				return service;
 			}
 
-			// Return a real registered service, if it exists (sometimes you want the real deal, i.e. utils)
-			preRegisteredService = application.getServiceForTest(serviceName, this);
-			if (preRegisteredService) {
-				return preRegisteredService;
-			}
+			// Check if this service is allowed to be pre-registered
+			if (isServiceAllowed(serviceName, this.allowedServicesList)) {
+				// Now check if we've already created the service instance
+				if (this.serviceInstances.hasOwnProperty(serviceName)) {
+					return this.serviceInstances[serviceName];
+				} else {
+					var preRegisteredService = application.getServiceForTest(serviceName, this);
+					if (preRegisteredService) {
+						// Save the instance for the next call to getService()
+						this.serviceInstances[serviceName] = preRegisteredService;
+						return preRegisteredService;
+					} else {
+						throw new Error('Service "' + serviceName + '" does not exist.');
+					}
+				}
 
-			return null;
+			} else {
+				throw new Error('Service "' + serviceName + '" is not on the `allowedServiceList`. Use "new Box.TestServiceProvider({ ...stubs... }, [\'' + serviceName + '\']);" or stub the service out.');
+			}
+		},
+
+		/**
+		 * Checks if a service exists
+		 * @param {string} serviceName The name of the service to check.
+		 * @returns {boolean} True, if service exist. False, otherwise.
+		 */
+		hasService: function(serviceName) {
+			return this.stubs.hasOwnProperty(serviceName) || isServiceAllowed(serviceName, this.allowedServicesList) && application.hasService(serviceName);
 		},
 
 		/**
@@ -599,11 +652,13 @@ Box.DOMEventDelegate = (function() {
 	};
 
 	// Add stubbed functions onto prototype for testing convenience
-	var stubName;
-	for (var i = 0, len = APPLICATION_CONTEXT_STUBS.length; i < len; i++) {
-		stubName = APPLICATION_CONTEXT_STUBS[i];
-		Box.TestServiceProvider.prototype[stubName] = functionStub(stubName);
-	}
+	(function() {
+		var stubName;
+		for (var i = 0, len = APPLICATION_CONTEXT_STUBS.length; i < len; i++) {
+			stubName = APPLICATION_CONTEXT_STUBS[i];
+			Box.TestServiceProvider.prototype[stubName] = functionStub(stubName);
+		}
+	}());
 
 }());
 
@@ -630,4 +685,3 @@ Box.DOMEventDelegate = (function() {
 // Potentially window is not defined yet, so bind to 'this' instead
 }(typeof window !== 'undefined' ? window : this));
 // End Wrapper
-

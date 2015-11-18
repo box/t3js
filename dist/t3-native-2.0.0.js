@@ -1,4 +1,4 @@
-/*! t3-native v 1.5.1*/
+/*! t3-native v2.0.0 */
 /*!
 Copyright 2015 Box, Inc. All rights reserved.
 
@@ -155,9 +155,9 @@ Box.EventTarget = (function() {
 
 
 Box.NativeDOM = (function(){
-    'use strict';
+	'use strict';
 
-    return {
+	return {
 
 		type: 'native',
 
@@ -208,7 +208,7 @@ Box.NativeDOM = (function(){
 		off: function(element, type, listener) {
 			element.removeEventListener(type, listener, false);
 		}
-    };
+	};
 }());
 
 Box.DOM = Box.NativeDOM;
@@ -225,7 +225,7 @@ Box.DOMEventDelegate = (function() {
 
 	// Supported events for modules. Only events that bubble properly can be used in T3.
 	var EVENT_TYPES = ['click', 'mouseover', 'mouseout', 'mousedown', 'mouseup',
-			'mouseenter', 'mouseleave', 'keydown', 'keyup', 'submit', 'change',
+			'mouseenter', 'mouseleave', 'mousemove', 'keydown', 'keyup', 'submit', 'change',
 			'contextmenu', 'dblclick', 'input', 'focusin', 'focusout'];
 
 
@@ -431,6 +431,15 @@ Box.Context = (function() {
 		},
 
 		/**
+		 * Checks if a service exists
+		 * @param {string} serviceName The name of the service to check.
+		 * @returns {boolean} True, if service exist. False, otherwise.
+		 */
+		hasService: function(serviceName) {
+			return this.application.hasService(serviceName);
+		},
+
+		/**
 		 * Returns any configuration information that was output into the page
 		 * for this instance of the module.
 		 * @param {string} [name] Specific config parameter
@@ -541,7 +550,6 @@ Box.Application = (function() {
 		services = {},       // Information about each registered service by serviceName
 		behaviors = {},      // Information about each registered behavior by behaviorName
 		instances = {},      // Module instances keyed by DOM element id
-		exports = [],        // Method names that were added to application/context by services
 		initialized = false, // Flag whether the application has been initialized
 
 		application = new Box.EventTarget();	// base object for application
@@ -608,12 +616,6 @@ Box.Application = (function() {
 		behaviors = {};
 		instances = {};
 		initialized = false;
-
-		for (var i = 0; i < exports.length; i++) {
-			delete application[exports[i]];
-			delete Box.Context.prototype[exports[i]];
-		}
-		exports = [];
 	}
 
 
@@ -738,7 +740,8 @@ Box.Application = (function() {
 	/**
 	 * Returns the requested service
 	 * @param {string} serviceName The name of the service to retrieve.
-	 * @returns {!Object} An object if the service is found or null if not.
+	 * @returns {Object} An object if the service
+	 * @throws {Error} If service does not exist or there is a circular dependency
 	 * @private
 	 */
 	function getService(serviceName) {
@@ -747,23 +750,25 @@ Box.Application = (function() {
 
 		if (serviceData) {
 
-			// check for circular dependencies
-			if (isServiceBeingInstantiated(serviceName)) {
-				error(new ReferenceError('Circular service dependency: ' + serviceStack.join(' -> ') + ' -> ' + serviceName));
-				return null;
-			}
-
-			// flag that this service is being initialized just in case there's a circular dependency issue
-			serviceStack.push(serviceName);
-
 			if (!serviceData.instance) {
-				serviceData.instance = serviceData.creator(application);
-			}
+				// check for circular dependencies
+				if (isServiceBeingInstantiated(serviceName)) {
+					error(new ReferenceError('Circular service dependency: ' + serviceStack.join(' -> ') + ' -> ' + serviceName));
+					return null;
+				}
 
-			// no error was thrown for circular dependencies, so we're done
-			serviceStack.pop();
+				// flag that this service is being initialized just in case there's a circular dependency issue
+				serviceStack.push(serviceName);
+
+				serviceData.instance = serviceData.creator(application);
+
+				// no error was thrown for circular dependencies, so we're done
+				serviceStack.pop();
+			}
 
 			return serviceData.instance;
+		} else {
+			error(new Error('Service "' + serviceName + '" not found'));
 		}
 
 		return null;
@@ -773,6 +778,7 @@ Box.Application = (function() {
 	 * Gets the behaviors associated with a particular module
 	 * @param {Box.Application~ModuleInstanceData} instanceData Module with behaviors
 	 * @returns {Array} Array of behavior instances
+	 * @throws {Error} If behavior does not exist
 	 * @private
 	 */
 	function getBehaviors(instanceData) {
@@ -780,29 +786,38 @@ Box.Application = (function() {
 			behaviorNames,
 			behaviorData,
 			behaviorInstances = [],
-			moduleBehaviorInstances;
+			includedBehaviors = {}, // Used to de-dupe behaviors
+			moduleBehaviorInstances,
+			behaviorName;
 
 		behaviorNames = instanceData.instance.behaviors || [];
 
 		for (i = 0; i < behaviorNames.length; i++) {
+			behaviorName = behaviorNames[i];
 
 			if (!('behaviorInstances' in instanceData)) {
 				instanceData.behaviorInstances = {};
 			}
 
 			moduleBehaviorInstances = instanceData.behaviorInstances;
-			behaviorData = behaviors[behaviorNames[i]];
+			behaviorData = behaviors[behaviorName];
 
-			if (behaviorData) {
+			// First make sure we haven't already included this behavior for this module
+			if (behaviorName in includedBehaviors) {
+				error(new Error('Behavior "' + behaviorName + '" cannot be specified twice in a module.'));
+			} else if (behaviorData) {
 
-				if (!moduleBehaviorInstances[behaviorNames[i]]) {
-					moduleBehaviorInstances[behaviorNames[i]] = behaviorData.creator(instanceData.context);
+				if (!moduleBehaviorInstances[behaviorName]) {
+					moduleBehaviorInstances[behaviorName] = behaviorData.creator(instanceData.context);
 				}
 
-				behaviorInstances.push(moduleBehaviorInstances[behaviorNames[i]]);
+				behaviorInstances.push(moduleBehaviorInstances[behaviorName]);
 			} else {
-				error(new Error('Behavior "' + behaviorNames[i] + '" not found'));
+				error(new Error('Behavior "' + behaviorName + '" not found'));
 			}
+
+			// Track which behaviors are included so we can catch duplicates
+			includedBehaviors[behaviorName] = true;
 		}
 
 		return behaviorInstances;
@@ -920,13 +935,14 @@ Box.Application = (function() {
 		 */
 		isStarted: function(element) {
 			var instanceData = getInstanceDataByElement(element);
-			return (typeof instanceData === 'object');
+			return typeof instanceData === 'object';
 		},
 
 		/**
 		 * Begins the lifecycle of a module (registers and binds listeners)
 		 * @param {HTMLElement} element DOM element associated with module to be started
 		 * @returns {Box.Application} The application object.
+		 * @throws {Error} If a module being started is not defined
 		 */
 		start: function(element) {
 			var moduleName = getModuleName(element),
@@ -965,11 +981,7 @@ Box.Application = (function() {
 					eventDelegates: []
 				};
 
-				bindEventListeners(instanceData);
-
 				instances[element.id] = instanceData;
-
-				callModuleMethod(instanceData.instance, 'init');
 
 				var moduleBehaviors = getBehaviors(instanceData),
 					behaviorInstance;
@@ -978,6 +990,12 @@ Box.Application = (function() {
 					behaviorInstance = moduleBehaviors[i];
 					callModuleMethod(behaviorInstance, 'init');
 				}
+
+				// Initialize module only after behaviors are initialized
+				callModuleMethod(instanceData.instance, 'init');
+
+				// Bind events after initialization is complete to avoid event timing issues
+				bindEventListeners(instanceData);
 
 			}
 
@@ -988,6 +1006,7 @@ Box.Application = (function() {
 		 * Ends the lifecycle of a module (unregisters and unbinds listeners)
 		 * @param {HTMLElement} element DOM element associated with module to be stopped
 		 * @returns {Box.Application} The application object.
+		 * @throws {Error} If a module being stopped doesn't exist
 		 */
 		stop: function(element) {
 			var instanceData = getInstanceDataByElement(element);
@@ -1058,6 +1077,7 @@ Box.Application = (function() {
 		 * @param {string} moduleName Unique module identifier
 		 * @param {Function} creator Factory function used to generate the module
 		 * @returns {Box.Application} The application object.
+		 * @throws {Error} If a module has already been added
 		 */
 		addModule: function(moduleName, creator) {
 			if (typeof modules[moduleName] !== 'undefined') {
@@ -1120,58 +1140,20 @@ Box.Application = (function() {
 		 * Registers a new service
 		 * @param {string} serviceName Unique service identifier
 		 * @param {Function} creator Factory function used to generate the service
-		 * @param {Object} [options] Additional options
-		 * @param {string[]} [options.exports] Method names to expose on context and application
 		 * @returns {Box.Application} The application object.
+		 * @throws {Error} If a service has already been added
 		 */
-		addService: function(serviceName, creator, options) {
+		addService: function(serviceName, creator) {
 
 			if (typeof services[serviceName] !== 'undefined') {
 				error(new Error('Service ' + serviceName + ' has already been added.'));
 				return this;
 			}
 
-			options = options || {};
-
 			services[serviceName] = {
 				creator: creator,
 				instance: null
 			};
-
-			if (options.exports) {
-				var i,
-					length = options.exports.length;
-
-				for (i = 0; i < length; i++) {
-
-					var exportedMethodName = options.exports[i];
-
-					/* eslint-disable no-loop-func */
-					var handler = (function(methodName) {
-						return function() {
-							var service = getService(serviceName);
-							return service[methodName].apply(service, arguments);
-						};
-					}(exportedMethodName));
-					/* eslint-enable no-loop-func */
-
-					if (exportedMethodName in this) {
-						error(new Error(exportedMethodName + ' already exists on Application object'));
-						return this;
-					} else {
-						this[exportedMethodName] = handler;
-					}
-
-					if (exportedMethodName in Box.Context.prototype) {
-						error(new Error(exportedMethodName + ' already exists on Context prototype'));
-						return this;
-					} else {
-						Box.Context.prototype[exportedMethodName] = handler;
-					}
-
-					exports.push(exportedMethodName);
-				}
-			}
 
 			return this;
 		},
@@ -1183,6 +1165,14 @@ Box.Application = (function() {
 		 */
 		getService: getService,
 
+		/**
+		 * Checks if a service exists
+		 * @param {string} serviceName The name of the service to check.
+		 * @returns {boolean} True, if service exist. False, otherwise.
+		 */
+		hasService: function(serviceName) {
+			return services.hasOwnProperty(serviceName);
+		},
 
 		//----------------------------------------------------------------------
 		// Behavior-Related
@@ -1193,6 +1183,7 @@ Box.Application = (function() {
 		 * @param {string} behaviorName Unique behavior identifier
 		 * @param {Function} creator Factory function used to generate the behavior
 		 * @returns {Box.Application} The application object.
+		 * @throws {Error} If a behavior has already been added
 		 */
 		addBehavior: function(behaviorName, creator) {
 			if (typeof behaviors[behaviorName] !== 'undefined') {
@@ -1349,4 +1340,3 @@ Box.Application = (function() {
 // Potentially window is not defined yet, so bind to 'this' instead
 }(typeof window !== 'undefined' ? window : this));
 // End Wrapper
-
