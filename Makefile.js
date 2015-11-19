@@ -179,6 +179,9 @@ function updateReadme(version) {
  * @private
  */
 function generateDistFiles(config) {
+	// Delete package.json from the cache since it can get updated by npm version
+	delete require.cache[require.resolve('./package.json')];
+
 	var pkg = require('./package.json'),
 		distFilename = DIST_DIR + config.name + '.js',
 		minDistFilename = distFilename.replace(/\.js$/, '.min.js'),
