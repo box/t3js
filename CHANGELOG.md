@@ -1,3 +1,8 @@
+v2.0.2 - November 18, 2015
+
+* 2.0.2 (Jeff Tan)
+* Remove package.json caching in the dist function (Jeff Tan)
+
 v2.0.1 - November 18, 2015
 
 * 2.0.1 (Jeff Tan)
