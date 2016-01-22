@@ -96,6 +96,23 @@ describe('Box.DOMEventDelegate', function() {
 				click(testElement.firstChild);
 			});
 
+			it('should pass three arguments to onclick when element has no ancestor with a data-type or data-module', function() {
+
+				delegate = new Box.DOMEventDelegate(testElement, {
+					onclick: sandbox.mock().withExactArgs(
+						sinon.match({ type: 'click' }),
+						null,
+						''
+					)
+				});
+
+				delegate.attachEvents();
+
+				testElement.removeAttribute('data-module');
+				testElement.firstChild.removeAttribute('data-type');
+				click(testElement.firstChild);
+			});
+
 			it('should respond to click only once when called twice', function() {
 
 				delegate = new Box.DOMEventDelegate(testElement, {
