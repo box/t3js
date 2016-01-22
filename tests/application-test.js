@@ -856,6 +856,13 @@ describe('Box.Application', function() {
 				assert.deepEqual(config, { name: 'box' }, 'Configuration key name should be "box".');
 			});
 
+			it('should return an object before module initializes when the module has configuration', function() {
+				Box.Application.addModule('test', sandbox.stub().returns({}));
+
+				var config = Box.Application.getModuleConfig(moduleWithConfig);
+				assert.deepEqual(config, { name: 'box' }, 'Configuration key name should be "box".');
+			});
+
 			it('should return config value when name specified', function() {
 				Box.Application.addModule('test', sandbox.mock().withArgs(sinon.match.any).returns({}));
 				Box.Application.start(moduleWithConfig);
