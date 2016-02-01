@@ -1,4 +1,4 @@
-/*! t3-jquery v2.0.2 */
+/*! t3-jquery v2.1.0 */
 /*!
 Copyright 2015 Box, Inc. All rights reserved.
 
@@ -258,16 +258,19 @@ Box.DOMEventDelegate = (function() {
 	 * @returns {HTMLElement} The matching element or null if not found.
 	 */
 	function getNearestTypeElement(element) {
-		var found = isTypeElement(element);
+		var found = false;
 
 		// We need to check for the existence of 'element' since occasionally we call this on a detached element node.
 		// For example:
 		//  1. event handlers like mouseout may sometimes detach nodes from the DOM
 		//  2. event handlers like mouseleave will still fire on the detached node
-		// Without checking the existence of a parentNode and returning null, we would throw errors
-		while (!found && element && !isModuleElement(element)) {
-			element = element.parentNode;
+		// Checking existence of element.parentNode ensures the element is a valid HTML Element
+		while (!found && element && element.parentNode && !isModuleElement(element)) {
 			found = isTypeElement(element);
+
+			if (!found) {
+				element = element.parentNode;
+			}
 		}
 
 		return found ? element : null;
@@ -1105,33 +1108,37 @@ Box.Application = (function() {
 		 */
 		getModuleConfig: function(element, name) {
 
-			var instanceData = getInstanceDataByElement(element),
-				configElement;
+			var instanceData = getInstanceDataByElement(element);
+			var moduleConfig = null;
 
-			if (instanceData) {
+			if (instanceData && instanceData.config) {
+				// Check if we've already read the configurations before
+				moduleConfig = instanceData.config;
+			} else {
+				// Read the special script element that stores module configuration in the markup
+				var configElement = Box.DOM.query(element, 'script[type="text/x-config"]');
 
-				if (!instanceData.config) {
-					// <script type="text/x-config"> is used to store JSON data
-					configElement = Box.DOM.query(element, 'script[type="text/x-config"]');
-
-					// <script> tag supports .text property
-					if (configElement) {
-						instanceData.config = JSON.parse(configElement.text);
-					}
+				// <script> tag supports .text property
+				if (configElement) {
+					moduleConfig = JSON.parse(configElement.text);
 				}
 
-				if (!instanceData.config) {
-					return null;
-				} else if (typeof name === 'undefined') {
-					return instanceData.config;
-				} else if (name in instanceData.config) {
-					return instanceData.config[name];
-				} else {
-					return null;
+				// Cache the configurations for performance, if the module instance has been created
+				if (instanceData) {
+					instanceData.config = moduleConfig;
 				}
 			}
 
-			return null;
+			if (!moduleConfig) {
+				return null;
+			} else if (typeof name === 'undefined') {
+				return moduleConfig;
+			} else if (name in moduleConfig) {
+				return moduleConfig[name];
+			} else {
+				return null;
+			}
+
 		},
 
 		//----------------------------------------------------------------------

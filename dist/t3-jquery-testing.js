@@ -1,4 +1,4 @@
-/*! t3-jquery-testing v2.0.2 */
+/*! t3-jquery-testing v2.1.0 */
 /*!
 Copyright 2015 Box, Inc. All rights reserved.
 
@@ -258,16 +258,19 @@ Box.DOMEventDelegate = (function() {
 	 * @returns {HTMLElement} The matching element or null if not found.
 	 */
 	function getNearestTypeElement(element) {
-		var found = isTypeElement(element);
+		var found = false;
 
 		// We need to check for the existence of 'element' since occasionally we call this on a detached element node.
 		// For example:
 		//  1. event handlers like mouseout may sometimes detach nodes from the DOM
 		//  2. event handlers like mouseleave will still fire on the detached node
-		// Without checking the existence of a parentNode and returning null, we would throw errors
-		while (!found && element && !isModuleElement(element)) {
-			element = element.parentNode;
+		// Checking existence of element.parentNode ensures the element is a valid HTML Element
+		while (!found && element && element.parentNode && !isModuleElement(element)) {
 			found = isTypeElement(element);
+
+			if (!found) {
+				element = element.parentNode;
+			}
 		}
 
 		return found ? element : null;

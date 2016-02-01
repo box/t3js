@@ -1,3 +1,9 @@
+v2.1.0 - January 31, 2016
+
+* 2.1.0 (Jeff Tan)
+* Add basic element check to DOMEventDelegate (Jeff Tan)
+* Allow getModuleConfig() to execute before module instantiation (Jeff Tan)
+
 v2.0.2 - November 18, 2015
 
 * 2.0.2 (Jeff Tan)
