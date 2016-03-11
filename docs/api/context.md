@@ -47,11 +47,6 @@ This method is a proxy to <a href="../application/#getModuleConfig">Application.
 	</thead>
 	<tbody>
 		<tr>
-			<td class="required">element</td>
-			<td>HTMLElement</td>
-			<td>Module root element.</td>
-		</tr>
-		<tr>
 			<td class="optional">name</td>
 			<td>string</td>
 			<td>Specific configuration value to retrieve.</td>
