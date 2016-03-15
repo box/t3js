@@ -754,7 +754,7 @@ describe('Box.Application', function() {
 				Box.Application.broadcast('abc', messageData);
 			});
 
-			it('should use correct handler of onmessage object when called', function() {
+			it('should call corresponding message handler when a message is received', function() {
 				var messageData = {};
 				Box.Application.addModule('test', sandbox.stub().returns({
 					onmessage: {
