@@ -562,8 +562,8 @@ describe('Box.Application', function() {
 
 			it('should still be called with a null element when an event occurs on a recently detached element', function() {
 				// Background on this edge case:
-				//  1. event handlers like mouseout may sometimes detach nodes from the DOM
-				//  2. event handlers like mouseleave will still fire on the detached node
+				//	1. event handlers like mouseout may sometimes detach nodes from the DOM
+				//	2. event handlers like mouseleave will still fire on the detached node
 				// Without checking the existence of a parentNode and returning null, we would throw errors
 
 				// Scenario appears unique to jquery
@@ -750,6 +750,18 @@ describe('Box.Application', function() {
 				}));
 				Box.Application.start(testModule);
 				Box.Application.start(testModule2);
+
+				Box.Application.broadcast('abc', messageData);
+			});
+
+			it('should call corresponding message handler when a message is received', function() {
+				var messageData = {};
+				Box.Application.addModule('test', sandbox.stub().returns({
+					onmessage: {
+						'abc': sandbox.mock().withArgs(messageData)
+					}
+				}));
+				Box.Application.start(testModule);
 
 				Box.Application.broadcast('abc', messageData);
 			});
