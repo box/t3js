@@ -1,4 +1,4 @@
-/*! t3-jquery v2.1.0 */
+/*! t3-jquery v2.2.0 */
 /*!
 Copyright 2015 Box, Inc. All rights reserved.
 
@@ -578,20 +578,6 @@ Box.Application = (function() {
 	}
 
 	/**
-	 * Creates a new version of a function whose this-value is bound to a specific
-	 * object.
-	 * @param {Function} method The function to bind.
-	 * @param {Object} thisValue The this-value to set for the function.
-	 * @returns {Function} A bound version of the function.
-	 * @private
-	 */
-	function bind(method, thisValue) {
-		return function() {
-			return method.apply(thisValue, arguments);
-		};
-	}
-
-	/**
 	 * Simple implementation of Array.prototype.indexOf().
 	 * @param {*[]} items An array of items to search.
 	 * @param {*} item The item to search for in the array.
@@ -889,6 +875,26 @@ Box.Application = (function() {
 		return instances[element.id];
 	}
 
+	/**
+	 * Gets message handlers from the provided module instance
+	 * @param {Box.Application~ModuleInstance|Box.Application~BehaviorInstance} instance Messages handlers will be retrieved from the Instance object
+	 * @param {String} name The name of the message to be handled
+   * @param {Any} data A playload to be passed to the message handler
+	 * @returns {void}
+	 * @private
+	 */
+	function callMessageHandler(instance, name, data) {
+
+		// If onmessage is an object call message handler with the matching key (if any)
+		if (instance.onmessage !== null && typeof instance.onmessage === 'object' && instance.onmessage.hasOwnProperty(name)) {
+			instance.onmessage[name](data);
+
+		// Otherwise if message name exists in messages call onmessage with name, data
+		} else if (indexOf(instance.messages || [], name) !== -1) {
+			instance.onmessage(name, data);
+		}
+	}
+
 	//--------------------------------------------------------------------------
 	// Public
 	//--------------------------------------------------------------------------
@@ -1120,7 +1126,11 @@ Box.Application = (function() {
 
 				// <script> tag supports .text property
 				if (configElement) {
-					moduleConfig = JSON.parse(configElement.text);
+					try {
+						moduleConfig = JSON.parse(configElement.text);
+					} catch (exception) {
+						error(new Error('Module with id ' + element.id + ' has a malformed config.'));
+					}
 				}
 
 				// Cache the configurations for performance, if the module instance has been created
@@ -1223,32 +1233,21 @@ Box.Application = (function() {
 				id,
 				instanceData,
 				behaviorInstance,
-				moduleBehaviors,
-				messageHandlers;
+				moduleBehaviors;
 
 			for (id in instances) {
 
 				if (instances.hasOwnProperty(id)) {
-					messageHandlers = [];
 					instanceData = instances[id];
 
 					// Module message handler is called first
-					if (indexOf(instanceData.instance.messages || [], name) !== -1) {
-						messageHandlers.push(bind(instanceData.instance.onmessage, instanceData.instance));
-					}
+					callMessageHandler(instanceData.instance, name, data);
 
 					// And then any message handlers defined in module's behaviors
 					moduleBehaviors = getBehaviors(instanceData);
 					for (i = 0; i < moduleBehaviors.length; i++) {
 						behaviorInstance = moduleBehaviors[i];
-
-						if (indexOf(behaviorInstance.messages || [], name) !== -1) {
-							messageHandlers.push(bind(behaviorInstance.onmessage, behaviorInstance));
-						}
-					}
-
-					for (i = 0; i < messageHandlers.length; i++) {
-						messageHandlers[i](name, data);
+						callMessageHandler(behaviorInstance, name, data);
 					}
 				}
 

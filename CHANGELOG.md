@@ -1,3 +1,12 @@
+v2.2.0 - March 14, 2016
+
+* 2.2.0 (Jeff Tan)
+* Use recommended wording (Justin Bennett)
+* Remove bind, reword test (Justin Bennett)
+* Remove unnecessary `bind` call. (Zephraph)
+* Support cleaner onmessage handler (Zephraph)
+* Add malformed JSON error message (Zephraph)
+
 v2.1.0 - January 31, 2016
 
 * 2.1.0 (Jeff Tan)
