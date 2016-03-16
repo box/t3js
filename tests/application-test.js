@@ -766,6 +766,19 @@ describe('Box.Application', function() {
 				Box.Application.broadcast('abc', messageData);
 			});
 
+			it('should provide the instance of the module or behavior to the message handler when a message is received', function() {
+				Box.Application.addModule('test', sandbox.stub().returns({
+					onmessage: {
+						'abc': function() {
+							assert.isTrue(this.onmessage !== undefined);
+						}
+					}
+				}));
+				Box.Application.start(testModule);
+
+				Box.Application.broadcast('abc');
+			});
+
 			it('should call onmessage of behaviors listening in correct order when defined', function() {
 				var messageData = {},
 					moduleMessageSpy = sandbox.spy(),
