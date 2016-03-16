@@ -1,4 +1,4 @@
-/*! t3-jquery v2.2.0 */
+/*! t3-jquery v2.3.0 */
 /*!
 Copyright 2015 Box, Inc. All rights reserved.
 
@@ -887,11 +887,11 @@ Box.Application = (function() {
 
 		// If onmessage is an object call message handler with the matching key (if any)
 		if (instance.onmessage !== null && typeof instance.onmessage === 'object' && instance.onmessage.hasOwnProperty(name)) {
-			instance.onmessage[name](data);
+			instance.onmessage[name].call(instance, data);
 
 		// Otherwise if message name exists in messages call onmessage with name, data
 		} else if (indexOf(instance.messages || [], name) !== -1) {
-			instance.onmessage(name, data);
+			instance.onmessage.call(instance, name, data);
 		}
 	}
 

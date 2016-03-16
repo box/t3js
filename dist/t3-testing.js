@@ -1,4 +1,4 @@
-/*! t3-testing v2.2.0 */
+/*! t3-testing v2.3.0 */
 /*!
 Copyright 2015 Box, Inc. All rights reserved.
 

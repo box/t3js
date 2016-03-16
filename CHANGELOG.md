@@ -1,3 +1,8 @@
+v2.3.0 - March 16, 2016
+
+* 2.3.0 (Jeff Tan)
+* Set the handler context to the actual behavior or module instance (Justin Bennett)
+
 v2.2.0 - March 14, 2016
 
 * 2.2.0 (Jeff Tan)

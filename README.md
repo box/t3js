@@ -44,16 +44,16 @@ The last published release:
 
 ```
 <!-- Recommended: Latest version of T3 -->
-<script src="https://cdn.rawgit.com/box/t3js/v2.2.0/dist/t3.js"></script>
+<script src="https://cdn.rawgit.com/box/t3js/v2.3.0/dist/t3.js"></script>
 
 <!-- Recommended: Latest minified version of T3 -->
-<script src="https://cdn.rawgit.com/box/t3js/v2.2.0/dist/t3.min.js"></script>
+<script src="https://cdn.rawgit.com/box/t3js/v2.3.0/dist/t3.min.js"></script>
 
 <!-- jQuery version (IE8 + 1.8.0+ jQuery) -->
-<script src="https://cdn.rawgit.com/box/t3js/v2.2.0/dist/t3-jquery.js"></script>
+<script src="https://cdn.rawgit.com/box/t3js/v2.3.0/dist/t3-jquery.js"></script>
 
 <!-- jQuery minified version (IE8 + 1.8.0+ jQuery) -->
-<script src="https://cdn.rawgit.com/box/t3js/v2.2.0/dist/t3-jquery.min.js"></script>
+<script src="https://cdn.rawgit.com/box/t3js/v2.3.0/dist/t3-jquery.min.js"></script>
 ```
 ## Upgrade from 1.5.1 to 2.0.0
 
