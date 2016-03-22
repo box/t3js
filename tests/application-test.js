@@ -3,8 +3,8 @@
  * @author Box
  */
 
-
 describe('Box.Application', function() {
+
 	'use strict';
 
 	leche.withData({
@@ -990,5 +990,79 @@ describe('Box.Application', function() {
 			});
 
 		});
+
+		describe('reportError()', function() {
+
+			it('should throw an error when in debug mode', function() {
+				Box.Application.init({
+					debug: true
+				});
+
+				assert.throws(function() {
+					Box.Application.reportError(new Error('blah'));
+				}, /blah/);
+
+			});
+
+			it('should fire an "error" event when in debug mode', function() {
+				Box.Application.init({
+					debug: false
+				});
+
+				var error = new Error('blah');
+				var errorHandlerMock = sandbox.mock().withArgs({
+					type: 'error',
+					data: {
+						exception: error
+					}
+				});
+
+				Box.Application.on('error', errorHandlerMock);
+
+				Box.Application.reportError(error);
+
+				Box.Application.off('error', errorHandlerMock);
+
+			});
+
+		});
+
+		describe('reportWarning()', function() {
+
+			it('should do a `console.warn` when in debug mode', function() {
+				Box.Application.init({
+					debug: true
+				});
+
+				sandbox.mock(Box.Application).expects('getGlobal').withArgs('console').returns({
+					warn: sandbox.mock().withArgs('blah')
+				});
+
+				Box.Application.reportWarning('blah');
+			});
+
+			it('should fire a "warning" event when not in debug mode', function() {
+				Box.Application.init({
+					debug: false
+				});
+
+				var warningData = {
+					foo: 'bar'
+				};
+				var warningMock = sandbox.mock().withArgs({
+					type: 'warning',
+					data: warningData
+				});
+
+				Box.Application.on('warning', warningMock);
+
+				Box.Application.reportWarning(warningData);
+
+				Box.Application.off('warning', warningMock);
+			});
+
+		});
+
 	});
+
 });
