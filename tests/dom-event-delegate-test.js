@@ -125,6 +125,32 @@ describe('Box.DOMEventDelegate', function() {
 				click(testElement.firstChild);
 			});
 
+			it('should respond to custom events when a custom event type list is specified', function() {
+
+				delegate = new Box.DOMEventDelegate(testElement, {
+					ontouchstart: sandbox.mock()
+				}, ['touchstart']);
+
+				delegate.attachEvents();
+
+				var event = document.createEvent('Event');
+				event.initEvent('touchstart', true, true);
+
+				testElement.firstChild.dispatchEvent(event);
+			});
+
+			it('should respond only to custom events when a custom event type list is specified', function() {
+
+				delegate = new Box.DOMEventDelegate(testElement, {
+					onclick: sandbox.mock().never()
+				}, ['onsubmit']);
+
+				delegate.attachEvents();
+
+				click(testElement.firstChild);
+			});
+
+
 		});
 
 		describe('detachEvents()', function() {

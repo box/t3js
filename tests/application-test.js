@@ -145,6 +145,24 @@ describe('Box.Application', function() {
 				Box.Application.start(testModule);
 			});
 
+			it('should bind event handlers with globalConfig.eventTypes when called', function() {
+				var eventTypes = ['touchstart'];
+				Box.Application.init({
+					eventTypes: eventTypes
+				});
+
+				var domEventDelegateSpy = sandbox.spy(Box, 'DOMEventDelegate');
+				Box.Application.addModule('test', function() {
+					return {};
+				});
+
+				Box.Application.start(testModule);
+
+				assert.deepEqual(domEventDelegateSpy.getCall(0).args[2], eventTypes);
+
+				domEventDelegateSpy.restore();
+			});
+
 			it('should call init() behaviors in order they are defined and then the module when called', function() {
 				var moduleInitSpy = sandbox.spy(),
 					behaviorInitSpy = sandbox.spy(),
