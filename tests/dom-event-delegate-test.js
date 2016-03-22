@@ -50,7 +50,7 @@ describe('Box.DOMEventDelegate', function() {
 			var testElement;
 
 			beforeEach(function() {
-				testElement = $('<div data-module="test"><input type="button" data-type="submit"></div>')[0];
+				testElement = $('<div data-module="test"><input type="button" data-type="submit"><button id="non-typed-button"></button></div>')[0];
 				$('#mocha-fixture').append(testElement);
 			});
 
@@ -78,6 +78,22 @@ describe('Box.DOMEventDelegate', function() {
 				delegate.attachEvents();
 
 				click(testElement.firstChild);
+			});
+
+			it('should pass three arguments to onclick when element with both data-type and data-module is clicked', function() {
+
+				delegate = new Box.DOMEventDelegate(testElement, {
+					onclick: sandbox.mock().withExactArgs(
+						sinon.match({ type: 'click' }),
+						testElement,
+						'form-type'
+					)
+				});
+
+				delegate.attachEvents();
+
+				testElement.setAttribute('data-type', 'form-type');
+				click(document.querySelector('#non-typed-button'));
 			});
 
 			it('should pass three arguments to onclick when a non-data-type element is clicked', function() {
