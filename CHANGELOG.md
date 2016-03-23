@@ -1,3 +1,12 @@
+v2.4.0 - March 23, 2016
+
+* 2.4.0 (Jeff Tan)
+* Add reportWarning to test service provider (Jeff Tan)
+* Add custom event types (Jeff Tan)
+* Add reportWarning to Box.Application (Jeff Tan)
+* Include the data-module element when finding event targets (Jeff Tan)
+* Update Copyright year (Jeff Tan)
+
 v2.3.0 - March 16, 2016
 
 * 2.3.0 (Jeff Tan)

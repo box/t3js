@@ -1,6 +1,6 @@
-/*! t3-jquery v2.3.0 */
+/*! t3-native v2.4.0 */
 /*!
-Copyright 2015 Box, Inc. All rights reserved.
+Copyright 2016 Box, Inc. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -148,19 +148,18 @@ Box.EventTarget = (function() {
 }());
 
 /**
- * @fileoverview DOM abstraction to use jquery to add and remove event listeners
+ * @fileoverview DOM abstraction to use native browser functionality to add and remove event listeners
  * in T3
  * @author jdivock
  */
 
-/* eslint-env jquery */
 
-Box.JQueryDOM = (function() {
+Box.NativeDOM = (function(){
 	'use strict';
 
 	return {
 
-		type: 'jquery',
+		type: 'native',
 
 		/**
 		 * Returns the first element that is a descendant of the element
@@ -170,9 +169,8 @@ Box.JQueryDOM = (function() {
 		 *
 		 * @returns {HTMLElement} first element found matching query
 		 */
-		query: function(root, selector) {
-			// Aligning with native which returns null if not found
-			return jQuery(root).find(selector)[0] || null;
+		query: function(root, selector){
+			return root.querySelector(selector);
 		},
 
 		/**
@@ -183,12 +181,12 @@ Box.JQueryDOM = (function() {
 		 *
 		 * @returns {Array} elements found matching query
 		 */
-		queryAll: function(root, selector) {
-			return jQuery.makeArray(jQuery(root).find(selector));
+		queryAll: function(root, selector){
+			return root.querySelectorAll(selector);
 		},
 
 		/**
-		 * Adds event listener to element via jquery
+		 * Adds event listener to element using native event listener
 		 * @param {HTMLElement} element Target to attach listener to
 		 * @param {string} type Name of the action to listen for
 		 * @param {function} listener Function to be executed on action
@@ -196,11 +194,11 @@ Box.JQueryDOM = (function() {
 		 * @returns {void}
 		 */
 		on: function(element, type, listener) {
-			jQuery(element).on(type, listener);
+			element.addEventListener(type, listener, false);
 		},
 
 		/**
-		 * Removes event listener to element via jquery
+		 * Removes event listener to element using native event listener functions
 		 * @param {HTMLElement} element Target to remove listener from
 		 * @param {string} type Name of the action remove listener from
 		 * @param {function} listener Function to be removed from action
@@ -208,12 +206,12 @@ Box.JQueryDOM = (function() {
 		 * @returns {void}
 		 */
 		off: function(element, type, listener) {
-			jQuery(element).off(type, listener);
+			element.removeEventListener(type, listener, false);
 		}
 	};
 }());
 
-Box.DOM = Box.JQueryDOM;
+Box.DOM = Box.NativeDOM;
 
 /**
  * @fileoverview An object that encapsulates event delegation wireup for a
@@ -226,7 +224,7 @@ Box.DOMEventDelegate = (function() {
 	'use strict';
 
 	// Supported events for modules. Only events that bubble properly can be used in T3.
-	var EVENT_TYPES = ['click', 'mouseover', 'mouseout', 'mousedown', 'mouseup',
+	var DEFAULT_EVENT_TYPES = ['click', 'mouseover', 'mouseout', 'mousedown', 'mouseup',
 			'mouseenter', 'mouseleave', 'mousemove', 'keydown', 'keyup', 'submit', 'change',
 			'contextmenu', 'dblclick', 'input', 'focusin', 'focusout'];
 
@@ -259,18 +257,21 @@ Box.DOMEventDelegate = (function() {
 	 */
 	function getNearestTypeElement(element) {
 		var found = false;
+		var moduleBoundaryReached = false;
 
 		// We need to check for the existence of 'element' since occasionally we call this on a detached element node.
 		// For example:
 		//  1. event handlers like mouseout may sometimes detach nodes from the DOM
 		//  2. event handlers like mouseleave will still fire on the detached node
 		// Checking existence of element.parentNode ensures the element is a valid HTML Element
-		while (!found && element && element.parentNode && !isModuleElement(element)) {
+		while (!found && element && element.parentNode && !moduleBoundaryReached) {
 			found = isTypeElement(element);
+			moduleBoundaryReached = isModuleElement(element);
 
 			if (!found) {
 				element = element.parentNode;
 			}
+
 		}
 
 		return found ? element : null;
@@ -279,19 +280,20 @@ Box.DOMEventDelegate = (function() {
 	/**
 	 * Iterates over each supported event type that is also in the handler, applying
 	 * a callback function. This is used to more easily attach/detach all events.
+	 * @param {string[]} eventTypes A list of event types to iterate over
 	 * @param {Object} handler An object with onclick, onmouseover, etc. methods.
 	 * @param {Function} callback The function to call on each event type.
 	 * @param {Object} [thisValue] The value of "this" inside the callback.
 	 * @returns {void}
 	 * @private
 	 */
-	function forEachEventType(handler, callback, thisValue) {
+	function forEachEventType(eventTypes, handler, callback, thisValue) {
 
 		var i,
 			type;
 
-		for (i = 0; i < EVENT_TYPES.length; i++) {
-			type = EVENT_TYPES[i];
+		for (i = 0; i < eventTypes.length; i++) {
+			type = eventTypes[i];
 
 			// only call the callback if the event is on the handler
 			if (handler['on' + type]) {
@@ -304,9 +306,10 @@ Box.DOMEventDelegate = (function() {
 	 * An object that manages events within a single DOM element.
 	 * @param {HTMLElement} element The DOM element to handle events for.
 	 * @param {Object} handler An object containing event handlers such as "onclick".
+	 * @param {string[]} [eventTypes] A list of event types to handle (events must bubble). Defaults to a common set of events.
 	 * @constructor
 	 */
-	function DOMEventDelegate(element, handler) {
+	function DOMEventDelegate(element, handler, eventTypes) {
 
 		/**
 		 * The DOM element that this object is handling events for.
@@ -320,6 +323,13 @@ Box.DOMEventDelegate = (function() {
 		 * @private
 		 */
 		this._handler = handler;
+
+		/**
+		 * List of event types to handle (make sure these events bubble!)
+		 * @type {string[]}
+		 * @private
+		 */
+		this._eventTypes = eventTypes || DEFAULT_EVENT_TYPES;
 
 		/**
 		 * Tracks event handlers whose this-value is bound to the correct
@@ -357,7 +367,7 @@ Box.DOMEventDelegate = (function() {
 		attachEvents: function() {
 			if (!this._attached) {
 
-				forEachEventType(this._handler, function(eventType) {
+				forEachEventType(this._eventTypes, this._handler, function(eventType) {
 					var that = this;
 
 					function handleEvent() {
@@ -378,7 +388,7 @@ Box.DOMEventDelegate = (function() {
 		 * @returns {void}
 		 */
 		detachEvents: function() {
-			forEachEventType(this._handler, function(eventType) {
+			forEachEventType(this._eventTypes, this._handler, function(eventType) {
 				Box.DOM.off(this.element, eventType, this._boundHandler[eventType]);
 			}, this);
 		}
@@ -824,7 +834,7 @@ Box.Application = (function() {
 	 * @private
 	 */
 	function createAndBindEventDelegate(eventDelegates, element, handler) {
-		var delegate = new Box.DOMEventDelegate(element, handler);
+		var delegate = new Box.DOMEventDelegate(element, handler, globalConfig.eventTypes);
 		eventDelegates.push(delegate);
 		delegate.attachEvents();
 	}
@@ -879,7 +889,7 @@ Box.Application = (function() {
 	 * Gets message handlers from the provided module instance
 	 * @param {Box.Application~ModuleInstance|Box.Application~BehaviorInstance} instance Messages handlers will be retrieved from the Instance object
 	 * @param {String} name The name of the message to be handled
-   * @param {Any} data A playload to be passed to the message handler
+	 * @param {Any} data A playload to be passed to the message handler
 	 * @returns {void}
 	 * @private
 	 */
@@ -1320,7 +1330,27 @@ Box.Application = (function() {
 		 * @param {Error} [exception] The exception object to use.
 		 * @returns {void}
 		 */
-		reportError: error
+		reportError: error,
+
+		/**
+		 * Signals that an warning has occurred.
+		 * If in development mode, console.warn is invoked.
+		 * If in production mode, an event is fired.
+		 * @param {*} data A message string or arbitrary data
+		 * @returns {void}
+		 */
+		reportWarning: function(data) {
+			if (globalConfig.debug) {
+				// We grab console via getGlobal() so we can stub it out in tests
+				var globalConsole = this.getGlobal('console');
+				if (globalConsole && globalConsole.warn) {
+					globalConsole.warn(data);
+				}
+			} else {
+				application.fire('warning', data);
+			}
+		}
+
 	});
 
 }());
