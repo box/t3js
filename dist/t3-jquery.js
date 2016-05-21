@@ -1,4 +1,4 @@
-/*! t3-jquery v2.4.0 */
+/*! t3-jquery v2.5.0 */
 /*!
 Copyright 2016 Box, Inc. All rights reserved.
 
@@ -427,6 +427,7 @@ Box.Context = (function() {
 	//-------------------------------------------------------------------------
 
 	Context.prototype = {
+		constructor: Context,
 
 		/**
 		 * Passthrough method to application that broadcasts messages.

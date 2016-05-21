@@ -1,4 +1,4 @@
-/*! t3-native-testing v2.4.0 */
+/*! t3-native-testing v2.5.0 */
 /*!
 Copyright 2016 Box, Inc. All rights reserved.
 
@@ -605,6 +605,7 @@ Box.DOMEventDelegate = (function() {
 	};
 
 	Box.TestServiceProvider.prototype = {
+		constructor: Box.TestServiceProvider,
 
 		/**
 		 * Will retrieve either a service stub (prioritized) or the real service. Returns null if neither exists.

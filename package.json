@@ -1,7 +1,7 @@
 {
   "name": "t3js",
   "description": "T3 Javascript Framework",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "author": "Box (https://www.box.com/)",
   "files": [
     "LICENSE",

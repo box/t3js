@@ -1,3 +1,8 @@
+v2.5.0 - May 20, 2016
+
+* 2.5.0 (Jeff Tan)
+* Fixes constructor reference in new instances of Box.Context and Box.TestServiceProvider (fixes #172) (Adam Platti)
+
 v2.4.0 - March 23, 2016
 
 * 2.4.0 (Jeff Tan)
