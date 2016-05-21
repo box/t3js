@@ -14,6 +14,14 @@ describe('Box.Context', function() {
 		sandbox.verifyAndRestore();
 	});
 
+	describe('new Box.Context', function(){
+		it('should have Box.Context as its constructor', function(){
+			var context = new Box.Context();
+
+			assert.strictEqual(context.constructor, Box.Context);
+		});
+	});
+
 	describe('broadcast()', function() {
 
 		it('should pass through to application when called', function() {

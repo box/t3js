@@ -22,6 +22,12 @@ describe('Box.TestServiceProvider', function() {
 
 	describe('new Box.TestServiceProvider', function() {
 
+		it('should have Box.TestServiceProvider as its constructor', function(){
+			testServiceProvider = new Box.TestServiceProvider();
+
+			assert.strictEqual(testServiceProvider.constructor, Box.TestServiceProvider);
+		});
+
 		it('should set this.stubs to serviceStubs when called', function() {
 			var serviceStub = {
 				bar: 'baz'
