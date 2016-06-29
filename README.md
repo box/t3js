@@ -55,6 +55,13 @@ The last published release:
 <!-- jQuery minified version (IE8 + 1.8.0+ jQuery) -->
 <script src="https://cdn.rawgit.com/box/t3js/v2.5.0/dist/t3-jquery.min.js"></script>
 ```
+
+You may also use `bower` to install t3js:
+
+```
+bower install t3js
+```
+
 ## Upgrade from 1.5.1 to 2.0.0
 
 T3 2.0.0 was released on November 18th, 2015 with some major changes. To upgrade, please see [these instructions](http://t3js.org/docs/getting-started/migrating-to-2-0-0).
