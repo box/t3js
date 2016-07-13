@@ -1081,6 +1081,22 @@ describe('Box.Application', function() {
 
 		});
 
+		describe('reportInfo()', function() {
+
+			it('should do a `console.info` when in debug mode', function() {
+				Box.Application.init({
+					debug: true
+				});
+
+				sandbox.mock(Box.Application).expects('getGlobal').withArgs('console').returns({
+					info: sandbox.mock().withArgs('blah')
+				});
+
+				Box.Application.reportInfo('blah');
+			});
+
+		});
+
 	});
 
 });
