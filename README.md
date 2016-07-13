@@ -44,16 +44,16 @@ The last published release:
 
 ```
 <!-- Recommended: Latest version of T3 -->
-<script src="https://cdn.rawgit.com/box/t3js/v2.5.0/dist/t3.js"></script>
+<script src="https://cdn.rawgit.com/box/t3js/v2.6.0/dist/t3.js"></script>
 
 <!-- Recommended: Latest minified version of T3 -->
-<script src="https://cdn.rawgit.com/box/t3js/v2.5.0/dist/t3.min.js"></script>
+<script src="https://cdn.rawgit.com/box/t3js/v2.6.0/dist/t3.min.js"></script>
 
 <!-- jQuery version (IE8 + 1.8.0+ jQuery) -->
-<script src="https://cdn.rawgit.com/box/t3js/v2.5.0/dist/t3-jquery.js"></script>
+<script src="https://cdn.rawgit.com/box/t3js/v2.6.0/dist/t3-jquery.js"></script>
 
 <!-- jQuery minified version (IE8 + 1.8.0+ jQuery) -->
-<script src="https://cdn.rawgit.com/box/t3js/v2.5.0/dist/t3-jquery.min.js"></script>
+<script src="https://cdn.rawgit.com/box/t3js/v2.6.0/dist/t3-jquery.min.js"></script>
 ```
 
 You may also use `bower` to install t3js:

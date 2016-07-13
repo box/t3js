@@ -1,3 +1,10 @@
+v2.6.0 - July 13, 2016
+
+* 2.6.0 (Jeff Tan)
+* Add test for reportInfo() method (Mike)
+* Added new method to report console info messages in debug mode (#175) (Mike)
+* Update README.md (Jeff Tan)
+
 v2.5.0 - May 20, 2016
 
 * 2.5.0 (Jeff Tan)

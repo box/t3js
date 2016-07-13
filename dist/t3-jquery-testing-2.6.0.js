@@ -1,4 +1,4 @@
-/*! t3-jquery-testing v2.5.0 */
+/*! t3-jquery-testing v2.6.0 */
 /*!
 Copyright 2016 Box, Inc. All rights reserved.
 
@@ -553,7 +553,7 @@ Box.DOMEventDelegate = (function() {
 	// function stubs that are automatically included on a TestServiceProvider
 	var APPLICATION_CONTEXT_STUBS = [
 		// Shared between Application and Context
-		'broadcast', 'getGlobalConfig', 'reportError', 'reportWarning',
+		'broadcast', 'getGlobalConfig', 'reportError', 'reportWarning', 'reportInfo',
 
 		// Application (only ones that should be called from a service)
 		'start', 'stop', 'startAll', 'stopAll', 'isStarted',

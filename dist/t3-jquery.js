@@ -1,4 +1,4 @@
-/*! t3-jquery v2.5.0 */
+/*! t3-jquery v2.6.0 */
 /*!
 Copyright 2016 Box, Inc. All rights reserved.
 
@@ -1351,6 +1351,22 @@ Box.Application = (function() {
 				}
 			} else {
 				application.fire('warning', data);
+			}
+		},
+
+		/**
+		 * Display console info messages.
+		 * If in development mode, console.info is invoked.
+		 * @param {*} data A message string or arbitrary data
+		 * @returns {void}
+		 */
+		reportInfo: function(data) {
+			if (globalConfig.debug) {
+				// We grab console via getGlobal() so we can stub it out in tests
+				var globalConsole = this.getGlobal('console');
+				if (globalConsole && globalConsole.info) {
+					globalConsole.info(data);
+				}
 			}
 		}
 
