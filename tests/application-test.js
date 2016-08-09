@@ -1097,6 +1097,25 @@ describe('Box.Application', function() {
 
 		});
 
+		describe('setErrorHandler()', function() {
+
+			afterEach(function() {
+				Box.Application.setErrorHandler(undefined);
+			});
+
+			it('should call a custom error handler when one is provided', function() {
+				var customErrorHandler = sandbox.spy();
+				var error = new Error('blah');
+
+				Box.Application.setErrorHandler(customErrorHandler);
+				Box.Application.init();
+				Box.Application.reportError(error);
+
+				assert(customErrorHandler.calledWith(error));
+			});
+
+		});
+
 	});
 
 });
