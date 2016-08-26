@@ -1,4 +1,4 @@
-/*! t3-jquery v2.6.0 */
+/*! t3-native v2.7.0 */
 /*!
 Copyright 2016 Box, Inc. All rights reserved.
 
@@ -148,19 +148,18 @@ Box.EventTarget = (function() {
 }());
 
 /**
- * @fileoverview DOM abstraction to use jquery to add and remove event listeners
+ * @fileoverview DOM abstraction to use native browser functionality to add and remove event listeners
  * in T3
  * @author jdivock
  */
 
-/* eslint-env jquery */
 
-Box.JQueryDOM = (function() {
+Box.NativeDOM = (function(){
 	'use strict';
 
 	return {
 
-		type: 'jquery',
+		type: 'native',
 
 		/**
 		 * Returns the first element that is a descendant of the element
@@ -170,9 +169,8 @@ Box.JQueryDOM = (function() {
 		 *
 		 * @returns {HTMLElement} first element found matching query
 		 */
-		query: function(root, selector) {
-			// Aligning with native which returns null if not found
-			return jQuery(root).find(selector)[0] || null;
+		query: function(root, selector){
+			return root.querySelector(selector);
 		},
 
 		/**
@@ -183,12 +181,12 @@ Box.JQueryDOM = (function() {
 		 *
 		 * @returns {Array} elements found matching query
 		 */
-		queryAll: function(root, selector) {
-			return jQuery.makeArray(jQuery(root).find(selector));
+		queryAll: function(root, selector){
+			return root.querySelectorAll(selector);
 		},
 
 		/**
-		 * Adds event listener to element via jquery
+		 * Adds event listener to element using native event listener
 		 * @param {HTMLElement} element Target to attach listener to
 		 * @param {string} type Name of the action to listen for
 		 * @param {function} listener Function to be executed on action
@@ -196,11 +194,11 @@ Box.JQueryDOM = (function() {
 		 * @returns {void}
 		 */
 		on: function(element, type, listener) {
-			jQuery(element).on(type, listener);
+			element.addEventListener(type, listener, false);
 		},
 
 		/**
-		 * Removes event listener to element via jquery
+		 * Removes event listener to element using native event listener functions
 		 * @param {HTMLElement} element Target to remove listener from
 		 * @param {string} type Name of the action remove listener from
 		 * @param {function} listener Function to be removed from action
@@ -208,12 +206,12 @@ Box.JQueryDOM = (function() {
 		 * @returns {void}
 		 */
 		off: function(element, type, listener) {
-			jQuery(element).off(type, listener);
+			element.removeEventListener(type, listener, false);
 		}
 	};
 }());
 
-Box.DOM = Box.JQueryDOM;
+Box.DOM = Box.NativeDOM;
 
 /**
  * @fileoverview An object that encapsulates event delegation wireup for a
@@ -569,6 +567,7 @@ Box.Application = (function() {
 		behaviors = {},      // Information about each registered behavior by behaviorName
 		instances = {},      // Module instances keyed by DOM element id
 		initialized = false, // Flag whether the application has been initialized
+		customErrorHandler = null,
 
 		application = new Box.EventTarget();	// base object for application
 
@@ -652,7 +651,10 @@ Box.Application = (function() {
 	 * @private
 	 */
 	function error(exception) {
-
+		if (typeof customErrorHandler === 'function') {
+			customErrorHandler(exception);
+			return;
+		}
 		if (globalConfig.debug) {
 			throw exception;
 		} else {
@@ -1326,6 +1328,16 @@ Box.Application = (function() {
 		//----------------------------------------------------------------------
 		// Error reporting
 		//----------------------------------------------------------------------
+
+		/**
+		 * Overrides default error handler
+		 * @param {Function} exceptionHandler handling function that takes an
+		 * exception as argument. Must be called before init.
+		 * @returns {void}
+		 */
+		setErrorHandler: function(exceptionHandler) {
+			customErrorHandler = exceptionHandler;
+		},
 
 		/**
 		 * Signals that an error has occurred. If in development mode, an error

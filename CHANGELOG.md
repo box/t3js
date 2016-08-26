@@ -1,3 +1,8 @@
+v2.7.0 - August 26, 2016
+
+* 2.7.0 (Jeff Tan)
+* Issue #159: Added setErrorHandler to override default error handling (Rey)
+
 v2.6.0 - July 13, 2016
 
 * 2.6.0 (Jeff Tan)

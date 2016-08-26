@@ -1,4 +1,4 @@
-/*! t3-native-testing v2.6.0 */
+/*! t3-native-testing v2.7.0 */
 /*!
 Copyright 2016 Box, Inc. All rights reserved.
 
