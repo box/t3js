@@ -109,14 +109,17 @@ Box.EventTarget = (function() {
 
 			// if there are handlers for the event, call them in order
 			handlers = this._handlers[event.type];
-			if (handlers instanceof Array) {
-				// @NOTE: do a concat() here to create a copy of the handlers array,
-				// so that if another handler is removed of the same type, it doesn't
-				// interfere with the handlers array during this loop
-				handlers = handlers.concat();
-				for (i = 0, len = handlers.length; i < len; i++) {
-					handlers[i].call(this, event);
-				}
+
+			if (!Array.isArray(handlers)) {
+				return;
+			}
+
+			// @NOTE: do a concat() here to create a copy of the handlers array,
+			// so that if another handler is removed of the same type, it doesn't
+			// interfere with the handlers array during this loop
+			handlers = handlers.concat();
+			for (i = 0, len = handlers.length; i < len; i++) {
+				handlers[i].call(this, event);
 			}
 		},
 
@@ -127,19 +130,19 @@ Box.EventTarget = (function() {
 		 * @returns {void}
 		 */
 		off: function(type, handler) {
+			var handlers = this._handlers[type];
 
-			var handlers = this._handlers[type],
-				i,
-				len;
-
-			if (handlers instanceof Array) {
-				for (i = 0, len = handlers.length; i < len; i++) {
-					if (handlers[i] === handler) {
-						handlers.splice(i, 1);
-						break;
-					}
-				}
+			if (!Array.isArray(handlers)) {
+				return;
 			}
+			
+			this._handlers[type] = (this._handlers[type] || []).filter(function (eventHandler) {
+		        	return (handler !== eventHandler);
+		        });
+		        
+		        if (this._handlers[type].length === 0) {
+		        	delete this._handlers[type];
+		        }
 		}
 	};
 
