@@ -132,6 +132,10 @@ Application.addModule('list', function(context) {
 					break;
 
 				case 'todostatuschange':
+					if (filter === 'incomplete' || filter === 'complete') {
+						this.renderList();
+					}
+					
 					this.updateSelectAllCheckbox();
 					break;
 
@@ -190,9 +194,8 @@ Application.addModule('list', function(context) {
 		 * @returns {void}
 		 */
 		clearList: function() {
-			var todoListEl = moduleEl.querySelector('#todo-list');
-			while (todoListEl.hasChildNodes()) {
-				todoListEl.removeChild(todoListEl.lastChild);
+			while (listEl.hasChildNodes()) {
+				listEl.removeChild(listEl.lastChild);
 			}
 		},
 
