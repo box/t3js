@@ -1,6 +1,9 @@
-[![NPM version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
-[![Project Status](http://opensource.box.com/badges/stable.svg)](http://opensource.box.com/badges)
+[![Project Status](https://opensource.box.com/badges/deprecated.svg)](https://opensource.box.com/badges)
+
+# DEPRECATED
+
+Box has migrated using `react`, `webpack`, and the latest version of ECMAScript for our frontend projects as of 2018. We no longer support changes, pull requests, or upgrades to this package. We appreciate all of the user contributions that you have given us over the past few years.
 
 # T3 JavaScript Framework
 
